@@ -1,0 +1,1009 @@
+{
+  "user": {
+    "id": "1",
+    "name": "John Doe",
+    "profileImage": "https://randomuser.me/api/portraits/men/1.jpg",
+    "phone": "603.555.0123",
+    "email": "example@gmail.com",
+    "gender": "Male",
+    "addresses": [
+      {
+        "id": 1,
+        "label": "Home",
+        "address": "1901 Thornridge Cir. Shiloh, Hawaii 81063"
+      },
+      {
+        "id": 2,
+        "label": "Office",
+        "address": "4517 Washington Ave. Manchester, Kentucky 39495"
+      },
+      {
+        "id": 3,
+        "label": "Parent's House",
+        "address": "8502 Preston Rd. Inglewood, Maine 98380"
+      },
+      {
+        "id": 4,
+        "label": "Friend's House",
+        "address": "2464 Royal Ln. Mesa, New Jersey 45463"
+      }
+    ]
+  },
+  "services": [
+    { "id": "1", "name": "Air Conditioner", "icon": "Air_conditioner" },
+    { "id": "2", "name": "Air Freshner", "icon": "Air_freshner" },
+    { "id": "3", "name": "Air Purifier", "icon": "Air_purifier" },
+    { "id": "4", "name": "Chimney", "icon": "Chimney" },
+    { "id": "5", "name": "Home Theater", "icon": "home_theter" },
+    { "id": "6", "name": "Laptop", "icon": "Laptop" },
+    { "id": "7", "name": "Microwave Oven", "icon": "Microwave_oven" },
+    { "id": "8", "name": "Television", "icon": "television" },
+    { "id": "9", "name": "Washing Machine", "icon": "washing_machine" },
+    { "id": "10", "name": "Water Heater", "icon": "water_heater" },
+    { "id": "11", "name": "Water Purifier", "icon": "Water_putifier" },
+    { "id": "12", "name": "Home Service", "icon": "home_service" }
+  ],
+  "serviceDetails": {
+    "1": {
+      "id": "1",
+      "name": "Air Conditioner",
+      "description": "Professional AC repair and maintenance services",
+      "rating": 4.77,
+      "totalBookings": "10.8M",
+      "warranty": "30 days",
+      "image": "https://images.unsplash.com/photo-1581092921461-eab62e97a780",
+      "superSaverPacks": [
+        {
+          "id": "ac_basic",
+          "name": "2 ACs PACK",
+          "title": "Foam-jet AC service",
+          "description": "Dust-free filters & better airflow",
+          "price": "₹999",
+          "savings": "₹500",
+          "features": [
+            "Deep cleaning with foam jet",
+            "Filter cleaning",
+            "Indoor unit service",
+            "Up to 2 AC units",
+            "30 days service warranty"
+          ]
+        },
+        {
+          "id": "ac_standard",
+          "name": "3 ACs PACK",
+          "title": "Complete AC service",
+          "description": "Full service with gas top-up",
+          "price": "₹1499",
+          "savings": "₹800",
+          "features": [
+            "Everything in Basic pack",
+            "Gas pressure check",
+            "Outdoor unit cleaning",
+            "Up to 3 AC units",
+            "60 days service warranty"
+          ]
+        },
+        {
+          "id": "ac_premium",
+          "name": "ANNUAL CARE",
+          "title": "Year-round AC maintenance",
+          "description": "Complete care for all your ACs",
+          "price": "₹2999",
+          "savings": "₹2000",
+          "features": [
+            "4 services per year",
+            "Priority scheduling",
+            "Free gas top-up",
+            "Up to 4 AC units",
+            "1 year service warranty"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "ac_service",
+          "name": "Service",
+          "description": "Regular maintenance and cleaning",
+          "price": "₹499"
+        },
+        {
+          "id": "ac_repair",
+          "name": "Repair",
+          "description": "Fix issues and component replacement",
+          "price": "₹799"
+        },
+        {
+          "id": "ac_install",
+          "name": "Installation",
+          "description": "New AC installation and setup",
+          "price": "₹1499"
+        }
+      ],
+      "packages": [
+        {
+          "id": "basic",
+          "name": "2 ACs PACK",
+          "title": "Foam-jet AC service",
+          "description": "Dust-free filters & better airflow",
+          "price": "₹999",
+          "features": [
+            "Deep cleaning with foam jet",
+            "Filter cleaning",
+            "Indoor unit service",
+            "Up to 2 AC units"
+          ]
+        },
+        {
+          "id": "standard",
+          "name": "3 ACs PACK",
+          "title": "Complete AC service",
+          "description": "Full service with gas top-up",
+          "price": "₹1499",
+          "features": [
+            "Everything in Basic pack",
+            "Gas pressure check",
+            "Outdoor unit cleaning",
+            "Up to 3 AC units"
+          ]
+        }
+      ],
+      "faqs": [
+        {
+          "question": "How often should I service my AC?",
+          "answer": "We recommend servicing your AC every 3-4 months for optimal performance."
+        },
+        {
+          "question": "What's included in basic service?",
+          "answer": "Basic service includes filter cleaning, indoor unit sanitization, and performance check."
+        }
+      ]
+    },
+    "2": {
+      "id": "2",
+      "name": "Air Freshner",
+      "description": "Professional air freshening and sanitization services",
+      "rating": 4.65,
+      "totalBookings": "3.2M",
+      "warranty": "15 days",
+      "image": "https://images.unsplash.com/photo-1582139329536-e7284fece509",
+      "superSaverPacks": [
+        {
+          "id": "af_basic",
+          "name": "FRESH START",
+          "title": "Basic Freshening Service",
+          "description": "Essential freshening for small spaces",
+          "price": "₹499",
+          "savings": "₹200",
+          "features": [
+            "2 rooms coverage",
+            "Basic odor removal",
+            "Natural fresheners",
+            "2 fragrance options",
+            "15 days freshness guarantee"
+          ]
+        },
+        {
+          "id": "af_premium",
+          "name": "HOME FRESH",
+          "title": "Complete Home Freshening",
+          "description": "Whole house air freshening solution",
+          "price": "₹999",
+          "savings": "₹500",
+          "features": [
+            "Full house coverage",
+            "Deep odor treatment",
+            "Premium fresheners",
+            "5 fragrance options",
+            "30 days freshness guarantee"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "af_basic_service",
+          "name": "Basic Service",
+          "description": "Regular freshening and odor control",
+          "price": "₹299"
+        },
+        {
+          "id": "af_deep_clean",
+          "name": "Deep Clean",
+          "description": "Complete sanitization and freshening",
+          "price": "₹599"
+        },
+        {
+          "id": "af_premium",
+          "name": "Premium Service",
+          "description": "Long-lasting fragrance solutions",
+          "price": "₹899"
+        }
+      ],
+      "faqs": [
+        {
+          "question": "How long does the fragrance last?",
+          "answer": "Our fragrances typically last 2-3 weeks depending on the service package chosen."
+        },
+        {
+          "question": "Are your fresheners safe for pets?",
+          "answer": "Yes, we use pet-friendly, natural fresheners that are safe for all family members."
+        }
+      ]
+    },
+    "3": {
+      "id": "3",
+      "name": "Air Purifier",
+      "description": "Expert air purifier service and maintenance",
+      "rating": 4.72,
+      "totalBookings": "4.5M",
+      "warranty": "45 days",
+      "image": "https://images.unsplash.com/photo-1585157603582-e1c27765908e",
+      "superSaverPacks": [
+        {
+          "id": "ap_basic",
+          "name": "PURE CARE",
+          "title": "Basic Purifier Service",
+          "description": "Essential maintenance for one unit",
+          "price": "₹799",
+          "savings": "₹300",
+          "features": [
+            "Filter cleaning",
+            "Performance check",
+            "Basic sanitization",
+            "1 purifier unit",
+            "30 days warranty"
+          ]
+        },
+        {
+          "id": "ap_premium",
+          "name": "MULTI PURE",
+          "title": "Multiple Units Service",
+          "description": "Complete care for multiple purifiers",
+          "price": "₹1499",
+          "savings": "₹700",
+          "features": [
+            "Deep filter cleaning",
+            "UV lamp check",
+            "Advanced sanitization",
+            "Up to 3 units",
+            "45 days warranty"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "ap_maintenance",
+          "name": "Maintenance",
+          "description": "Regular filter cleaning and check-up",
+          "price": "₹399"
+        },
+        {
+          "id": "ap_repair",
+          "name": "Repair",
+          "description": "Fix issues and component replacement",
+          "price": "₹699"
+        },
+        {
+          "id": "ap_installation",
+          "name": "Installation",
+          "description": "New purifier setup and configuration",
+          "price": "₹299"
+        }
+      ],
+      "faqs": [
+        {
+          "question": "How often should I service my air purifier?",
+          "answer": "We recommend servicing your air purifier every 3 months for optimal performance."
+        },
+        {
+          "question": "When should I replace the filters?",
+          "answer": "Filters typically need replacement every 6-8 months depending on usage and air quality."
+        }
+      ]
+    },
+    "4": {
+      "id": "4",
+      "name": "Chimney",
+      "description": "Professional chimney cleaning and repair",
+      "rating": 4.68,
+      "totalBookings": "2.8M",
+      "warranty": "30 days",
+      "image": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a",
+      "superSaverPacks": [
+        {
+          "id": "ch_basic",
+          "name": "BASIC CLEAN",
+          "title": "Essential Chimney Service",
+          "description": "Basic cleaning and maintenance",
+          "price": "₹699",
+          "savings": "₹300",
+          "features": [
+            "Basic cleaning",
+            "Filter wash",
+            "Motor check",
+            "Basic repairs",
+            "30 days warranty"
+          ]
+        },
+        {
+          "id": "ch_premium",
+          "name": "DEEP CLEAN",
+          "title": "Complete Chimney Care",
+          "description": "Thorough cleaning and maintenance",
+          "price": "₹1299",
+          "savings": "₹600",
+          "features": [
+            "Deep cleaning",
+            "Filter replacement",
+            "Motor service",
+            "All repairs included",
+            "60 days warranty"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "ch_service",
+          "name": "Service",
+          "description": "Regular cleaning and maintenance",
+          "price": "₹499"
+        },
+        {
+          "id": "ch_repair",
+          "name": "Repair",
+          "description": "Fix issues and part replacement",
+          "price": "₹799"
+        },
+        {
+          "id": "ch_install",
+          "name": "Installation",
+          "description": "New chimney installation",
+          "price": "₹1299"
+        }
+      ],
+      "faqs": [
+        {
+          "question": "How often should I clean my chimney?",
+          "answer": "We recommend cleaning your chimney every 3-4 months for optimal performance."
+        },
+        {
+          "question": "What's included in basic service?",
+          "answer": "Basic service includes filter cleaning, motor check, and basic maintenance."
+        }
+      ]
+    },
+    "5": {
+      "id": "5",
+      "name": "Home Theater",
+      "description": "Expert home theater setup and repair",
+      "rating": 4.81,
+      "totalBookings": "1.5M",
+      "warranty": "60 days",
+      "image": "https://images.unsplash.com/photo-1593784991095-a205069470b6",
+      "superSaverPacks": [
+        {
+          "id": "ht_basic",
+          "name": "SOUND CHECK",
+          "title": "Basic Audio Setup",
+          "description": "Essential audio calibration",
+          "price": "₹899",
+          "savings": "₹400",
+          "features": [
+            "Speaker calibration",
+            "Basic wiring check",
+            "Remote programming",
+            "Sound test",
+            "30 days warranty"
+          ]
+        },
+        {
+          "id": "ht_premium",
+          "name": "COMPLETE SETUP",
+          "title": "Full System Optimization",
+          "description": "Complete audio-visual setup",
+          "price": "₹1699",
+          "savings": "₹800",
+          "features": [
+            "Full system calibration",
+            "Advanced wiring setup",
+            "Universal remote setup",
+            "Audio-visual optimization",
+            "60 days warranty"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "ht_setup",
+          "name": "Setup",
+          "description": "New system setup and calibration",
+          "price": "₹899"
+        },
+        {
+          "id": "ht_repair",
+          "name": "Repair",
+          "description": "Fix issues and component repair",
+          "price": "₹699"
+        },
+        {
+          "id": "ht_upgrade",
+          "name": "Upgrade",
+          "description": "System upgrade and enhancement",
+          "price": "₹1499"
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Do you provide HDMI cables?",
+          "answer": "Yes, we provide high-quality HDMI cables if needed during setup or repair."
+        },
+        {
+          "question": "Can you wall mount my TV?",
+          "answer": "Yes, we offer professional TV wall mounting as part of our setup service."
+        }
+      ]
+    },
+    "6": {
+      "id": "6",
+      "name": "Laptop",
+      "description": "Expert laptop repair and maintenance",
+      "rating": 4.85,
+      "totalBookings": "5.2M",
+      "warranty": "90 days",
+      "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed",
+      "superSaverPacks": [
+        {
+          "id": "lt_basic",
+          "name": "QUICK FIX",
+          "title": "Basic Service & Repair",
+          "description": "Essential laptop care",
+          "price": "₹699",
+          "savings": "₹300",
+          "features": [
+            "Hardware diagnostics",
+            "Software troubleshooting",
+            "Virus removal",
+            "Basic optimization",
+            "30 days warranty"
+          ]
+        },
+        {
+          "id": "lt_advanced",
+          "name": "PERFORMANCE BOOST",
+          "title": "Advanced Optimization",
+          "description": "Complete performance upgrade",
+          "price": "₹1499",
+          "savings": "₹700",
+          "features": [
+            "Hardware upgrades",
+            "OS optimization",
+            "Data backup",
+            "SSD/RAM upgrade options",
+            "90 days warranty"
+          ]
+        },
+        {
+          "id": "lt_premium",
+          "name": "TOTAL CARE",
+          "title": "Comprehensive Protection",
+          "description": "Year-round laptop care",
+          "price": "₹2999",
+          "savings": "₹1500",
+          "features": [
+            "Quarterly maintenance",
+            "Priority support",
+            "Parts replacement",
+            "Data protection",
+            "1 year warranty"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "lt_repair",
+          "name": "Repair",
+          "description": "Hardware and software repairs",
+          "price": "₹699"
+        },
+        {
+          "id": "lt_upgrade",
+          "name": "Upgrade",
+          "description": "Performance upgrades and optimization",
+          "price": "₹1499"
+        },
+        {
+          "id": "lt_data",
+          "name": "Data Recovery",
+          "description": "Recover lost or corrupted data",
+          "price": "₹1999"
+        }
+      ],
+      "faqs": [
+        {
+          "question": "How long does a typical repair take?",
+          "answer": "Most repairs are completed within 24-48 hours depending on the issue."
+        },
+        {
+          "question": "Do you provide doorstep service?",
+          "answer": "Yes, we offer convenient doorstep service for most laptop issues."
+        }
+      ]
+    },
+    "7": {
+      "id": "7",
+      "name": "Microwave Oven",
+      "description": "Professional microwave repair and service",
+      "rating": 4.73,
+      "totalBookings": "3.8M",
+      "warranty": "45 days",
+      "image": "https://images.unsplash.com/photo-1585659722983-3a675dabf23d",
+      "superSaverPacks": [
+        {
+          "id": "mo_basic",
+          "name": "QUICK SERVICE",
+          "title": "Basic Maintenance",
+          "description": "Essential microwave care",
+          "price": "₹499",
+          "savings": "₹200",
+          "features": [
+            "Basic cleaning",
+            "Performance check",
+            "Safety inspection",
+            "Minor repairs",
+            "30 days warranty"
+          ]
+        },
+        {
+          "id": "mo_premium",
+          "name": "COMPLETE CARE",
+          "title": "Advanced Service",
+          "description": "Thorough maintenance & repair",
+          "price": "₹999",
+          "savings": "₹500",
+          "features": [
+            "Deep cleaning",
+            "Magnetron check",
+            "Component testing",
+            "All repairs included",
+            "45 days warranty"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "mo_service",
+          "name": "Service",
+          "description": "Regular maintenance and cleaning",
+          "price": "₹399"
+        },
+        {
+          "id": "mo_repair",
+          "name": "Repair",
+          "description": "Fix issues and part replacement",
+          "price": "₹699"
+        },
+        {
+          "id": "mo_install",
+          "name": "Installation",
+          "description": "New microwave setup",
+          "price": "₹299"
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Is it safe to repair a microwave?",
+          "answer": "Our technicians are certified and follow all safety protocols for microwave repairs."
+        },
+        {
+          "question": "What's included in regular service?",
+          "answer": "Regular service includes cavity cleaning, door seal check, and performance testing."
+        }
+      ]
+    },
+    "8": {
+      "id": "8",
+      "name": "Television",
+      "description": "Expert TV repair and installation",
+      "rating": 4.79,
+      "totalBookings": "6.1M",
+      "warranty": "60 days",
+      "image": "https://images.unsplash.com/photo-1593784991095-a205069470b6",
+      "superSaverPacks": [
+        {
+          "id": "tv_basic",
+          "name": "QUICK FIX",
+          "title": "Basic TV Service",
+          "description": "Essential TV maintenance",
+          "price": "₹599",
+          "savings": "₹200",
+          "features": [
+            "Picture quality check",
+            "Basic repairs",
+            "Remote programming",
+            "Channel setup",
+            "30 days warranty"
+          ]
+        },
+        {
+          "id": "tv_premium",
+          "name": "SMART CARE",
+          "title": "Smart TV Setup",
+          "description": "Complete smart TV solution",
+          "price": "₹1299",
+          "savings": "₹600",
+          "features": [
+            "Smart features setup",
+            "WiFi optimization",
+            "App installation",
+            "Advanced calibration",
+            "60 days warranty"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "tv_repair",
+          "name": "Repair",
+          "description": "Fix display and hardware issues",
+          "price": "₹599"
+        },
+        {
+          "id": "tv_install",
+          "name": "Installation",
+          "description": "TV mounting and setup",
+          "price": "₹799"
+        },
+        {
+          "id": "tv_smart",
+          "name": "Smart Setup",
+          "description": "Smart TV configuration",
+          "price": "₹399"
+        }
+      ],
+      "faqs": [
+        {
+          "question": "Do you repair all TV brands?",
+          "answer": "Yes, we service all major TV brands and models."
+        },
+        {
+          "question": "What wall mounting options do you provide?",
+          "answer": "We offer fixed, tilting, and full-motion wall mount options for all TV sizes."
+        }
+      ]
+    },
+    "9": {
+      "id": "9",
+      "name": "Washing Machine",
+      "description": "Professional washing machine service",
+      "rating": 4.82,
+      "totalBookings": "7.5M",
+      "warranty": "60 days",
+      "image": "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1",
+      "superSaverPacks": [
+        {
+          "id": "wm_basic",
+          "name": "QUICK CARE",
+          "title": "Basic Service",
+          "description": "Essential maintenance",
+          "price": "₹599",
+          "savings": "₹300",
+          "features": [
+            "Basic cleaning",
+            "Water inlet check",
+            "Spin test",
+            "Minor repairs",
+            "30 days warranty"
+          ]
+        },
+        {
+          "id": "wm_standard",
+          "name": "DEEP CLEAN",
+          "title": "Complete Service",
+          "description": "Thorough maintenance",
+          "price": "₹999",
+          "savings": "₹500",
+          "features": [
+            "Deep cleaning",
+            "Motor service",
+            "Belt adjustment",
+            "Major repairs",
+            "60 days warranty"
+          ]
+        },
+        {
+          "id": "wm_premium",
+          "name": "ANNUAL CARE",
+          "title": "Year-round Protection",
+          "description": "Complete annual maintenance",
+          "price": "₹2499",
+          "savings": "₹1200",
+          "features": [
+            "Quarterly service",
+            "Priority support",
+            "Parts replacement",
+            "Emergency support",
+            "1 year warranty"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "wm_service",
+          "name": "Service",
+          "description": "Regular maintenance and cleaning",
+          "price": "₹499"
+        },
+        {
+          "id": "wm_repair",
+          "name": "Repair",
+          "description": "Fix issues and part replacement",
+          "price": "₹799"
+        },
+        {
+          "id": "wm_install",
+          "name": "Installation",
+          "description": "New machine setup",
+          "price": "₹599"
+        }
+      ],
+      "faqs": [
+        {
+          "question": "How often should I service my washing machine?",
+          "answer": "We recommend servicing your washing machine every 4-6 months for optimal performance."
+        },
+        {
+          "question": "Do you repair all brands?",
+          "answer": "Yes, we service all major washing machine brands including front load and top load models."
+        }
+      ]
+    },
+    "10": {
+      "id": "10",
+      "name": "Water Heater",
+      "description": "Expert water heater service and repair",
+      "rating": 4.71,
+      "totalBookings": "4.2M",
+      "warranty": "45 days",
+      "image": "https://images.unsplash.com/photo-1585157603582-e1c27765908e",
+      "superSaverPacks": [
+        {
+          "id": "wh_basic",
+          "name": "QUICK FIX",
+          "title": "Basic Service",
+          "description": "Essential maintenance",
+          "price": "₹499",
+          "savings": "₹200",
+          "features": [
+            "Safety check",
+            "Basic cleaning",
+            "Temperature check",
+            "Minor repairs",
+            "30 days warranty"
+          ]
+        },
+        {
+          "id": "wh_premium",
+          "name": "TOTAL CARE",
+          "title": "Complete Service",
+          "description": "Comprehensive maintenance",
+          "price": "₹999",
+          "savings": "₹500",
+          "features": [
+            "Deep cleaning",
+            "Element check",
+            "Thermostat service",
+            "All repairs included",
+            "45 days warranty"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "wh_service",
+          "name": "Service",
+          "description": "Regular maintenance",
+          "price": "₹399"
+        },
+        {
+          "id": "wh_repair",
+          "name": "Repair",
+          "description": "Fix issues and part replacement",
+          "price": "₹699"
+        },
+        {
+          "id": "wh_install",
+          "name": "Installation",
+          "description": "New heater installation",
+          "price": "₹899"
+        }
+      ],
+      "faqs": [
+        {
+          "question": "How long does installation take?",
+          "answer": "Most water heater installations are completed within 2-3 hours."
+        },
+        {
+          "question": "What warranty do you provide?",
+          "answer": "We provide 45 days warranty on repairs and 1 year on new installations."
+        }
+      ]
+    },
+    "11": {
+      "id": "11",
+      "name": "Water Purifier",
+      "description": "Professional water purifier service",
+      "rating": 4.76,
+      "totalBookings": "5.8M",
+      "warranty": "30 days",
+      "image": "https://images.unsplash.com/photo-1585157603582-e1c27765908e",
+      "superSaverPacks": [
+        {
+          "id": "wp_basic",
+          "name": "PURE CARE",
+          "title": "Basic Service",
+          "description": "Essential maintenance",
+          "price": "₹599",
+          "savings": "₹200",
+          "features": [
+            "Filter cleaning",
+            "TDS check",
+            "Basic sanitization",
+            "Minor repairs",
+            "30 days warranty"
+          ]
+        },
+        {
+          "id": "wp_premium",
+          "name": "COMPLETE CARE",
+          "title": "Advanced Service",
+          "description": "Complete purifier care",
+          "price": "₹1199",
+          "savings": "₹600",
+          "features": [
+            "Filter replacement",
+            "UV lamp check",
+            "Deep sanitization",
+            "All repairs included",
+            "60 days warranty"
+          ]
+        }
+      ],
+      "categories": [
+        {
+          "id": "wp_service",
+          "name": "Service",
+          "description": "Filter cleaning and maintenance",
+          "price": "₹399"
+        },
+        {
+          "id": "wp_repair",
+          "name": "Repair",
+          "description": "Fix issues and part replacement",
+          "price": "₹699"
+        },
+        {
+          "id": "wp_install",
+          "name": "Installation",
+          "description": "New purifier setup",
+          "price": "₹499"
+        }
+      ],
+      "faqs": [
+        {
+          "question": "How often should I change the filters?",
+          "answer": "We recommend changing filters every 6-8 months depending on water quality and usage."
+        },
+        {
+          "question": "Do you provide genuine parts?",
+          "answer": "Yes, we use only genuine parts from authorized manufacturers."
+        }
+      ]
+    }
+  },
+  "bookings": {
+    "ongoing": [
+      {
+        "id": "1",
+        "service": "AC Repair",
+        "provider": "Mike Johnson",
+        "workerProfileImage": "https://randomuser.me/api/portraits/men/32.jpg",
+        "progress": 75,
+        "status": "In Progress"
+      },
+      {
+        "id": "2",
+        "service": "House Cleaning",
+        "provider": "Sarah Wilson",
+        "workerProfileImage": "https://randomuser.me/api/portraits/women/44.jpg",
+        "progress": 30,
+        "status": "Started"
+      }
+    ]
+  },
+  "servicesList": [
+    {
+      "id": "1",
+      "title": "Air Conditioner Service & Repair",
+      "image": "ac-service.jpg",
+      "rating": 4.77,
+      "reviewCount": 128,
+      "price": "₹499",
+      "popular": true
+    },
+    {
+      "id": "2",
+      "title": "Air Freshener Services",
+      "image": "air-freshner.jpg",
+      "rating": 4.65,
+      "reviewCount": 256,
+      "price": "₹499",
+      "popular": true
+    },
+    {
+      "id": "3",
+      "title": "Air Purifier Service & Maintenance",
+      "image": "air-purifier.jpg",
+      "rating": 4.72,
+      "reviewCount": 184,
+      "price": "₹799",
+      "popular": true
+    }
+  ],
+  "offers": [
+    {
+      "id": "1",
+      "title": "20% OFF",
+      "description": "Get 20% off on your first booking",
+      "code": "FIRST20",
+      "bgColor": "#C0E4FF",
+      "codeBoxColor": "#2266C1"
+    },
+    {
+      "id": "2",
+      "title": "15% OFF",
+      "description": "Special discount on AC services",
+      "code": "SUMMER15",
+      "bgColor": "#D6FCD6",
+      "codeBoxColor": "#3AC46E"
+    },
+    {
+      "id": "3",
+      "title": "10% OFF",
+      "description": "Weekend special on all services",
+      "code": "WEEKEND10",
+      "bgColor": "#FFF7CC",
+      "codeBoxColor": "#F6B93B"
+    }
+  ],
+  "contacts": [
+    {
+      "key": "customer_service",
+      "label": "Customer Service",
+      "details": "Call us at 1800-123-456"
+    },
+    {
+      "key": "whatsapp",
+      "label": "WhatsApp",
+      "details": "(480) 555-0103"
+    },
+    {
+      "key": "website",
+      "label": "Website",
+      "details": "www.example.com"
+    },
+    {
+      "key": "facebook",
+      "label": "Facebook",
+      "details": "facebook.com/example"
+    },
+    {
+      "key": "twitter",
+      "label": "Twitter",
+      "details": "@example"
+    },
+    {
+      "key": "instagram",
+      "label": "Instagram",
+      "details": "@example"
+    }
+  ]
+} 
