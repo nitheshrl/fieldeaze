@@ -7,9 +7,10 @@
 
 import React, { ReactNode } from 'react';
 import { Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import MainNavigator from './src/navigation/MainNavigator';
+import { BookmarkProvider } from './src/context/BookmarkContext';
 
 // Error boundary component
 interface ErrorBoundaryProps {
@@ -50,17 +51,21 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 }
 
+export const navigationRef = createNavigationContainerRef();
+
 function App(): React.ReactElement {
   return (
-    <ErrorBoundary name="root">
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <ErrorBoundary name="navigation">
-            <MainNavigator />
-          </ErrorBoundary>
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </ErrorBoundary>
+    <BookmarkProvider>
+      <ErrorBoundary name="root">
+        <SafeAreaProvider>
+          <NavigationContainer ref={navigationRef}>
+            <ErrorBoundary name="navigation">
+              <MainNavigator />
+            </ErrorBoundary>
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </ErrorBoundary>
+    </BookmarkProvider>
   );
 }
 

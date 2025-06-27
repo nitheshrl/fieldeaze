@@ -14,6 +14,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { MainStackParamList } from '../navigation/MainNavigator';
 import mockData from '../mockData.json';
 import PopularServicesSection from '../components/PopularServicesSection';
+import { useBookmarks } from '../context/BookmarkContext';
 
 const { width } = Dimensions.get('window');
 
@@ -61,6 +62,7 @@ const ServiceDetailsScreen = () => {
   console.log('Found serviceDetails:', serviceDetails?.name);
 
   const [selectedPackage, setSelectedPackage] = useState(serviceDetails?.superSaverPacks[0]?.id || '');
+  const { addBookmark, removeBookmark, bookmarks } = useBookmarks();
 
   if (!serviceDetails) {
     return (
@@ -151,34 +153,65 @@ const ServiceDetailsScreen = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.packagesContainer}
           >
-            {serviceDetails.superSaverPacks.map((pkg) => (
-              <TouchableOpacity
-                key={pkg.id}
-                style={[
-                  styles.packageCard,
-                  selectedPackage === pkg.id && styles.packageCardSelected
-                ]}
-                onPress={() => setSelectedPackage(pkg.id)}
-              >
-                <View style={styles.packageHeader}>
-                  <Text style={styles.packageType}>{pkg.name}</Text>
-                </View>
-                <Text style={styles.packageTitle}>{pkg.title}</Text>
-                <Text style={styles.packageDesc}>{pkg.description}</Text>
-                <View style={styles.priceRow}>
-                  <Text style={styles.packagePrice}>{pkg.price}</Text>
-                  <Text style={styles.savingsText}>Save {pkg.savings}</Text>
-                </View>
-                <View style={styles.packageFeatures}>
-                  {pkg.features.map((feature, i) => (
-                    <View key={i} style={styles.featureRow}>
-                      <Icon name="check" size={14} color="#27537B" />
-                      <Text style={styles.featureText}>{feature}</Text>
+            {serviceDetails.superSaverPacks.map((pkg) => {
+              const isBookmarked = bookmarks.some(b => b.id === pkg.id);
+              return (
+                <View
+                  key={pkg.id}
+                  style={[
+                    styles.packageCard,
+                    selectedPackage === pkg.id && styles.packageCardSelected
+                  ]}
+                >
+                  {/* Heart icon for bookmarking */}
+                  <TouchableOpacity
+                    style={{ position: 'absolute', top: 12, right: 12, zIndex: 2 }}
+                    onPress={() => {
+                      if (isBookmarked) {
+                        removeBookmark(pkg.id);
+                      } else {
+                        addBookmark({
+                          id: pkg.id,
+                          title: pkg.title,
+                          price: pkg.price,
+                          features: pkg.features,
+                          rating: serviceDetails.rating,
+                          reviewCount: serviceDetails.totalBookings,
+                          duration: '3 hrs',
+                          serviceName: serviceDetails.name,
+                          serviceId: serviceDetails.id,
+                        });
+                      }
+                    }}
+                  >
+                    <Icon name={isBookmarked ? 'heart' : 'heart-o'} size={22} color="#27537B" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{ flex: 1 }}
+                    activeOpacity={0.9}
+                    onPress={() => setSelectedPackage(pkg.id)}
+                  >
+                    <View style={styles.packageHeader}>
+                      <Text style={styles.packageType}>{pkg.name}</Text>
                     </View>
-                  ))}
+                    <Text style={styles.packageTitle}>{pkg.title}</Text>
+                    <Text style={styles.packageDesc}>{pkg.description}</Text>
+                    <View style={styles.priceRow}>
+                      <Text style={styles.packagePrice}>{pkg.price}</Text>
+                      <Text style={styles.savingsText}>Save {pkg.savings}</Text>
+                    </View>
+                    <View style={styles.packageFeatures}>
+                      {pkg.features.map((feature, i) => (
+                        <View key={i} style={styles.featureRow}>
+                          <Icon name="check" size={14} color="#27537B" />
+                          <Text style={styles.featureText}>{feature}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
-            ))}
+              );
+            })}
           </ScrollView>
         </View>
 
@@ -222,9 +255,6 @@ const ServiceDetailsScreen = () => {
 
       {/* Bottom CTA */}
       <View style={styles.bottomCTA}>
-        <TouchableOpacity style={styles.viewDetailsButton}>
-          <Text style={styles.viewDetailsText}>View Details</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.bookNowButton}>
           <Text style={styles.bookNowText}>Book Now</Text>
         </TouchableOpacity>
@@ -498,20 +528,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
-  },
-  viewDetailsButton: {
-    flex: 1,
-    paddingVertical: 12,
-    marginRight: 12,
-    borderWidth: 1,
-    borderColor: '#27537B',
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  viewDetailsText: {
-    color: '#27537B',
-    fontSize: 16,
-    fontWeight: '600',
   },
   bookNowButton: {
     flex: 2,

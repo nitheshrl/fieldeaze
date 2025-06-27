@@ -306,7 +306,7 @@ const HomeScreen = () => {
                       return <View key={idx} style={{ width: '23%' }} />;
                     }
                     const isActive = selectedServiceIdx === (pageIdx * SERVICES_PER_PAGE + row * 4 + idx);
-                    return (
+            return (
                       <View
                         key={service.id}
                         style={{
@@ -315,31 +315,31 @@ const HomeScreen = () => {
                           width: '23%',
                         }}
                       >
-                        {isActive && <View style={styles.serviceBoxShadow} />}
-                        <TouchableOpacity
-                          style={[
-                            styles.serviceBox,
-                            isActive && styles.serviceBoxActive,
-                          ]}
+                {isActive && <View style={styles.serviceBoxShadow} />}
+                <TouchableOpacity
+                  style={[
+                    styles.serviceBox,
+                    isActive && styles.serviceBoxActive,
+                  ]}
                           onPress={() => {
                             setSelectedServiceIdx(pageIdx * SERVICES_PER_PAGE + row * 4 + idx);
                             navigation.navigate('ServiceDetails', { serviceId: service.id });
                           }}
-                          activeOpacity={0.85}
-                        >
-                          <View style={styles.serviceIconCircle}>
-                            <Image
+                  activeOpacity={0.85}
+                >
+                  <View style={styles.serviceIconCircle}>
+                    <Image
                               source={serviceIcons[service.icon] || serviceIcons['Air_conditioner']}
-                              style={styles.serviceIconImg}
-                              resizeMode="contain"
-                            />
-                          </View>
-                          <Text style={[styles.serviceName, isActive && styles.serviceNameActive]}>{service.name}</Text>
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  })}
-                </View>
+                      style={styles.serviceIconImg}
+                      resizeMode="contain"
+                    />
+              </View>
+                  <Text style={[styles.serviceName, isActive && styles.serviceNameActive]}>{service.name}</Text>
+            </TouchableOpacity>
+              </View>
+            );
+          })}
+        </View>
               ))}
             </View>
           ))}
@@ -675,7 +675,7 @@ const styles = StyleSheet.create({
   },
   offerScroll: {
     marginBottom: 30,
-    marginTop: 0,
+    marginTop:20,
   },
   offerScrollContent: {
     paddingRight: 16,
@@ -686,7 +686,7 @@ const styles = StyleSheet.create({
     
     color: '#222',
     marginBottom: 10,
-    marginTop: 8,
+    top: 8,
     bottom: -9,
   
   },

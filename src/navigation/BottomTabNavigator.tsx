@@ -84,21 +84,13 @@ const BottomTabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Explore"
-        component={withErrorBoundary(ExploreScreen, 'ExploreScreen')}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="explore" size={24} color={color} />
-          ),
-        }}
-      />
+     
       <Tab.Screen
         name="Bookmark"
         component={withErrorBoundary(BookmarkScreen, 'BookmarkScreen')}
         options={{
           tabBarIcon: ({ color }) => (
-            <Icon name="bookmark" size={24} color={color} />
+            <Icon name="favorite" size={24} color={color} />
           ),
         }}
       />

@@ -39,11 +39,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#222',
     marginBottom: 10,
-    marginTop: 8,
+    marginTop: -8,
     bottom: -9,
   },
   scrollView: {
-    marginBottom: 20,
+    marginBottom: 30,
   },
 });
 
