@@ -45,9 +45,26 @@ const AddAddressScreen = () => {
     setLoading(true);
     try {
       const url = `${NOMINATIM_BASE_URL}/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`;
-      const res = await fetch(url);
-      const data = await res.json();
-      
+      const res = await fetch(url, {
+        headers: {
+          'User-Agent': 'fieldeaze-app/1.0 (contact@fieldeaze.com)'
+        }
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('API error:', res.status, errorText);
+        setLoading(false);
+        return;
+      }
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error('Non-JSON response:', text);
+        setLoading(false);
+        return;
+      }
       // Parse the address components
       const addressComponents = data.address || {};
       setAddress((prev: Address) => ({
@@ -74,11 +91,31 @@ const AddAddressScreen = () => {
     setLoading(true);
     try {
       const url = `${NOMINATIM_BASE_URL}/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=5`;
-      const res = await fetch(url);
-      const data = await res.json();
+      const res = await fetch(url, {
+        headers: {
+          'User-Agent': 'fieldeaze-app/1.0 (contact@fieldeaze.com)'
+        }
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('API error:', res.status, errorText);
+        setLoading(false);
+        return;
+      }
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error('Non-JSON response:', text);
+        setSearchResults([]);
+        setLoading(false);
+        return;
+      }
       setSearchResults(data);
     } catch (e) {
       setSearchResults([]);
+      console.error('Error searching address:', e);
     }
     setLoading(false);
   };

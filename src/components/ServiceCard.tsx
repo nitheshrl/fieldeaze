@@ -17,6 +17,7 @@ interface ServiceCardProps {
 const ServiceCard = ({ id, title, image, rating, reviewCount, price }: ServiceCardProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
 
+
   return (
     <TouchableOpacity 
       style={styles.card}
