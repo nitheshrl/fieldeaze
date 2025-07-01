@@ -1,11 +1,30 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useBookmarks } from '../context/BookmarkContext';
 import { navigationRef } from '../../App';
 
 const BookmarkScreen = () => {
   const { bookmarks, removeBookmark } = useBookmarks();
+
+  const handleRemoveBookmark = (serviceId: string, serviceTitle: string) => {
+    Alert.alert(
+      'Remove from Wishlist',
+      `Are you sure you want to remove "${serviceTitle}" from your wishlist?`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => removeBookmark(serviceId),
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -31,7 +50,7 @@ const BookmarkScreen = () => {
                   <Icon name="gift" size={16} color="#27537B" style={{ marginRight: 6 }} />
                   <Text style={styles.packageLabel}>Packages</Text>
                 </View>
-                <TouchableOpacity onPress={() => removeBookmark(service.id)}>
+                <TouchableOpacity onPress={() => handleRemoveBookmark(service.id, service.title)}>
                   <Icon name="heart" size={20} color="#27537B" style={styles.heartIcon} />
                 </TouchableOpacity>
               </View>

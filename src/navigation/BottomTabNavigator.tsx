@@ -5,7 +5,6 @@ import { View, Text } from 'react-native';
 
 // Import screens
 import HomeScreen from '../screens/HomeScreen';
-import ExploreScreen from '../screens/ExploreScreen';
 import BookmarkScreen from '../screens/BookmarkScreen';
 import ChatScreen from '../screens/ChatScreen';
 import ProfileScreen from '../screens/ProfileScreen';

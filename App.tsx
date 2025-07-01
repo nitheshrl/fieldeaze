@@ -5,8 +5,8 @@
  * @format
  */
 
-import React, { ReactNode } from 'react';
-import { Text, View } from 'react-native';
+import React, { ReactNode, useEffect, useRef } from 'react';
+import { Text, View, BackHandler, AppState, Alert, AppStateStatus } from 'react-native';
 import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import MainNavigator from './src/navigation/MainNavigator';
@@ -54,6 +54,59 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 export const navigationRef = createNavigationContainerRef();
 
 function App(): React.ReactElement {
+  const appState = useRef(AppState.currentState);
+
+  useEffect(() => {
+    // Handle back button press
+    const backAction = () => {
+      // Check if navigation can go back
+      if (navigationRef.isReady() && navigationRef.canGoBack()) {
+        // Let navigation handle the back action
+        return false;
+      }
+      
+      // Show exit confirmation only when at the root level
+      Alert.alert(
+        'Exit App',
+        'Are you sure you want to exit the app?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Exit',
+            style: 'destructive',
+            onPress: () => BackHandler.exitApp(),
+          },
+        ],
+        { cancelable: false }
+      );
+      return true; // Prevent default back action
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+
+    // Handle app state changes (when app goes to background)
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        // App has come to the foreground
+        console.log('App has come to the foreground!');
+      } else if (appState.current === 'active' && nextAppState.match(/inactive|background/)) {
+        // App is going to the background
+        console.log('App is going to the background!');
+      }
+      appState.current = nextAppState;
+    };
+
+    const appStateSubscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      backHandler.remove();
+      appStateSubscription?.remove();
+    };
+  }, []);
+
   return (
     <BookmarkProvider>
       <ErrorBoundary name="root">
