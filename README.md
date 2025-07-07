@@ -185,3 +185,9 @@ This project is licensed under the MIT License.
 ## Support
 
 For support and questions, please open an issue in the repository.
+
+## Backend API (Coming Soon)
+
+A backend will be scaffolded in a new `backend/` directory using FastAPI, PostgreSQL, and JWT authentication. It will provide endpoints and models matching all features in `src/mockData.json` (users, addresses, services, service details, etc.).
+
+Setup and usage instructions will be included once the backend is scaffolded.

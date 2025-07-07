@@ -7,14 +7,15 @@ import {
   TouchableOpacity,
   StatusBar,
   Dimensions,
+  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useRoute, RouteProp } from '@react-navigation/native';
 import type { MainStackParamList } from '../navigation/MainNavigator';
 import mockData from '../mockData.json';
 import PopularServicesSection from '../components/PopularServicesSection';
 import { useBookmarks } from '../context/BookmarkContext';
+import LinearGradient from 'react-native-linear-gradient';
 
 const { width } = Dimensions.get('window');
 
@@ -50,7 +51,6 @@ type ServiceDetail = {
 };
 
 const ServiceDetailsScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const route = useRoute<ServiceDetailsScreenRouteProp>();
   const serviceId = route.params.serviceId;
 
@@ -72,20 +72,80 @@ const ServiceDetailsScreen = () => {
     );
   }
 
+  // Example offers (replace with dynamic if available)
+  const offers = [
+    { id: '1', label: 'save 10% on every order', sub: 'Get Plus now' },
+    { id: '2', label: 'Assured Reward from CRED', sub: 'on all online payments' },
+    { id: '3', label: 'Amazon offer', sub: 'via Amazon Pay' },
+  ];
+
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#27537B" />
-      
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Icon name="arrow-left" size={20} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>{serviceDetails.name}</Text>
-        <TouchableOpacity style={styles.shareButton}>
-          <Icon name="share-alt" size={20} color="#fff" />
-        </TouchableOpacity>
-      </View>
+      <StatusBar barStyle="dark-content" backgroundColor="#E6F2FF" />
+      {/* Top Section with Gradient */}
+      <LinearGradient colors={["#E6F2FF", "#B3D8F7"]} style={styles.gradientTopSection}>
+        <View style={styles.topRowExact}>
+          <Text style={styles.serviceTitleExact}>{serviceDetails.name}</Text>
+          <View style={styles.iconRowExact}>
+            <TouchableOpacity style={styles.circleIconExact}>
+              <Icon name="search" size={18} color="#27537B" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.circleIconExact}>
+              <Icon name="share-alt" size={18} color="#27537B" />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* Offers Pills with Chevron */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.offersPillScrollExact} contentContainerStyle={{paddingRight: 16}}>
+          {offers.map((offer) => (
+            <View key={offer.id} style={styles.offerPillExact}>
+              <Text style={styles.offerPillTextExact}>{offer.label}</Text>
+              <Icon name="chevron-right" size={12} color="#27537B" style={{marginLeft: 6}} />
+            </View>
+          ))}
+        </ScrollView>
+        {/* Categories Horizontal Scroll, Icon Above Label */}
+        {serviceDetails.categories && (
+          <View style={styles.categoryRowFixed}>
+            {/* Discount card */}
+            <View style={{ alignItems: 'center', flex: 1 }}>
+              <View style={styles.categorySquareCard}>
+                <View style={styles.categorySquareIconWrap}>
+                  <Image source={require('../assets/icons/service-details-discount.png')} style={styles.categorySquareIcon} resizeMode="contain" />
+                </View>
+              </View>
+              <Text style={styles.categorySquareLabel}>Discount</Text>
+            </View>
+            {/* Service card */}
+            <View style={{ alignItems: 'center', flex: 1 }}>
+              <View style={styles.categorySquareCard}>
+                <View style={styles.categorySquareIconWrap}>
+                  <Image source={require('../assets/icons/service-details1.png')} style={styles.categorySquareIcon} resizeMode="contain" />
+                </View>
+              </View>
+              <Text style={styles.categorySquareLabel}>Service</Text>
+            </View>
+            {/* Repair & gas refill card */}
+            <View style={{ alignItems: 'center', flex: 1 }}>
+              <View style={styles.categorySquareCard}>
+                <View style={styles.categorySquareIconWrap}>
+                  <Image source={require('../assets/icons/service-details2..png')} style={styles.categorySquareIcon} resizeMode="contain" />
+                </View>
+              </View>
+              <Text style={styles.categorySquareLabel}>Repair & gas refill</Text>
+            </View>
+            {/* Installation/uninstallation card */}
+            <View style={{ alignItems: 'center', flex: 1 }}>
+              <View style={styles.categorySquareCard}>
+                <View style={styles.categorySquareIconWrap}>
+                  <Image source={require('../assets/icons/service-details3.png')} style={styles.categorySquareIcon} resizeMode="contain" />
+                </View>
+              </View>
+              <Text style={styles.categorySquareLabel}>installtion/{`\n`}uninstalllation</Text>
+            </View>
+          </View>
+        )}
+      </LinearGradient>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Rating Section */}
@@ -117,30 +177,6 @@ const ServiceDetailsScreen = () => {
           </View>
           <TouchableOpacity style={styles.warrantyBox}>
             <Text style={styles.warrantyText}>Up to {serviceDetails.warranty} warranty on repairs</Text>
-            <Icon name="chevron-right" size={16} color="#666" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Offers Section */}
-        <View style={styles.offersSection}>
-          <TouchableOpacity style={styles.offerCard}>
-            <View style={styles.offerIcon}>
-              <Icon name="tag" size={20} color="#4E84C1" />
-            </View>
-            <View style={styles.offerContent}>
-              <Text style={styles.offerTitle}>Save 10% on every order</Text>
-              <Text style={styles.offerSubtitle}>Get Plus now</Text>
-            </View>
-            <Icon name="chevron-right" size={16} color="#666" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.offerCard}>
-            <View style={styles.offerIcon}>
-              <Icon name="credit-card" size={20} color="#3AC46E" />
-            </View>
-            <View style={styles.offerContent}>
-              <Text style={styles.offerTitle}>Up to ₹150 cashback</Text>
-              <Text style={styles.offerSubtitle}>Valid for Paytm payments</Text>
-            </View>
             <Icon name="chevron-right" size={16} color="#666" />
           </TouchableOpacity>
         </View>
@@ -268,26 +304,64 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f9fa',
   },
-  header: {
+  gradientTopSection: {
+    paddingTop: 32,
+    paddingBottom: 16,
+    paddingHorizontal: 0,
+  },
+  topRowExact: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#27537B',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 16,
-    elevation: 4,
+    paddingHorizontal: 20,
+    marginBottom: 16,
   },
-  backButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
+  serviceTitleExact: {
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#222',
+    flex: 1,
   },
-  shareButton: {
-    padding: 8,
+  iconRowExact: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  circleIconExact: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 1 },
+  },
+  offersPillScrollExact: {
+    paddingLeft: 20,
+    marginBottom: 12,
+  },
+  offerPillExact: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingVertical: 6,
+    paddingHorizontal: 14,
+    borderRadius: 16,
+    marginRight: 12,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 1,
+    shadowOffset: { width: 0, height: 1 },
+  },
+  offerPillTextExact: {
+    fontSize: 13,
+    color: '#27537B',
+    fontWeight: '600',
   },
   content: {
     flex: 1,
@@ -342,40 +416,6 @@ const styles = StyleSheet.create({
   warrantyText: {
     fontSize: 14,
     color: '#222',
-  },
-  offersSection: {
-    backgroundColor: '#fff',
-    padding: 16,
-    marginBottom: 8,
-  },
-  offerCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-  },
-  offerIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  offerContent: {
-    flex: 1,
-  },
-  offerTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#222',
-  },
-  offerSubtitle: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 2,
   },
   packagesSection: {
     backgroundColor: '#fff',
@@ -546,6 +586,44 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 80,
   },
+  categoryRowFixed: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    marginTop: 8,
+    marginHorizontal: 0,
+  },
+  categorySquareCard: {
+    width: 80,
+    height: 80,
+    backgroundColor: '#27537B',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 10,
+    paddingTop: 6,
+    paddingBottom: 6,
+  },
+  categorySquareIconWrap: {
+    width: 50,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: 8,
+    marginBottom: 4,
+  },
+  categorySquareIcon: {
+    width: 48,
+    height: 48,
+  },
+  categorySquareLabel: {
+    fontSize: 10,
+    color: '#222',
+    textAlign: 'center',
+    fontWeight: '500',
+    marginTop: 6,
+  },
 });
 
-export default ServiceDetailsScreen; 
+export default ServiceDetailsScreen;  
