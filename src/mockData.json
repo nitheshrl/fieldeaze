@@ -101,22 +101,36 @@
       ],
       "categories": [
         {
-          "id": "ac_service",
-          "name": "Service",
-          "description": "Regular maintenance and cleaning",
-          "price": "₹499"
+          "id": "ac_less_cooling",
+          "name": "AC less/no cooling repair (2 ACs)",
+          "price": "₹2,493",
+          "oldPrice": "₹2,685",
+          "duration": "3 hrs",
+          "description": "Repair for ACs with less or no cooling. Includes diagnosis and basic repair for 2 ACs."
         },
         {
-          "id": "ac_repair",
-          "name": "Repair",
-          "description": "Fix issues and component replacement",
-          "price": "₹799"
+          "id": "ac_noise_smell",
+          "name": "AC noise / smell repair",
+          "price": "₹2,493",
+          "oldPrice": "₹2,685",
+          "duration": "3 hrs",
+          "description": "Repair for ACs with noise or smell issues. Includes cleaning and minor repairs."
         },
         {
-          "id": "ac_install",
-          "name": "Installation",
-          "description": "New AC installation and setup",
-          "price": "₹1499"
+          "id": "ac_gas_refill",
+          "name": "AC gas refill",
+          "price": "₹1,999",
+          "oldPrice": "₹2,200",
+          "duration": "2 hrs",
+          "description": "Complete gas refill for split and window ACs. Includes leak check and top-up."
+        },
+        {
+          "id": "ac_installation",
+          "name": "AC installation (split/window)",
+          "price": "₹1,499",
+          "oldPrice": "₹1,799",
+          "duration": "2.5 hrs",
+          "description": "Professional installation of split or window ACs. Includes mounting and setup."
         }
       ],
       "packages": [
@@ -201,21 +215,27 @@
       "categories": [
         {
           "id": "af_basic_service",
-          "name": "Basic Service",
-          "description": "Regular freshening and odor control",
-          "price": "₹299"
+          "name": "Basic freshening (2 rooms)",
+          "price": "₹299",
+          "oldPrice": "₹399",
+          "duration": "1 hr",
+          "description": "Essential freshening for up to 2 rooms. Removes mild odors and refreshes air."
         },
         {
           "id": "af_deep_clean",
-          "name": "Deep Clean",
-          "description": "Complete sanitization and freshening",
-          "price": "₹599"
+          "name": "Deep odor removal",
+          "price": "₹599",
+          "oldPrice": "₹799",
+          "duration": "1.5 hrs",
+          "description": "Advanced treatment for persistent odors. Includes deep cleaning and deodorizing."
         },
         {
           "id": "af_premium",
-          "name": "Premium Service",
-          "description": "Long-lasting fragrance solutions",
-          "price": "₹899"
+          "name": "Whole home fragrance",
+          "price": "₹899",
+          "oldPrice": "₹1,099",
+          "duration": "2 hrs",
+          "description": "Premium fragrance service for the entire home. Long-lasting and natural scents."
         }
       ],
       "faqs": [
@@ -271,22 +291,28 @@
       ],
       "categories": [
         {
-          "id": "ap_maintenance",
-          "name": "Maintenance",
-          "description": "Regular filter cleaning and check-up",
-          "price": "₹399"
+          "id": "ap_filter_clean",
+          "name": "Filter cleaning",
+          "price": "₹399",
+          "oldPrice": "₹499",
+          "duration": "45 min",
+          "description": "Cleaning and sanitizing of air purifier filters for optimal performance."
         },
         {
           "id": "ap_repair",
-          "name": "Repair",
-          "description": "Fix issues and component replacement",
-          "price": "₹699"
+          "name": "Purifier repair",
+          "price": "₹699",
+          "oldPrice": "₹899",
+          "duration": "2 hrs",
+          "description": "Diagnosis and repair of air purifier issues. Includes parts replacement if needed."
         },
         {
           "id": "ap_installation",
-          "name": "Installation",
-          "description": "New purifier setup and configuration",
-          "price": "₹299"
+          "name": "Purifier installation",
+          "price": "₹299",
+          "oldPrice": "₹399",
+          "duration": "1 hr",
+          "description": "Professional installation and setup of new air purifier units."
         }
       ],
       "faqs": [
@@ -342,22 +368,28 @@
       ],
       "categories": [
         {
-          "id": "ch_service",
-          "name": "Service",
-          "description": "Regular cleaning and maintenance",
-          "price": "₹499"
+          "id": "ch_basic_clean",
+          "name": "Basic chimney cleaning",
+          "price": "₹499",
+          "oldPrice": "₹599",
+          "duration": "1 hr",
+          "description": "Routine cleaning of chimney filters and exterior."
+        },
+        {
+          "id": "ch_deep_clean",
+          "name": "Deep cleaning & oil removal",
+          "price": "₹899",
+          "oldPrice": "₹1,099",
+          "duration": "2 hrs",
+          "description": "Thorough cleaning of filters, ducts, and oil removal for improved efficiency."
         },
         {
           "id": "ch_repair",
-          "name": "Repair",
-          "description": "Fix issues and part replacement",
-          "price": "₹799"
-        },
-        {
-          "id": "ch_install",
-          "name": "Installation",
-          "description": "New chimney installation",
-          "price": "₹1299"
+          "name": "Chimney repair",
+          "price": "₹799",
+          "oldPrice": "₹999",
+          "duration": "1.5 hrs",
+          "description": "Repair of motor, switches, and other chimney components."
         }
       ],
       "faqs": [

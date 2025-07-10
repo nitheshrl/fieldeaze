@@ -85,7 +85,7 @@ const BottomTabNavigator = () => {
       />
      
       <Tab.Screen
-        name="Bookmark"
+        name="Wishlist"
         component={withErrorBoundary(BookmarkScreen, 'BookmarkScreen')}
         options={{
           tabBarIcon: ({ color }) => (

@@ -1,0 +1,182 @@
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
+
+const mockCards = [
+  { id: '1', type: 'Visa', last4: '1234', isDefault: true },
+  { id: '2', type: 'Mastercard', last4: '5678', isDefault: false },
+];
+
+const PaymentMethodsScreen = () => {
+  const [cards, setCards] = useState(mockCards);
+  const navigation = useNavigation();
+
+  const handleRemove = (id) => {
+    Alert.alert('Remove Card', 'Are you sure you want to remove this card?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Remove', style: 'destructive', onPress: () => setCards(cards.filter(c => c.id !== id)) },
+    ]);
+  };
+
+  const handleSetDefault = (id) => {
+    setCards(cards.map(card => ({ ...card, isDefault: card.id === id })));
+  };
+
+  const renderCard = ({ item }) => (
+    <View style={styles.cardContainer}>
+      <View style={styles.cardInfo}>
+        <Icon name={item.type === 'Visa' ? 'credit-card' : 'payment'} size={32} color="#27537B" />
+        <View style={{ marginLeft: 16 }}>
+          <Text style={styles.cardType}>{item.type} **** {item.last4}</Text>
+          {item.isDefault && <Text style={styles.defaultLabel}>Default</Text>}
+        </View>
+      </View>
+      <View style={styles.cardActions}>
+        {!item.isDefault && (
+          <TouchableOpacity style={styles.setDefaultBtn} onPress={() => handleSetDefault(item.id)}>
+            <Text style={styles.setDefaultText}>Set Default</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity style={styles.removeBtn} onPress={() => handleRemove(item.id)}>
+          <Icon name="delete" size={22} color="#e74c3c" />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      {/* Back Button */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Icon name="arrow-back" size={24} color="#27537B" />
+      </TouchableOpacity>
+      <Text style={styles.title}>Payment Methods</Text>
+      {cards.length === 0 ? (
+        <View style={styles.emptyState}>
+          <Icon name="credit-card-off" size={48} color="#ccc" />
+          <Text style={styles.emptyText}>No payment methods added yet.</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={cards}
+          renderItem={renderCard}
+          keyExtractor={item => item.id}
+          style={{ marginBottom: 20 }}
+        />
+      )}
+      <TouchableOpacity style={styles.fab}>
+        <Icon name="add" size={28} color="#fff" />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    padding: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 10,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '600',
+    marginBottom: 20,
+    color: '#27537B',
+    marginTop: 0,
+    alignSelf: 'center',
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  cardInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  cardType: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#333',
+  },
+  defaultLabel: {
+    fontSize: 12,
+    color: '#fff',
+    backgroundColor: '#27537B',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginTop: 4,
+    alignSelf: 'flex-start',
+  },
+  cardActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 12,
+  },
+  setDefaultBtn: {
+    backgroundColor: '#eaf1fa',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    marginRight: 8,
+  },
+  setDefaultText: {
+    color: '#27537B',
+    fontWeight: '600',
+    fontSize: 13,
+  },
+  removeBtn: {
+    padding: 8,
+  },
+  fab: {
+    position: 'absolute',
+    right: 24,
+    bottom: 32,
+    backgroundColor: '#27537B',
+    borderRadius: 28,
+    width: 56,
+    height: 56,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+  },
+  emptyState: {
+    alignItems: 'center',
+    marginTop: 60,
+    marginBottom: 40,
+  },
+  emptyText: {
+    color: '#888',
+    fontSize: 16,
+    marginTop: 12,
+  },
+});
+
+export default PaymentMethodsScreen; 

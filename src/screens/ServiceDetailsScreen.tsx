@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,12 +10,14 @@ import {
   Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import type { MainStackParamList } from '../navigation/MainNavigator';
+import type { StackNavigationProp } from '@react-navigation/stack';
 import mockData from '../mockData.json';
 import PopularServicesSection from '../components/PopularServicesSection';
 import { useBookmarks } from '../context/BookmarkContext';
 import LinearGradient from 'react-native-linear-gradient';
+import AdCarousel from '../components/AdCarousel';
 
 const { width } = Dimensions.get('window');
 
@@ -43,6 +45,8 @@ type ServiceDetail = {
     name: string;
     description: string;
     price: string;
+    oldPrice?: string;
+    duration?: string;
   }>;
   faqs?: Array<{
     question: string;
@@ -52,6 +56,7 @@ type ServiceDetail = {
 
 const ServiceDetailsScreen = () => {
   const route = useRoute<ServiceDetailsScreenRouteProp>();
+  const navigation = useNavigation<StackNavigationProp<MainStackParamList>>();
   const serviceId = route.params.serviceId;
 
   console.log('Received serviceId:', serviceId);
@@ -63,6 +68,16 @@ const ServiceDetailsScreen = () => {
 
   const [selectedPackage, setSelectedPackage] = useState(serviceDetails?.superSaverPacks[0]?.id || '');
   const { addBookmark, removeBookmark, bookmarks } = useBookmarks();
+
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [discountY, setDiscountY] = useState(0);
+  const [serviceY, setServiceY] = useState(0);
+  const [repairY, setRepairY] = useState(0);
+  const [installY, setInstallY] = useState(0);
+
+  const scrollToSection = (y: number) => {
+    scrollViewRef.current?.scrollTo({ y, animated: true });
+  };
 
   if (!serviceDetails) {
     return (
@@ -82,6 +97,10 @@ const ServiceDetailsScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#E6F2FF" />
+      {/* Back Button */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Icon name="arrow-left" size={20} color="#27537B" />
+      </TouchableOpacity>
       {/* Top Section with Gradient */}
       <LinearGradient colors={["#E6F2FF", "#B3D8F7"]} style={styles.gradientTopSection}>
         <View style={styles.topRowExact}>
@@ -99,8 +118,12 @@ const ServiceDetailsScreen = () => {
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.offersPillScrollExact} contentContainerStyle={{paddingRight: 16}}>
           {offers.map((offer) => (
             <View key={offer.id} style={styles.offerPillExact}>
-              <Text style={styles.offerPillTextExact}>{offer.label}</Text>
-              <Icon name="chevron-right" size={12} color="#27537B" style={{marginLeft: 6}} />
+              {/* Blue diamond/triangle icon */}
+              <View style={styles.offerPillIcon} />
+              <View>
+                <Text style={styles.offerPillMainText}>{offer.label}</Text>
+                <Text style={styles.offerPillSubText}>{offer.sub}</Text>
+              </View>
             </View>
           ))}
         </ScrollView>
@@ -108,167 +131,269 @@ const ServiceDetailsScreen = () => {
         {serviceDetails.categories && (
           <View style={styles.categoryRowFixed}>
             {/* Discount card */}
-            <View style={{ alignItems: 'center', flex: 1 }}>
+            <TouchableOpacity style={{ alignItems: 'center', flex: 1 }} onPress={() => scrollToSection(discountY)}>
               <View style={styles.categorySquareCard}>
                 <View style={styles.categorySquareIconWrap}>
                   <Image source={require('../assets/icons/service-details-discount.png')} style={styles.categorySquareIcon} resizeMode="contain" />
                 </View>
               </View>
               <Text style={styles.categorySquareLabel}>Discount</Text>
-            </View>
+            </TouchableOpacity>
             {/* Service card */}
-            <View style={{ alignItems: 'center', flex: 1 }}>
+            <TouchableOpacity style={{ alignItems: 'center', flex: 1 }} onPress={() => scrollToSection(serviceY)}>
               <View style={styles.categorySquareCard}>
                 <View style={styles.categorySquareIconWrap}>
                   <Image source={require('../assets/icons/service-details1.png')} style={styles.categorySquareIcon} resizeMode="contain" />
                 </View>
               </View>
               <Text style={styles.categorySquareLabel}>Service</Text>
-            </View>
+            </TouchableOpacity>
             {/* Repair & gas refill card */}
-            <View style={{ alignItems: 'center', flex: 1 }}>
+            <TouchableOpacity style={{ alignItems: 'center', flex: 1 }} onPress={() => scrollToSection(repairY)}>
               <View style={styles.categorySquareCard}>
                 <View style={styles.categorySquareIconWrap}>
                   <Image source={require('../assets/icons/service-details2..png')} style={styles.categorySquareIcon} resizeMode="contain" />
                 </View>
               </View>
               <Text style={styles.categorySquareLabel}>Repair & gas refill</Text>
-            </View>
+            </TouchableOpacity>
             {/* Installation/uninstallation card */}
-            <View style={{ alignItems: 'center', flex: 1 }}>
+            <TouchableOpacity style={{ alignItems: 'center', flex: 1 }} onPress={() => scrollToSection(installY)}>
               <View style={styles.categorySquareCard}>
                 <View style={styles.categorySquareIconWrap}>
                   <Image source={require('../assets/icons/service-details3.png')} style={styles.categorySquareIcon} resizeMode="contain" />
                 </View>
               </View>
-              <Text style={styles.categorySquareLabel}>installtion/{`\n`}uninstalllation</Text>
-            </View>
+              <Text style={styles.categorySquareLabel}>installtion/{'\n'}uninstalllation</Text>
+            </TouchableOpacity>
           </View>
         )}
       </LinearGradient>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Rating Section */}
-        <View style={styles.ratingSection}>
-          <View style={styles.ratingBox}>
-            <Text style={styles.ratingNumber}>{serviceDetails.rating}</Text>
-            <View style={styles.starsRow}>
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Icon 
-                  key={star} 
-                  name="star" 
-                  size={16} 
-                  color="#F6B93B"
-                  style={{ marginRight: 2 }}
-                />
-              ))}
-            </View>
-            <Text style={styles.bookingsCount}>
-              ({serviceDetails.totalBookings} bookings)
-            </Text>
-          </View>
-        </View>
-
-        {/* UC Cover Section */}
-        <View style={styles.ucCoverSection}>
-          <View style={styles.ucCoverHeader}>
-            <Icon name="check-circle" size={20} color="#27537B" />
-            <Text style={styles.ucCoverTitle}>UC COVER</Text>
-          </View>
-          <TouchableOpacity style={styles.warrantyBox}>
-            <Text style={styles.warrantyText}>Up to {serviceDetails.warranty} warranty on repairs</Text>
-            <Icon name="chevron-right" size={16} color="#666" />
-          </TouchableOpacity>
-        </View>
-
+      <ScrollView ref={scrollViewRef} style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Service Packages */}
-        <View style={styles.packagesSection}>
-          <Text style={styles.sectionTitle}>Super saver packages</Text>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.packagesContainer}
-          >
-            {serviceDetails.superSaverPacks.map((pkg) => {
-              const isBookmarked = bookmarks.some(b => b.id === pkg.id);
-              return (
-                <View
-                  key={pkg.id}
-                  style={[
-                    styles.packageCard,
-                    selectedPackage === pkg.id && styles.packageCardSelected
-                  ]}
-                >
-                  {/* Heart icon for bookmarking */}
-                  <TouchableOpacity
-                    style={{ position: 'absolute', top: 12, right: 12, zIndex: 2 }}
-                    onPress={() => {
-                      if (isBookmarked) {
-                        removeBookmark(pkg.id);
-                      } else {
-                        addBookmark({
-                          id: pkg.id,
-                          title: pkg.title,
-                          price: pkg.price,
-                          features: pkg.features,
-                          rating: serviceDetails.rating,
-                          reviewCount: serviceDetails.totalBookings,
-                          duration: '3 hrs',
-                          serviceName: serviceDetails.name,
-                          serviceId: serviceDetails.id,
-                        });
-                      }
-                    }}
+        <View onLayout={e => setDiscountY(e.nativeEvent.layout.y)}>
+          <AdCarousel />
+          <View style={styles.packagesSection}>
+            <Text style={styles.sectionTitle}>Super saver packages</Text>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.packagesContainer}
+            >
+              {serviceDetails.superSaverPacks.map((pkg) => {
+                const isBookmarked = bookmarks.some(b => b.id === pkg.id);
+                return (
+                  <View
+                    key={pkg.id}
+                    style={[
+                      styles.packageCard,
+                      selectedPackage === pkg.id && styles.packageCardSelected
+                    ]}
                   >
-                    <Icon name={isBookmarked ? 'heart' : 'heart-o'} size={22} color="#27537B" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{ flex: 1 }}
-                    activeOpacity={0.9}
-                    onPress={() => setSelectedPackage(pkg.id)}
-                  >
-                    <View style={styles.packageHeader}>
-                      <Text style={styles.packageType}>{pkg.name}</Text>
-                    </View>
-                    <Text style={styles.packageTitle}>{pkg.title}</Text>
-                    <Text style={styles.packageDesc}>{pkg.description}</Text>
-                    <View style={styles.priceRow}>
-                      <Text style={styles.packagePrice}>{pkg.price}</Text>
-                      <Text style={styles.savingsText}>Save {pkg.savings}</Text>
-                    </View>
-                    <View style={styles.packageFeatures}>
-                      {pkg.features.map((feature, i) => (
-                        <View key={i} style={styles.featureRow}>
-                          <Icon name="check" size={14} color="#27537B" />
-                          <Text style={styles.featureText}>{feature}</Text>
-                        </View>
-                      ))}
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-          </ScrollView>
+                    {/* Heart icon for bookmarking */}
+                    <TouchableOpacity
+                      style={{ position: 'absolute', top: 12, right: 12, zIndex: 2 }}
+                      onPress={() => {
+                        if (isBookmarked) {
+                          removeBookmark(pkg.id);
+                        } else {
+                          addBookmark({
+                            id: pkg.id,
+                            title: pkg.title,
+                            price: pkg.price,
+                            features: pkg.features,
+                            rating: serviceDetails.rating,
+                            reviewCount: serviceDetails.totalBookings,
+                            duration: '3 hrs',
+                            serviceName: serviceDetails.name,
+                            serviceId: serviceDetails.id,
+                          });
+                        }
+                      }}
+                    >
+                      <Icon name={isBookmarked ? 'heart' : 'heart-o'} size={22} color="#27537B" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{ flex: 1 }}
+                      activeOpacity={0.9}
+                      onPress={() => setSelectedPackage(pkg.id)}
+                    >
+                      <View style={styles.packageHeader}>
+                        <Text style={styles.packageType}>{pkg.name}</Text>
+                      </View>
+                      <Text style={styles.packageTitle}>{pkg.title}</Text>
+                      <Text style={styles.packageDesc}>{pkg.description}</Text>
+                      <View style={styles.priceRow}>
+                        <Text style={styles.packagePrice}>{pkg.price}</Text>
+                        <Text style={styles.savingsText}>Save {pkg.savings}</Text>
+                      </View>
+                      <View style={styles.packageFeatures}>
+                        {pkg.features.map((feature, i) => (
+                          <View key={i} style={styles.featureRow}>
+                            <Icon name="check" size={14} color="#27537B" />
+                            <Text style={styles.featureText}>{feature}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </ScrollView>
+          </View>
         </View>
 
         {/* Service Categories */}
+        <View onLayout={e => setServiceY(e.nativeEvent.layout.y)}>
         {serviceDetails.categories && (
           <View style={styles.categoriesSection}>
             <Text style={styles.sectionTitle}>Service Categories</Text>
-            <View style={styles.categoryRow}>
-              {serviceDetails.categories.map((category) => (
-                <TouchableOpacity key={category.id} style={styles.categoryCard}>
-                  <View style={styles.categoryIconCircle}>
-                    <Icon name="wrench" size={24} color="#27537B" />
+            {serviceDetails.categories.filter(category => !/install|uninstall/i.test(category.name)).map((category) => (
+              <View key={category.id} style={styles.newCategoryCard}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.newCategoryTitle}>{category.name}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 4 }}>
+                      <Icon name="star" size={16} color="#FFC107" style={{ marginRight: 4 }} />
+                      <Text style={styles.newCategoryRating}>4.8 (23k)</Text>
+                    </View>
                   </View>
-                  <Text style={styles.categoryName}>{category.name}</Text>
-                  <Text style={styles.categoryPrice}>{category.price}</Text>
-                  <Text style={styles.categoryDesc}>{category.description}</Text>
+                  <TouchableOpacity
+                    style={styles.heartIconWrap}
+                    onPress={() => {
+                      addBookmark({
+                        id: category.id,
+                        title: category.name,
+                        price: category.price,
+                        oldPrice: category.oldPrice,
+                        duration: category.duration,
+                        serviceId: serviceDetails.id,
+                        serviceName: serviceDetails.name,
+                      });
+                      (navigation as any).navigate('Tabs', { screen: 'Wishlist' });
+                    }}
+                  >
+                    <Icon name="heart-o" size={20} color="#888" />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}>
+                  <Text style={styles.newCategoryPrice}>{category.price}</Text>
+                  {category.oldPrice && <Text style={styles.newCategoryOldPrice}>{category.oldPrice}</Text>}
+                  <Text style={styles.newCategoryDuration}>{category.duration}</Text>
+                </View>
+                <TouchableOpacity style={styles.addButton}>
+                  <Text style={styles.addButtonText}>+Add</Text>
                 </TouchableOpacity>
-              ))}
-            </View>
+                <TouchableOpacity>
+                  <Text style={styles.viewDetailsText}>view details</Text>
+                </TouchableOpacity>
+                <View style={styles.dottedLine} />
+              </View>
+            ))}
           </View>
         )}
+        </View>
+        {/* Repair & Gas Refill Section */}
+        <View onLayout={e => setRepairY(e.nativeEvent.layout.y)}>
+        {serviceDetails.categories && serviceDetails.categories.some(category => /repair|gas/i.test(category.name)) && (
+          <View style={styles.categoriesSection}>
+            <Text style={styles.sectionTitle}>Repair & Gas Refill</Text>
+            {serviceDetails.categories.filter(category => /repair|gas/i.test(category.name)).map((category) => (
+              <View key={category.id} style={styles.newCategoryCard}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.newCategoryTitle}>{category.name}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 4 }}>
+                      <Icon name="star" size={16} color="#FFC107" style={{ marginRight: 4 }} />
+                      <Text style={styles.newCategoryRating}>4.8 (23k)</Text>
+                    </View>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.heartIconWrap}
+                    onPress={() => {
+                      addBookmark({
+                        id: category.id,
+                        title: category.name,
+                        price: category.price,
+                        oldPrice: category.oldPrice,
+                        duration: category.duration,
+                        serviceId: serviceDetails.id,
+                        serviceName: serviceDetails.name,
+                      });
+                      (navigation as any).navigate('Tabs', { screen: 'Wishlist' });
+                    }}
+                  >
+                    <Icon name="heart-o" size={20} color="#888" />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}>
+                  <Text style={styles.newCategoryPrice}>{category.price}</Text>
+                  {category.oldPrice && <Text style={styles.newCategoryOldPrice}>{category.oldPrice}</Text>}
+                  <Text style={styles.newCategoryDuration}>{category.duration}</Text>
+                </View>
+                <TouchableOpacity style={styles.addButton}>
+                  <Text style={styles.addButtonText}>+Add</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.viewDetailsText}>view details</Text>
+                </TouchableOpacity>
+                <View style={styles.dottedLine} />
+              </View>
+            ))}
+          </View>
+        )}
+        </View>
+        {/* Installation / Uninstallation Section */}
+        <View onLayout={e => setInstallY(e.nativeEvent.layout.y)}>
+        {serviceDetails.categories && serviceDetails.categories.some(category => /install|uninstall/i.test(category.name)) && (
+          <View style={styles.categoriesSection}>
+            <Text style={styles.sectionTitle}>Installation / Uninstallation</Text>
+            {serviceDetails.categories.filter(category => /install|uninstall/i.test(category.name)).map((category) => (
+              <View key={category.id} style={styles.newCategoryCard}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.newCategoryTitle}>{category.name}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 4 }}>
+                      <Icon name="star" size={16} color="#FFC107" style={{ marginRight: 4 }} />
+                      <Text style={styles.newCategoryRating}>4.8 (23k)</Text>
+                    </View>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.heartIconWrap}
+                    onPress={() => {
+                      addBookmark({
+                        id: category.id,
+                        title: category.name,
+                        price: category.price,
+                        oldPrice: category.oldPrice,
+                        duration: category.duration,
+                        serviceId: serviceDetails.id,
+                        serviceName: serviceDetails.name,
+                      });
+                      (navigation as any).navigate('Tabs', { screen: 'Wishlist' });
+                    }}
+                  >
+                    <Icon name="heart-o" size={20} color="#888" />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}>
+                  <Text style={styles.newCategoryPrice}>{category.price}</Text>
+                  {category.oldPrice && <Text style={styles.newCategoryOldPrice}>{category.oldPrice}</Text>}
+                  <Text style={styles.newCategoryDuration}>{category.duration}</Text>
+                </View>
+                <TouchableOpacity style={styles.addButton}>
+                  <Text style={styles.addButtonText}>+Add</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.viewDetailsText}>view details</Text>
+                </TouchableOpacity>
+                <View style={styles.dottedLine} />
+              </View>
+            ))}
+          </View>
+        )}
+        </View>
 
         {/* FAQs Section */}
         {serviceDetails.faqs && (
@@ -304,6 +429,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f9fa',
   },
+  backButton: {
+    position: 'absolute',
+    top: 38,
+    left: 20,
+    zIndex: 20,
+    padding: 0,
+    backgroundColor: 'transparent',
+  },
   gradientTopSection: {
     paddingTop: 32,
     paddingBottom: 16,
@@ -321,6 +454,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#222',
     flex: 1,
+    left:95
   },
   iconRowExact: {
     flexDirection: 'row',
@@ -348,74 +482,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#B3D8F7',
+    borderRadius: 10,
     paddingVertical: 6,
-    paddingHorizontal: 14,
-    borderRadius: 16,
+    paddingHorizontal: 12,
     marginRight: 12,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 1,
-    shadowOffset: { width: 0, height: 1 },
+    minWidth: 170,
+    gap: 8,
   },
-  offerPillTextExact: {
-    fontSize: 13,
+  offerPillIcon: {
+    width: 12,
+    height: 12,
+    backgroundColor: '#3CA6F2',
+    transform: [{ rotate: '45deg' }],
+    borderRadius: 2,
+    marginRight: 8,
+  },
+  offerPillMainText: {
+    fontWeight: '500',
+    fontSize: 11,
     color: '#27537B',
-    fontWeight: '600',
+  },
+  offerPillSubText: {
+    fontSize: 9,
+    color: '#222',
+    marginTop: -2,
   },
   content: {
     flex: 1,
-  },
-  ratingSection: {
-    backgroundColor: '#27537B',
-    paddingHorizontal: 16,
-    paddingBottom: 20,
-  },
-  ratingBox: {
-    alignItems: 'center',
-  },
-  ratingNumber: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 4,
-  },
-  starsRow: {
-    flexDirection: 'row',
-    marginBottom: 4,
-  },
-  bookingsCount: {
-    fontSize: 14,
-    color: '#fff',
-    opacity: 0.9,
-  },
-  ucCoverSection: {
-    backgroundColor: '#fff',
-    padding: 16,
-    marginBottom: 8,
-  },
-  ucCoverHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  ucCoverTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#27537B',
-    marginLeft: 8,
-  },
-  warrantyBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#f8f9fa',
-    padding: 12,
-    borderRadius: 8,
-  },
-  warrantyText: {
-    fontSize: 14,
-    color: '#222',
   },
   packagesSection: {
     backgroundColor: '#fff',
@@ -501,43 +596,75 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 8,
   },
-  categoryRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 16,
-  },
-  categoryCard: {
-    width: '47%',
-    backgroundColor: '#f8f9fa',
+  newCategoryCard: {
+    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    shadowColor: '#000',
+    shadowOpacity: 0.04,
+    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 1 },
   },
-  categoryIconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#E6F2FF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-  },
-  categoryName: {
+  newCategoryTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: '#222',
-    marginBottom: 4,
+    marginBottom: 2,
   },
-  categoryPrice: {
+  newCategoryRating: {
+    fontSize: 14,
+    color: '#222',
+    fontWeight: '400',
+  },
+  heartIconWrap: {
+    padding: 4,
+  },
+  newCategoryPrice: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#27537B',
+    marginRight: 8,
+  },
+  newCategoryOldPrice: {
+    fontSize: 14,
+    color: '#888',
+    textDecorationLine: 'line-through',
+    marginRight: 8,
+  },
+  newCategoryDuration: {
+    fontSize: 14,
+    color: '#888',
+  },
+  addButton: {
+    backgroundColor: '#F5F8FF',
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 24,
+    alignSelf: 'flex-end',
+    marginTop: 8,
     marginBottom: 4,
   },
-  categoryDesc: {
-    fontSize: 12,
-    color: '#666',
+  addButtonText: {
+    color: '#27537B',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  viewDetailsText: {
+    color: '#3A6EF6',
+    fontSize: 14,
+    fontWeight: '500',
+    marginTop: 2,
+    marginBottom: 6,
+  },
+  dottedLine: {
+    borderStyle: 'dotted',
+    borderWidth: 0.5,
+    borderColor: '#bbb',
+    marginTop: 8,
+    marginBottom: 0,
   },
   faqsSection: {
     backgroundColor: '#fff',
@@ -594,8 +721,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
   categorySquareCard: {
-    width: 80,
-    height: 80,
+    width: 75,
+    height: 75,
     backgroundColor: '#27537B',
     borderRadius: 12,
     alignItems: 'center',
@@ -605,8 +732,8 @@ const styles = StyleSheet.create({
     paddingBottom: 6,
   },
   categorySquareIconWrap: {
-    width: 50,
-    height: 48,
+    width: 40,
+    height: 38,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
@@ -614,14 +741,14 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   categorySquareIcon: {
-    width: 48,
-    height: 48,
+    width: 68,
+    height: 68,
   },
   categorySquareLabel: {
     fontSize: 10,
     color: '#222',
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: '300',
     marginTop: 6,
   },
 });

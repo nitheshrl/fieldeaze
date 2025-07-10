@@ -6,57 +6,64 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { MainStackParamList } from '../navigation/MainNavigator';
 
+const stats = [
+  { label: 'Bookings', value: 12, icon: 'event' },
+  { label: 'Wallet', value: '₹1250', icon: 'account-balance-wallet' },
+  { label: 'Points', value: 320, icon: 'star' },
+];
+
+const navCards = [
+  { icon: 'event', title: 'My Bookings', onPress: 'MyBookings' },
+  { icon: 'payment', title: 'Payment Methods', onPress: 'PaymentMethods' },
+ // { icon: 'account-balance-wallet', title: 'My Wallet', onPress: 'MyWallet' },
+  { icon: 'settings', title: 'Settings', onPress: 'Settings' },
+  { icon: 'help', title: 'Help Center', onPress: 'HelpCenter' },
+  { icon: 'privacy-tip', title: 'Privacy Policy', onPress: 'PrivacyPolicy' },
+];
+
 const ProfileScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
-  const menuItems = [
-    { icon: 'person', title: 'Your profile', onPress: () => navigation.navigate('EditProfile') },
-    { icon: 'location-on', title: 'Manage Address', onPress: () => navigation.navigate('ManageAddress') },
-    { icon: 'payment', title: 'Payment Methods' },
-    { icon: 'calendar-today', title: 'My Bookings' },
-    { icon: 'account-balance-wallet', title: 'My Wallet' },
-    { icon: 'settings', title: 'Settings' },
-    { icon: 'help', title: 'Help Center', onPress: () => navigation.navigate('HelpCenter') },
-    { icon: 'privacy-tip', title: 'Privacy Policy' },
-  ];
-
   const { user } = mockData;
   const [imgError, setImgError] = useState(false);
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Profile</Text>
-      </View>
-
-      <View style={styles.profileSection}>
-        <View style={styles.profileInfo}>
+      {/* Profile Overview */}
+      <View style={styles.profileCard}>
+        <View style={styles.avatarRow}>
           <Image
-            source={
-              imgError
-                ? require('../assets/icons/default-profile.png') // Add this image to your assets/icons
-                : { uri: user.profileImage }
-            }
+            source={imgError ? require('../assets/icons/default-profile.png') : { uri: user.profileImage }}
             style={styles.profileImage}
             onError={() => setImgError(true)}
           />
-          <View style={styles.editIconContainer}>
-            <Icon name="edit" size={20} color="#fff" />
+          <View style={styles.profileInfo}>
+            <Text style={styles.profileName}>{user.name}</Text>
+            <Text style={styles.profileRole}>{user.role || 'User'}</Text>
           </View>
+          <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditProfile')}>
+            <Icon name="edit" size={20} color="#fff" />
+          </TouchableOpacity>
         </View>
-        <Text style={styles.profileName}>{user.name}</Text>
-      </View>
-
-      <View style={styles.menuContainer}>
-        {menuItems.map((item, index) => (
-          <TouchableOpacity key={index} style={styles.menuItem} onPress={item.onPress}>
-            <View style={styles.menuItemLeft}>
-              <Icon name={item.icon} size={24} color="#555" />
-              <Text style={styles.menuItemText}>{item.title}</Text>
+        {/* Quick Stats */}
+        <View style={styles.statsRow}>
+          {stats.map((stat, idx) => (
+            <View key={stat.label} style={[styles.statCard, idx !== stats.length - 1 && { marginRight: 16 }] }>
+              <Icon name={stat.icon} size={22} color="#27537B" />
+              <Text style={styles.statValue}>{stat.value}</Text>
+              <Text style={styles.statLabel}>{stat.label}</Text>
             </View>
-            <Icon name="chevron-right" size={24} color="#555" />
+          ))}
+        </View>
+      </View>
+      {/* Navigation Cards */}
+      <View style={styles.navSection}>
+        {navCards.map((item, idx) => (
+          <TouchableOpacity key={item.title} style={styles.navCard} onPress={() => navigation.navigate(item.onPress)}>
+            <View style={styles.navIconWrap}>
+              <Icon name={item.icon} size={24} color="#27537B" />
+            </View>
+            <Text style={styles.navTitle}>{item.title}</Text>
+            <Icon name="chevron-right" size={24} color="#bbb" />
           </TouchableOpacity>
         ))}
       </View>
@@ -69,71 +76,95 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  header: {
+  profileCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    margin: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  avatarRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginLeft: 16,
-  },
-  profileSection: {
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  profileInfo: {
-    position: 'relative',
-    marginBottom: 12,
+    marginBottom: 18,
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: '#eee',
   },
-  editIconContainer: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    backgroundColor: '#27537B',
-    borderRadius: 20,
-    padding: 8,
-    borderWidth: 3,
-    borderColor: '#fff',
+  profileInfo: {
+    marginLeft: 18,
+    flex: 1,
   },
   profileName: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#000',
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#222',
   },
-  menuContainer: {
-    backgroundColor: '#fff',
-    marginTop: 16,
-    borderRadius: 12,
-    overflow: 'hidden',
+  profileRole: {
+    fontSize: 15,
+    color: '#888',
+    marginTop: 2,
   },
-  menuItem: {
+  editBtn: {
+    backgroundColor: '#27537B',
+    borderRadius: 20,
+    padding: 10,
+  },
+  statsRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    marginTop: 8,
   },
-  menuItemLeft: {
+  statCard: {
+    alignItems: 'center',
+    flex: 1,
+    backgroundColor: '#f7fafd',
+    borderRadius: 10,
+    paddingVertical: 12,
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#27537B',
+    marginTop: 4,
+  },
+  statLabel: {
+    fontSize: 13,
+    color: '#888',
+    marginTop: 2,
+  },
+  navSection: {
+    marginHorizontal: 16,
+    marginTop: 10,
+  },
+  navCard: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.03,
+    shadowRadius: 2,
+    elevation: 1,
   },
-  menuItemText: {
+  navIconWrap: {
+    backgroundColor: '#eaf1fa',
+    borderRadius: 8,
+    padding: 8,
+    marginRight: 16,
+  },
+  navTitle: {
     fontSize: 16,
-    marginLeft: 16,
-    color: '#333',
+    color: '#222',
+    flex: 1,
   },
 });
 
