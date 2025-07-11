@@ -5,7 +5,7 @@ import { View, Text } from 'react-native';
 
 // Import screens
 import HomeScreen from '../screens/HomeScreen';
-import BookmarkScreen from '../screens/BookmarkScreen';
+import CartScreen from '../screens/CartScreen';
 import ChatScreen from '../screens/ChatScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
@@ -85,11 +85,11 @@ const BottomTabNavigator = () => {
       />
      
       <Tab.Screen
-        name="Wishlist"
-        component={withErrorBoundary(BookmarkScreen, 'BookmarkScreen')}
+        name="Cart"
+        component={withErrorBoundary(CartScreen, 'CartScreen')}
         options={{
           tabBarIcon: ({ color }) => (
-            <Icon name="favorite" size={24} color={color} />
+            <Icon name="shopping-cart" size={24} color={color} />
           ),
         }}
       />

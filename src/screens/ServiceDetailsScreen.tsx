@@ -8,8 +8,11 @@ import {
   StatusBar,
   Dimensions,
   Image,
+  Modal,
+  Animated,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import type { MainStackParamList } from '../navigation/MainNavigator';
 import type { StackNavigationProp } from '@react-navigation/stack';
@@ -68,6 +71,25 @@ const ServiceDetailsScreen = () => {
 
   const [selectedPackage, setSelectedPackage] = useState(serviceDetails?.superSaverPacks[0]?.id || '');
   const { addBookmark, removeBookmark, bookmarks } = useBookmarks();
+  const [showAddedModal, setShowAddedModal] = useState(false);
+  const [modalOpacity] = useState(new Animated.Value(0));
+
+  const showAddedToCartModal = () => {
+    setShowAddedModal(true);
+    Animated.timing(modalOpacity, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start(() => {
+      setTimeout(() => {
+        Animated.timing(modalOpacity, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }).start(() => setShowAddedModal(false));
+      }, 1200);
+    });
+  };
 
   const scrollViewRef = useRef<ScrollView>(null);
   const [discountY, setDiscountY] = useState(0);
@@ -93,6 +115,10 @@ const ServiceDetailsScreen = () => {
     { id: '2', label: 'Assured Reward from CRED', sub: 'on all online payments' },
     { id: '3', label: 'Amazon offer', sub: 'via Amazon Pay' },
   ];
+
+  // Calculate total services and total cost from bookmarks
+  const totalServices = bookmarks.length;
+  const totalCost = bookmarks.reduce((sum, item) => sum + (parseFloat(item.price?.replace(/[^\d.]/g, '') || '0')), 0);
 
   return (
     <View style={styles.container}>
@@ -209,10 +235,11 @@ const ServiceDetailsScreen = () => {
                             serviceName: serviceDetails.name,
                             serviceId: serviceDetails.id,
                           });
+                          showAddedToCartModal();
                         }
                       }}
                     >
-                      <Icon name={isBookmarked ? 'heart' : 'heart-o'} size={22} color="#27537B" />
+                      <MaterialIcon name="shopping-cart" size={22} color={isBookmarked ? '#27537B' : '#888'} />
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={{ flex: 1 }}
@@ -262,19 +289,23 @@ const ServiceDetailsScreen = () => {
                   <TouchableOpacity
                     style={styles.heartIconWrap}
                     onPress={() => {
-                      addBookmark({
-                        id: category.id,
-                        title: category.name,
-                        price: category.price,
-                        oldPrice: category.oldPrice,
-                        duration: category.duration,
-                        serviceId: serviceDetails.id,
-                        serviceName: serviceDetails.name,
-                      });
-                      (navigation as any).navigate('Tabs', { screen: 'Wishlist' });
+                      if (bookmarks.some(b => b.id === category.id)) {
+                        removeBookmark(category.id);
+                      } else {
+                        addBookmark({
+                          id: category.id,
+                          title: category.name,
+                          price: category.price,
+                          oldPrice: category.oldPrice,
+                          duration: category.duration,
+                          serviceId: serviceDetails.id,
+                          serviceName: serviceDetails.name,
+                        });
+                        showAddedToCartModal();
+                      }
                     }}
                   >
-                    <Icon name="heart-o" size={20} color="#888" />
+                    <MaterialIcon name="shopping-cart" size={20} color={bookmarks.some(b => b.id === category.id) ? '#27537B' : '#888'} />
                   </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}>
@@ -282,9 +313,6 @@ const ServiceDetailsScreen = () => {
                   {category.oldPrice && <Text style={styles.newCategoryOldPrice}>{category.oldPrice}</Text>}
                   <Text style={styles.newCategoryDuration}>{category.duration}</Text>
                 </View>
-                <TouchableOpacity style={styles.addButton}>
-                  <Text style={styles.addButtonText}>+Add</Text>
-                </TouchableOpacity>
                 <TouchableOpacity>
                   <Text style={styles.viewDetailsText}>view details</Text>
                 </TouchableOpacity>
@@ -312,19 +340,23 @@ const ServiceDetailsScreen = () => {
                   <TouchableOpacity
                     style={styles.heartIconWrap}
                     onPress={() => {
-                      addBookmark({
-                        id: category.id,
-                        title: category.name,
-                        price: category.price,
-                        oldPrice: category.oldPrice,
-                        duration: category.duration,
-                        serviceId: serviceDetails.id,
-                        serviceName: serviceDetails.name,
-                      });
-                      (navigation as any).navigate('Tabs', { screen: 'Wishlist' });
+                      if (bookmarks.some(b => b.id === category.id)) {
+                        removeBookmark(category.id);
+                      } else {
+                        addBookmark({
+                          id: category.id,
+                          title: category.name,
+                          price: category.price,
+                          oldPrice: category.oldPrice,
+                          duration: category.duration,
+                          serviceId: serviceDetails.id,
+                          serviceName: serviceDetails.name,
+                        });
+                        showAddedToCartModal();
+                      }
                     }}
                   >
-                    <Icon name="heart-o" size={20} color="#888" />
+                    <MaterialIcon name="shopping-cart" size={20} color={bookmarks.some(b => b.id === category.id) ? '#27537B' : '#888'} />
                   </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}>
@@ -332,9 +364,6 @@ const ServiceDetailsScreen = () => {
                   {category.oldPrice && <Text style={styles.newCategoryOldPrice}>{category.oldPrice}</Text>}
                   <Text style={styles.newCategoryDuration}>{category.duration}</Text>
                 </View>
-                <TouchableOpacity style={styles.addButton}>
-                  <Text style={styles.addButtonText}>+Add</Text>
-                </TouchableOpacity>
                 <TouchableOpacity>
                   <Text style={styles.viewDetailsText}>view details</Text>
                 </TouchableOpacity>
@@ -362,19 +391,23 @@ const ServiceDetailsScreen = () => {
                   <TouchableOpacity
                     style={styles.heartIconWrap}
                     onPress={() => {
-                      addBookmark({
-                        id: category.id,
-                        title: category.name,
-                        price: category.price,
-                        oldPrice: category.oldPrice,
-                        duration: category.duration,
-                        serviceId: serviceDetails.id,
-                        serviceName: serviceDetails.name,
-                      });
-                      (navigation as any).navigate('Tabs', { screen: 'Wishlist' });
+                      if (bookmarks.some(b => b.id === category.id)) {
+                        removeBookmark(category.id);
+                      } else {
+                        addBookmark({
+                          id: category.id,
+                          title: category.name,
+                          price: category.price,
+                          oldPrice: category.oldPrice,
+                          duration: category.duration,
+                          serviceId: serviceDetails.id,
+                          serviceName: serviceDetails.name,
+                        });
+                        showAddedToCartModal();
+                      }
                     }}
                   >
-                    <Icon name="heart-o" size={20} color="#888" />
+                    <MaterialIcon name="shopping-cart" size={20} color={bookmarks.some(b => b.id === category.id) ? '#27537B' : '#888'} />
                   </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}>
@@ -382,9 +415,6 @@ const ServiceDetailsScreen = () => {
                   {category.oldPrice && <Text style={styles.newCategoryOldPrice}>{category.oldPrice}</Text>}
                   <Text style={styles.newCategoryDuration}>{category.duration}</Text>
                 </View>
-                <TouchableOpacity style={styles.addButton}>
-                  <Text style={styles.addButtonText}>+Add</Text>
-                </TouchableOpacity>
                 <TouchableOpacity>
                   <Text style={styles.viewDetailsText}>view details</Text>
                 </TouchableOpacity>
@@ -415,11 +445,25 @@ const ServiceDetailsScreen = () => {
       </ScrollView>
 
       {/* Bottom CTA */}
-      <View style={styles.bottomCTA}>
-        <TouchableOpacity style={styles.bookNowButton}>
-          <Text style={styles.bookNowText}>Book Now</Text>
-        </TouchableOpacity>
-      </View>
+      {bookmarks.length > 0 && (
+        <View style={styles.bottomCTA}>
+          <View style={{ flex: 2 }}>
+            <Text style={{ fontSize: 15, color: '#222', fontWeight: 'bold' }}>Total services: {totalServices}</Text>
+            <Text style={{ fontSize: 15, color: '#27537B', fontWeight: 'bold' }}>Total: ₹{totalCost.toFixed(2)}</Text>
+          </View>
+          <TouchableOpacity style={[styles.bookNowButton, { flex: 1, marginLeft: 12 }]} onPress={() => navigation.navigate('Tabs', { screen: 'Cart' })}>
+            <Text style={styles.bookNowText}>Go to Cart</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      <Modal transparent visible={showAddedModal} animationType="none">
+        <Animated.View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.2)', opacity: modalOpacity }}>
+          <View style={{ backgroundColor: '#fff', borderRadius: 16, padding: 24, elevation: 6, alignItems: 'center' }}>
+            <MaterialIcon name="check-circle" size={48} color="#27537B" />
+            <Text style={{ fontSize: 18, color: '#27537B', fontWeight: 'bold', marginTop: 12 }}>Service added to cart</Text>
+          </View>
+        </Animated.View>
+      </Modal>
     </View>
   );
 };

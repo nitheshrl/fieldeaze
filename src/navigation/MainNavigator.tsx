@@ -15,6 +15,7 @@ import MyBookingsScreen from '../screens/MyBookingsScreen';
 import MyWalletScreen from '../screens/MyWalletScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
+import CheckoutScreen from '../screens/CheckoutScreen';
 
 export type MainStackParamList = {
   Home: undefined;
@@ -33,6 +34,7 @@ export type MainStackParamList = {
   MyWallet: undefined;
   Settings: undefined;
   PrivacyPolicy: undefined;
+  Checkout: undefined;
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -78,6 +80,7 @@ const MainNavigator = () => {
       <Stack.Screen name="MyWallet" component={MyWalletScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Screen name="Checkout" component={CheckoutScreen} />
     </Stack.Navigator>
   );
 };

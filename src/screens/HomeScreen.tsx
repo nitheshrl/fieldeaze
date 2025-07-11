@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   tabButton: {
-    backgroundColor: '#C0E4FF',
+    backgroundColor: '#E6F4FF', // changed from #C0E4FF to a brighter blue
     borderRadius: 8,
     paddingHorizontal: 20,
     height: 34,
@@ -467,14 +467,13 @@ const styles = StyleSheet.create({
     
   },
   tabText: {
-    color: 'dark-grey',
+    color: 'black', // changed from 'dark-grey' to a visible blue
     fontWeight: '600',
     fontSize: 13,
     lineHeight: 38,
   },
   tabTextActive: {
-    color: '#fff',
-    
+    color: '#fff', // ensure active tab text is bright white
   },
   tabCount: {
     fontSize: 10,
