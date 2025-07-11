@@ -41,47 +41,18 @@ const getStarColor = (bgColor: string) => {
 };
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const PAGE_HORIZONTAL_PADDING = 8; // match your container's paddingHorizontal
 const ONGOING_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.92);
 const HORIZONTAL_PADDING = Math.round((SCREEN_WIDTH - ONGOING_CARD_WIDTH) / 2);
 
 const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const [selectedTab, setSelectedTab] = useState('all');
-  const [selectedServiceIdx, setSelectedServiceIdx] = useState<number | null>(null);
   const { user, services } = mockData;
 
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [recommendations, setRecommendations] = useState<typeof services>([]);
-
-  // Helper to get icon require path from icon field
-  const serviceIcons: { [key: string]: any } = {
-    Air_conditioner: require('../assets/icons/Air_conditioner.png'),
-    Air_freshner: require('../assets/icons/Air_freshner.png'),
-    Air_purifier: require('../assets/icons/Air_purifier.png'),
-    Chimney: require('../assets/icons/Chimney.png'),
-    home_theter: require('../assets/icons/home_theter.png'),
-    Laptop: require('../assets/icons/Laptop.png'),
-    Microwave_oven: require('../assets/icons/Microwave_oven.png'),
-    television: require('../assets/icons/television.png'),
-    washing_machine: require('../assets/icons/washing_machine.png'),
-    water_heater: require('../assets/icons/water_heater.png'),
-    Water_putifier: require('../assets/icons/Water_putifier.png'),
-  };
-
-  // Pagination state
-  const [servicePage, setServicePage] = useState(0);
-  const SERVICES_PER_PAGE = 8;
-  const totalPages = Math.ceil(services.length / SERVICES_PER_PAGE);
-  type Service = typeof services[0];
-  const pagedServiceGroups = Array.from({ length: totalPages }, (_, i) => {
-    const group = services.slice(i * SERVICES_PER_PAGE, (i + 1) * SERVICES_PER_PAGE);
-    const filledGroup: (Service | null)[] = [...group];
-    while (filledGroup.length < SERVICES_PER_PAGE) filledGroup.push(null);
-    return filledGroup;
-  });
 
   // Search filter handler
   const handleSearch = (text: string) => {
@@ -165,7 +136,7 @@ const HomeScreen = () => {
                   onPress={() => handleRecommendationSelect(service)}
                 >
                   <Image
-                    source={serviceIcons[service.icon] || serviceIcons['Air_conditioner']}
+                    source={{ uri: service.icon }}
                     style={{ width: 28, height: 28, marginRight: 12 }}
                     resizeMode="contain"
                   />
@@ -278,78 +249,32 @@ const HomeScreen = () => {
 
         {/* Our Services Section: 2x4 grid for first 8, scroll for extra */}
         <Text style={styles.servicesTitle}>Our Services</Text>
-        {/* Horizontally scrollable paged grid (2x4 per page) */}
-        <RNScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          style={{ marginBottom: 18 }}
-          onMomentumScrollEnd={e => {
-            const page = Math.round(e.nativeEvent.contentOffset.x / e.nativeEvent.layoutMeasurement.width);
-            setServicePage(page);
-          }}
-        >
-          {pagedServiceGroups.map((group, pageIdx) => (
-            <View key={pageIdx} style={{ width: SCREEN_WIDTH, paddingHorizontal: PAGE_HORIZONTAL_PADDING }}>
-              {[0, 1].map(row => (
-                <View
-                  key={row}
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginBottom: 12,
-                  }}
-                >
-                  {group.slice(row * 4, row * 4 + 4).map((service, idx) => {
-                    if (!service) {
-                      // Render an empty slot
-                      return <View key={idx} style={{ width: '23%' }} />;
-                    }
-                    const isActive = selectedServiceIdx === (pageIdx * SERVICES_PER_PAGE + row * 4 + idx);
-            return (
-                      <View
-                        key={service.id}
-                        style={{
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '23%',
-                        }}
-                      >
-                {isActive && <View style={styles.serviceBoxShadow} />}
-                <TouchableOpacity
-                  style={[
-                    styles.serviceBox,
-                    isActive && styles.serviceBoxActive,
-                  ]}
-                          onPress={() => {
-                            setSelectedServiceIdx(pageIdx * SERVICES_PER_PAGE + row * 4 + idx);
-                            navigation.navigate('ServiceDetails', { serviceId: service.id });
-                          }}
-                  activeOpacity={0.85}
-                >
-                  <View style={styles.serviceIconCircle}>
-                    <Image
-                              source={serviceIcons[service.icon] || serviceIcons['Air_conditioner']}
-                      style={styles.serviceIconImg}
-                      resizeMode="contain"
-                    />
+        <View style={styles.servicesGrid}>
+          {services.slice(0, 8).map((service) => (
+            <TouchableOpacity
+              key={service.id}
+              style={styles.serviceBox}
+              onPress={() => navigation.navigate('ServiceDetails', { serviceId: service.id })}
+            >
+              <View style={styles.serviceIconCircle}>
+                <Image
+                  source={{ uri: service.icon }}
+                  style={styles.serviceIconImg}
+                  resizeMode="contain"
+                />
               </View>
-                  <Text style={[styles.serviceName, isActive && styles.serviceNameActive]}>{service.name}</Text>
+              <Text
+                style={styles.serviceName}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+              >
+                {service.name}
+              </Text>
             </TouchableOpacity>
-              </View>
-            );
-          })}
-        </View>
-              ))}
-            </View>
           ))}
-        </RNScrollView>
+        </View>
         {/* Optional: page indicator */}
-        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 12 }}>
-          {pagedServiceGroups.map((_, idx) => (
-            <View key={idx} style={{ width: 8, height: 8, borderRadius: 4, margin: 4, backgroundColor: idx === servicePage ? '#2266C1' : '#C0E4FF' }} />
-          ))}
-        </View>
+        {/* Removed page indicator as grid is no longer paged */}
 
         <PopularServicesSection />
 
@@ -511,7 +436,7 @@ const styles = StyleSheet.create({
   },
   ongoingServiceName: {
     fontSize: 13,
-    color: '#e0eaf5',
+    color: '#e0af55',
     fontWeight: '400',
     marginTop: 2,
   },
@@ -628,15 +553,13 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   serviceBox: {
-  left: -11,
-    width: '100%',
+    width: '23%',
     aspectRatio: 1,
     backgroundColor: '#E7E7E7',
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
-    zIndex: 2,
   },
   serviceBoxActive: {
     backgroundColor: '#27537B',
@@ -668,6 +591,8 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#222',
     fontWeight: '500',
+    marginTop: 2,
+    textAlign: 'center',
   },
   serviceNameActive: {
     color: '#fff',

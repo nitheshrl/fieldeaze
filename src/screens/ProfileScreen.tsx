@@ -8,7 +8,7 @@ import type { MainStackParamList } from '../navigation/MainNavigator';
 
 const stats = [
   { label: 'Bookings', value: 12, icon: 'event' },
-  { label: 'Wallet', value: '₹1250', icon: 'account-balance-wallet' },
+  { label: 'Total Spent', value: '₹1250', icon: 'account-balance-wallet' },
   { label: 'Points', value: 320, icon: 'star' },
 ];
 
@@ -38,7 +38,7 @@ const ProfileScreen = () => {
           />
           <View style={styles.profileInfo}>
             <Text style={styles.profileName}>{user.name}</Text>
-            <Text style={styles.profileRole}>{user.role || 'User'}</Text>
+            {/* Removed user.role as it's not present in user object */}
           </View>
           <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditProfile')}>
             <Icon name="edit" size={20} color="#fff" />
@@ -46,8 +46,8 @@ const ProfileScreen = () => {
         </View>
         {/* Quick Stats */}
         <View style={styles.statsRow}>
-          {stats.map((stat, idx) => (
-            <View key={stat.label} style={[styles.statCard, idx !== stats.length - 1 && { marginRight: 16 }] }>
+          {stats.map((stat) => (
+            <View key={stat.label} style={[styles.statCard, stats.length - 1 !== stats.indexOf(stat) && { marginRight: 16 }] }>
               <Icon name={stat.icon} size={22} color="#27537B" />
               <Text style={styles.statValue}>{stat.value}</Text>
               <Text style={styles.statLabel}>{stat.label}</Text>
@@ -57,8 +57,8 @@ const ProfileScreen = () => {
       </View>
       {/* Navigation Cards */}
       <View style={styles.navSection}>
-        {navCards.map((item, idx) => (
-          <TouchableOpacity key={item.title} style={styles.navCard} onPress={() => navigation.navigate(item.onPress)}>
+        {navCards.map((item) => (
+          <TouchableOpacity key={item.title} style={styles.navCard} onPress={() => navigation.navigate(item.onPress as any)}>
             <View style={styles.navIconWrap}>
               <Icon name={item.icon} size={24} color="#27537B" />
             </View>

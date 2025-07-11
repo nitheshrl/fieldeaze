@@ -10,6 +10,7 @@ import {
   Image,
   Modal,
   Animated,
+  Easing,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -34,6 +35,15 @@ type ServiceDetail = {
   totalBookings: string;
   warranty: string;
   image: string;
+  packages: Array<{
+    id: string;
+    name: string;
+    title: string;
+    description: string;
+    price: string;
+    savings: string;
+    features: string[];
+  }>;
   superSaverPacks: Array<{
     id: string;
     name: string;
@@ -69,7 +79,7 @@ const ServiceDetailsScreen = () => {
   const serviceDetails = (mockData.serviceDetails as { [key: string]: ServiceDetail })[serviceId];
   console.log('Found serviceDetails:', serviceDetails?.name);
 
-  const [selectedPackage, setSelectedPackage] = useState(serviceDetails?.superSaverPacks[0]?.id || '');
+  const [selectedPackage, setSelectedPackage] = useState(serviceDetails?.packages[0]?.id || '');
   const { addBookmark, removeBookmark, bookmarks } = useBookmarks();
   const [showAddedModal, setShowAddedModal] = useState(false);
   const [modalOpacity] = useState(new Animated.Value(0));
@@ -96,9 +106,30 @@ const ServiceDetailsScreen = () => {
   const [serviceY, setServiceY] = useState(0);
   const [repairY, setRepairY] = useState(0);
   const [installY, setInstallY] = useState(0);
+  const [faqY, setFaqY] = useState(0);
 
   const scrollToSection = (y: number) => {
     scrollViewRef.current?.scrollTo({ y, animated: true });
+  };
+
+  // FAQ accordion state
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [animations, setAnimations] = useState<{ [key: number]: Animated.Value }>({});
+
+  const handleFaqPress = (idx: number) => {
+    setExpandedFaq(expandedFaq === idx ? null : idx);
+    setAnimations((prev) => {
+      if (!prev[idx]) {
+        prev[idx] = new Animated.Value(0);
+      }
+      Animated.timing(prev[idx], {
+        toValue: expandedFaq === idx ? 0 : 1,
+        duration: 250,
+        easing: Easing.ease,
+        useNativeDriver: false,
+      }).start();
+      return { ...prev };
+    });
   };
 
   if (!serviceDetails) {
@@ -129,8 +160,11 @@ const ServiceDetailsScreen = () => {
       </TouchableOpacity>
       {/* Top Section with Gradient */}
       <LinearGradient colors={["#E6F2FF", "#B3D8F7"]} style={styles.gradientTopSection}>
-        <View style={styles.topRowExact}>
-          <Text style={styles.serviceTitleExact}>{serviceDetails.name}</Text>
+        <View style={styles.topRowExactCentered}>
+         
+          <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }}>
+            <Text style={styles.serviceTitleExactCentered}>{serviceDetails.name}</Text>
+          </View>
           <View style={styles.iconRowExact}>
             <TouchableOpacity style={styles.circleIconExact}>
               <Icon name="search" size={18} color="#27537B" />
@@ -174,23 +208,29 @@ const ServiceDetailsScreen = () => {
               </View>
               <Text style={styles.categorySquareLabel}>Service</Text>
             </TouchableOpacity>
-            {/* Repair & gas refill card */}
-            <TouchableOpacity style={{ alignItems: 'center', flex: 1 }} onPress={() => scrollToSection(repairY)}>
-              <View style={styles.categorySquareCard}>
-                <View style={styles.categorySquareIconWrap}>
-                  <Image source={require('../assets/icons/service-details2..png')} style={styles.categorySquareIcon} resizeMode="contain" />
-                </View>
-              </View>
-              <Text style={styles.categorySquareLabel}>Repair & gas refill</Text>
-            </TouchableOpacity>
             {/* Installation/uninstallation card */}
-            <TouchableOpacity style={{ alignItems: 'center', flex: 1 }} onPress={() => scrollToSection(installY)}>
+            <TouchableOpacity
+              style={{ alignItems: 'center', flex: 1 }}
+              onPress={() => {
+                const hasInstall = serviceDetails.categories && serviceDetails.categories.some(category => /install|uninstall/i.test(category.name));
+                scrollToSection(hasInstall ? installY : serviceY);
+              }}
+            >
               <View style={styles.categorySquareCard}>
                 <View style={styles.categorySquareIconWrap}>
                   <Image source={require('../assets/icons/service-details3.png')} style={styles.categorySquareIcon} resizeMode="contain" />
                 </View>
               </View>
               <Text style={styles.categorySquareLabel}>installtion/{'\n'}uninstalllation</Text>
+            </TouchableOpacity>
+            {/* Repair card (now FAQ) */}
+            <TouchableOpacity style={{ alignItems: 'center', flex: 1 }} onPress={() => scrollToSection(faqY)}>
+              <View style={styles.categorySquareCard}>
+                <View style={styles.categorySquareIconWrap}>
+                  <Image source={require('../assets/icons/service-details2..png')} style={styles.categorySquareIcon} resizeMode="contain" />
+                </View>
+              </View>
+              <Text style={styles.categorySquareLabel}>FAQ</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -322,57 +362,6 @@ const ServiceDetailsScreen = () => {
           </View>
         )}
         </View>
-        {/* Repair & Gas Refill Section */}
-        <View onLayout={e => setRepairY(e.nativeEvent.layout.y)}>
-        {serviceDetails.categories && serviceDetails.categories.some(category => /repair|gas/i.test(category.name)) && (
-          <View style={styles.categoriesSection}>
-            <Text style={styles.sectionTitle}>Repair & Gas Refill</Text>
-            {serviceDetails.categories.filter(category => /repair|gas/i.test(category.name)).map((category) => (
-              <View key={category.id} style={styles.newCategoryCard}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.newCategoryTitle}>{category.name}</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 4 }}>
-                      <Icon name="star" size={16} color="#FFC107" style={{ marginRight: 4 }} />
-                      <Text style={styles.newCategoryRating}>4.8 (23k)</Text>
-                    </View>
-                  </View>
-                  <TouchableOpacity
-                    style={styles.heartIconWrap}
-                    onPress={() => {
-                      if (bookmarks.some(b => b.id === category.id)) {
-                        removeBookmark(category.id);
-                      } else {
-                        addBookmark({
-                          id: category.id,
-                          title: category.name,
-                          price: category.price,
-                          oldPrice: category.oldPrice,
-                          duration: category.duration,
-                          serviceId: serviceDetails.id,
-                          serviceName: serviceDetails.name,
-                        });
-                        showAddedToCartModal();
-                      }
-                    }}
-                  >
-                    <MaterialIcon name="shopping-cart" size={20} color={bookmarks.some(b => b.id === category.id) ? '#27537B' : '#888'} />
-                  </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}>
-                  <Text style={styles.newCategoryPrice}>{category.price}</Text>
-                  {category.oldPrice && <Text style={styles.newCategoryOldPrice}>{category.oldPrice}</Text>}
-                  <Text style={styles.newCategoryDuration}>{category.duration}</Text>
-                </View>
-                <TouchableOpacity>
-                  <Text style={styles.viewDetailsText}>view details</Text>
-                </TouchableOpacity>
-                <View style={styles.dottedLine} />
-              </View>
-            ))}
-          </View>
-        )}
-        </View>
         {/* Installation / Uninstallation Section */}
         <View onLayout={e => setInstallY(e.nativeEvent.layout.y)}>
         {serviceDetails.categories && serviceDetails.categories.some(category => /install|uninstall/i.test(category.name)) && (
@@ -427,14 +416,73 @@ const ServiceDetailsScreen = () => {
 
         {/* FAQs Section */}
         {serviceDetails.faqs && (
-          <View style={styles.faqsSection}>
+          <View style={styles.faqsSection} onLayout={e => setFaqY(e.nativeEvent.layout.y)}>
             <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
-            {serviceDetails.faqs.map((faq, i) => (
-              <View key={i} style={styles.faqCard}>
-                <Text style={styles.faqQuestion}>{faq.question}</Text>
-                <Text style={styles.faqAnswer}>{faq.answer}</Text>
-              </View>
-            ))}
+            {serviceDetails.faqs.map((faq, i) => {
+              const isOpen = expandedFaq === i;
+              const rotate = animations[i]
+                ? animations[i].interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '90deg'],
+                  })
+                : '0deg';
+              return (
+                <View
+                  key={i}
+                  style={{
+                    backgroundColor: isOpen ? '#f0f6ff' : '#fff',
+                    borderRadius: 12,
+                    marginBottom: 12,
+                    padding: 0,
+                    shadowColor: '#000',
+                    shadowOpacity: 0.06,
+                    shadowRadius: 4,
+                    shadowOffset: { width: 0, height: 2 },
+                    elevation: 2,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => handleFaqPress(i)}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingVertical: 18,
+                      paddingHorizontal: 18,
+                      borderBottomWidth: isOpen ? 1 : 0,
+                      borderBottomColor: '#e0e0e0',
+                    }}
+                    activeOpacity={0.8}
+                  >
+                    <Text
+                      style={{
+                        fontWeight: isOpen ? 'bold' : '600',
+                        fontSize: 16,
+                        color: '#222',
+                        flex: 1,
+                      }}
+                    >
+                      {faq.question}
+                    </Text>
+                    <Animated.View style={{ transform: [{ rotate }] }}>
+                      <Icon name="chevron-right" size={20} color="#27537B" />
+                    </Animated.View>
+                  </TouchableOpacity>
+                  {isOpen && (
+                    <Animated.View
+                      style={{
+                        paddingHorizontal: 18,
+                        paddingBottom: 16,
+                        opacity: animations[i] ? animations[i] : 1,
+                      }}
+                    >
+                      <Text style={{ color: '#444', fontSize: 15, lineHeight: 22 }}>
+                        {faq.answer}
+                      </Text>
+                    </Animated.View>
+                  )}
+                </View>
+              );
+            })}
           </View>
         )}
 
@@ -794,6 +842,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '300',
     marginTop: 6,
+  },
+  topRowExactCentered: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginBottom: 16,
+  },
+  serviceTitleExactCentered: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#222',
+    textAlign: 'center',
+    flex: 1,
   },
 });
 
