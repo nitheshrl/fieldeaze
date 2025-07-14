@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { useRoute, RouteProp, useNavigation, useIsFocused } from '@react-navigation/native';
 import type { MainStackParamList } from '../navigation/MainNavigator';
 import type { StackNavigationProp } from '@react-navigation/stack';
 import mockData from '../mockData.json';
@@ -131,6 +131,14 @@ const ServiceDetailsScreen = () => {
       return { ...prev };
     });
   };
+
+  const isFocused = useIsFocused();
+
+  React.useEffect(() => {
+    if (isFocused && scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: false });
+    }
+  }, [isFocused, serviceId]);
 
   if (!serviceDetails) {
     return (

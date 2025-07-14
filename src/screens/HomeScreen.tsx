@@ -252,16 +252,16 @@ const HomeScreen = () => {
         <View style={styles.servicesGrid}>
           {services.slice(0, 8).map((service) => (
             <TouchableOpacity
-              key={service.id}
+                        key={service.id}
               style={styles.serviceBox}
               onPress={() => navigation.navigate('ServiceDetails', { serviceId: service.id })}
-            >
-              <View style={styles.serviceIconCircle}>
-                <Image
+                >
+                  <View style={styles.serviceIconCircle}>
+                    <Image
                   source={{ uri: service.icon }}
-                  style={styles.serviceIconImg}
-                  resizeMode="contain"
-                />
+                      style={styles.serviceIconImg}
+                      resizeMode="contain"
+                    />
               </View>
               <Text
                 style={styles.serviceName}

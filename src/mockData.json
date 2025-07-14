@@ -640,7 +640,8 @@
       "rating": 4.9,
       "reviewCount": 210,
       "price": "₹999",
-      "popular": true
+      "popular": true,
+      "specialities": ["Certified Technicians", "Genuine Parts", "Quick Turnaround"]
     },
     {
       "id": "2",
@@ -649,7 +650,8 @@
       "rating": 4.8,
       "reviewCount": 180,
       "price": "₹1499",
-      "popular": true
+      "popular": true,
+      "specialities": ["Custom Builds", "Expert Cable Management", "Thermal Paste Application"]
     },
     {
       "id": "3",
@@ -658,7 +660,8 @@
       "rating": 4.7,
       "reviewCount": 160,
       "price": "₹799",
-      "popular": true
+      "popular": true,
+      "specialities": ["Deep Scan", "No Data Loss", "System Optimization"]
     },
     {
       "id": "4",
@@ -667,7 +670,8 @@
       "rating": 4.8,
       "reviewCount": 140,
       "price": "₹1999",
-      "popular": true
+      "popular": true,
+      "specialities": ["No Data, No Charge", "All Device Types", "Confidential Handling"]
     },
     {
       "id": "5",
@@ -676,16 +680,18 @@
       "rating": 4.6,
       "reviewCount": 120,
       "price": "₹699",
-      "popular": true
+      "popular": true,
+      "specialities": ["Licensed Software", "Driver Updates", "Quick Install"]
     },
     {
       "id": "6",
       "title": "Hardware Upgrade",
-      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
+      "image": "https://images.unsplash.com/photo-1515548212235-6c2e1e8c1b8b?auto=format&fit=crop&w=400&q=80",
       "rating": 4.7,
       "reviewCount": 110,
       "price": "₹1299",
-      "popular": true
+      "popular": true,
+      "specialities": ["RAM/SSD/GPU Upgrades", "Performance Tuning", "Genuine Parts"]
     },
     {
       "id": "7",
@@ -694,7 +700,8 @@
       "rating": 4.5,
       "reviewCount": 100,
       "price": "₹599",
-      "popular": true
+      "popular": true,
+      "specialities": ["Professional Tools", "Fan Cleaning", "Thermal Paste Reapplication"]
     },
     {
       "id": "8",
@@ -703,7 +710,8 @@
       "rating": 4.6,
       "reviewCount": 90,
       "price": "₹899",
-      "popular": true
+      "popular": true,
+      "specialities": ["Wi-Fi & LAN Setup", "Device Configuration", "Network Security"]
     }
   ],
   "offers": [

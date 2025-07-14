@@ -67,6 +67,27 @@ const ProfileScreen = () => {
           </TouchableOpacity>
         ))}
       </View>
+      {/* Addresses Section */}
+      <View style={styles.addressSection}>
+        <Text style={styles.addressSectionTitle}>Addresses</Text>
+        {user.addresses && user.addresses.length > 0 ? (
+          user.addresses.map((addr: any) => (
+            <View key={addr.id} style={styles.addressCard}>
+              <Icon name="location-on" size={22} color="#27537B" style={{ marginRight: 10 }} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.addressLabel}>{addr.label}</Text>
+                <Text style={styles.addressText}>{addr.address}</Text>
+              </View>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.addressText}>No addresses available.</Text>
+        )}
+        <TouchableOpacity style={styles.addAddressBtn} onPress={() => navigation.navigate('AddAddress') }>
+          <Icon name="add-location" size={20} color="#fff" />
+          <Text style={styles.addAddressBtnText}>Add Address</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
@@ -165,6 +186,58 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#222',
     flex: 1,
+  },
+  addressSection: {
+    marginHorizontal: 16,
+    marginTop: 18,
+    marginBottom: 24,
+    backgroundColor: '#fff',
+    borderRadius: 14,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.03,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  addressSectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#27537B',
+    marginBottom: 10,
+  },
+  addressCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#f7fafd',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 10,
+  },
+  addressLabel: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#27537B',
+  },
+  addressText: {
+    fontSize: 14,
+    color: '#444',
+    marginTop: 2,
+  },
+  addAddressBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#27537B',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    alignSelf: 'flex-start',
+    marginTop: 8,
+  },
+  addAddressBtnText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 15,
+    marginLeft: 8,
   },
 });
 

@@ -1,5 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, Image, ScrollView, Dimensions, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import mockData from '../mockData.json';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { MainStackParamList } from '../navigation/MainNavigator';
 
 const { width } = Dimensions.get('window');
 
@@ -7,28 +11,33 @@ const ads = [
   {
     title: 'Laptop Repair & Upgrade',
     subtitle: 'Fast fixes, genuine parts, and expert technicians',
-    image: require('../assets/icons/Laptop.png'),
+    image: mockData.servicesList[0].image,
+    serviceId: mockData.servicesList[0].id,
   },
   {
     title: 'Virus Removal & Protection',
     subtitle: 'Keep your PC safe from malware and threats',
-    image: require('../assets/pick-services.png'),
+    image: mockData.servicesList[2].image,
+    serviceId: mockData.servicesList[2].id,
   },
   {
     title: 'Custom PC Assembly',
     subtitle: 'Gaming, work, or home – built to your needs',
-    image: require('../assets/choose-provider.png'),
+    image: mockData.servicesList[1].image,
+    serviceId: mockData.servicesList[1].id,
   },
   {
     title: 'Data Recovery Services',
     subtitle: 'Lost files? We recover your important data',
-    image: require('../assets/icons/service-details1.png'),
+    image: mockData.servicesList[3].image,
+    serviceId: mockData.servicesList[3].id,
   },
 ];
 
 const AdCarousel = () => {
   const scrollRef = useRef<ScrollView>(null);
   const [current, setCurrent] = useState(0);
+  const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,15 +60,19 @@ const AdCarousel = () => {
         scrollEnabled={false}
       >
         {ads.map((ad, idx) => (
-          <View key={idx} style={styles.adCard}>
-            <View style={styles.adTextWrap}>
+          <TouchableOpacity
+            key={idx}
+            style={styles.adCard}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate('ServiceDetails', { serviceId: ad.serviceId })}
+          >
+            <Image source={{ uri: ad.image }} style={styles.bgImage} />
+            <View style={styles.bgOverlay} />
+            <View style={styles.adTextOverlay}>
               <Text style={styles.adTitle}>{ad.title}</Text>
               <Text style={styles.adSubtitle}>{ad.subtitle}</Text>
             </View>
-            <View style={styles.adImageCircleWrap}>
-              <Image source={ad.image} style={styles.adImage} />
-            </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
@@ -72,52 +85,41 @@ const styles = StyleSheet.create({
     height: 130,
     backgroundColor: '#fff',
     borderRadius: 18,
-    flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
     overflow: 'hidden',
-    paddingHorizontal: 18,
-    paddingVertical: 10,
+    marginBottom: 0,
     position: 'relative',
-  },
-  adTextWrap: {
-    flex: 1,
     justifyContent: 'center',
-    paddingRight: 10,
+  },
+  bgImage: {
+    ...StyleSheet.absoluteFillObject,
+    width: undefined,
+    height: undefined,
+    resizeMode: 'cover',
+    zIndex: 0,
+  },
+  bgOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.32)',
+    zIndex: 1,
+  },
+  adTextOverlay: {
+    flex: 1,
     zIndex: 2,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
   },
   adTitle: {
     fontSize: 19,
     fontWeight: '700',
-    color: '#222',
+    color: '#fff',
     marginBottom: 8,
+    textAlign: 'left',
   },
   adSubtitle: {
     fontSize: 14,
-    color: '#888',
+    color: '#eee',
     fontWeight: '400',
-  },
-  adImageCircleWrap: {
-    position: 'absolute',
-    right: -65,
-    top: -10,
-    width: 180,
-    height: 180,
-    borderRadius: 90,
-    overflow: 'hidden',
-    backgroundColor: '#eee',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1,
-  },
-  adImage: {
-    width: 180,
-    height: 180,
-    resizeMode: 'cover',
+    textAlign: 'left',
   },
 });
 
