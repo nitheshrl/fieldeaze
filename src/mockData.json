@@ -636,7 +636,7 @@
     {
       "id": "1",
       "title": "Laptop Repair",
-      "image": "https://cdn-icons-png.flaticon.com/512/1055/1055687.png",
+      "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80",
       "rating": 4.9,
       "reviewCount": 210,
       "price": "₹999",
@@ -645,7 +645,7 @@
     {
       "id": "2",
       "title": "PC Assembly",
-      "image": "https://cdn-icons-png.flaticon.com/512/1055/1055672.png",
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
       "rating": 4.8,
       "reviewCount": 180,
       "price": "₹1499",
@@ -654,7 +654,7 @@
     {
       "id": "3",
       "title": "Virus Removal",
-      "image": "https://cdn-icons-png.flaticon.com/512/482/482947.png",
+      "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80",
       "rating": 4.7,
       "reviewCount": 160,
       "price": "₹799",
@@ -663,7 +663,7 @@
     {
       "id": "4",
       "title": "Data Recovery",
-      "image": "https://cdn-icons-png.flaticon.com/512/2921/2921822.png",
+      "image": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=80",
       "rating": 4.8,
       "reviewCount": 140,
       "price": "₹1999",
@@ -672,7 +672,7 @@
     {
       "id": "5",
       "title": "Software Installation",
-      "image": "https://cdn-icons-png.flaticon.com/512/1828/1828919.png",
+      "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80",
       "rating": 4.6,
       "reviewCount": 120,
       "price": "₹699",
@@ -681,7 +681,7 @@
     {
       "id": "6",
       "title": "Hardware Upgrade",
-      "image": "https://cdn-icons-png.flaticon.com/512/1055/1055676.png",
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
       "rating": 4.7,
       "reviewCount": 110,
       "price": "₹1299",
@@ -690,7 +690,7 @@
     {
       "id": "7",
       "title": "PC Cleaning",
-      "image": "https://cdn-icons-png.flaticon.com/512/1046/1046857.png",
+      "image": "https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=400&q=80",
       "rating": 4.5,
       "reviewCount": 100,
       "price": "₹599",
@@ -699,7 +699,7 @@
     {
       "id": "8",
       "title": "Network Setup",
-      "image": "https://cdn-icons-png.flaticon.com/512/483/483947.png",
+      "image": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80",
       "rating": 4.6,
       "reviewCount": 90,
       "price": "₹899",

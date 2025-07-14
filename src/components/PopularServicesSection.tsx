@@ -1,13 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, ImageSourcePropType } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import ServiceCard from './ServiceCard';
 import mockData from '../mockData.json';
-
-const localImages: { [key: string]: ImageSourcePropType } = {
-  'ac-service.jpg': require('../assets/ac-service.jpg'),
-  'air-purifier.jpg': require('../assets/air-purifier.jpg'),
-  'air-freshner.jpg': require('../assets/air-freshner.jpg'),
-};
 
 const PopularServicesSection = () => {
   return (
@@ -23,7 +17,7 @@ const PopularServicesSection = () => {
             key={service.id}
             id={service.id}
             title={service.title}
-            image={localImages[service.image] || localImages['ac-service.jpg']}
+            image={service.image} // Pass the URL directly
             rating={service.rating}
             reviewCount={service.reviewCount}
             price={service.price}
@@ -39,11 +33,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#222',
     marginBottom: 10,
-    marginTop: -8,
-    bottom: -9,
+    marginTop: 18,
+    bottom: 5,
   },
   scrollView: {
-    marginBottom: 30,
+    marginBottom: 40, // Increased from 30
+    paddingBottom: 16, // Added for extra space
   },
 });
 

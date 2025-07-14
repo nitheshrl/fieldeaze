@@ -8,7 +8,7 @@ import type { MainStackParamList } from '../navigation/MainNavigator';
 interface ServiceCardProps {
   id: string;
   title: string;
-  image: ImageSourcePropType;
+  image: string; // Changed from ImageSourcePropType to string
   rating: number;
   reviewCount: number;
   price: string;
@@ -17,14 +17,16 @@ interface ServiceCardProps {
 const ServiceCard = ({ id, title, image, rating, reviewCount, price }: ServiceCardProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
 
-
   return (
     <TouchableOpacity 
       style={styles.card}
       onPress={() => navigation.navigate('ServiceDetails', { serviceId: id })}
     >
       <View style={styles.imageContainer}>
-        <Image source={image} style={styles.image} />
+        <Image
+          source={{ uri: image }} // Always use remote URL
+          style={styles.image}
+        />
         <View style={styles.overlay} />
       </View>
       <View style={styles.content}>

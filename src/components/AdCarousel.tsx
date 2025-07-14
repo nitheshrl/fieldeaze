@@ -5,14 +5,24 @@ const { width } = Dimensions.get('window');
 
 const ads = [
   {
-    title: 'Foam - Jet AC Service',
-    subtitle: 'Dust-free filters & better airflow',
-    image: require('../assets/air-freshner.jpg'), // Replace with your actual image
+    title: 'Laptop Repair & Upgrade',
+    subtitle: 'Fast fixes, genuine parts, and expert technicians',
+    image: require('../assets/icons/Laptop.png'),
   },
   {
-    title: 'AC Installation Offer',
-    subtitle: 'Get 20% off on new installations',
-    image: require('../assets/air-purifier.jpg'), // Replace with your actual image
+    title: 'Virus Removal & Protection',
+    subtitle: 'Keep your PC safe from malware and threats',
+    image: require('../assets/pick-services.png'),
+  },
+  {
+    title: 'Custom PC Assembly',
+    subtitle: 'Gaming, work, or home – built to your needs',
+    image: require('../assets/choose-provider.png'),
+  },
+  {
+    title: 'Data Recovery Services',
+    subtitle: 'Lost files? We recover your important data',
+    image: require('../assets/icons/service-details1.png'),
   },
 ];
 
