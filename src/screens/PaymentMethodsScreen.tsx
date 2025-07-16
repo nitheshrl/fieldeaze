@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, SafeAreaView, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -46,29 +46,44 @@ const PaymentMethodsScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" size={24} color="#27537B" />
-      </TouchableOpacity>
-      <Text style={styles.title}>Payment Methods</Text>
-      {cards.length === 0 ? (
-        <View style={styles.emptyState}>
-          <Icon name="credit-card-off" size={48} color="#ccc" />
-          <Text style={styles.emptyText}>No payment methods added yet.</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+      {/* Header */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingTop: 18, marginBottom: 8 }}>
+        <TouchableOpacity style={{ padding: 6, marginRight: 8 }} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={28} color="#27537B" />
+        </TouchableOpacity>
+        <Text style={{ flex: 1, fontSize: 22, fontWeight: 'bold', color: '#27537B', textAlign: 'center', marginRight: 36 }}>Payment Methods</Text>
+      </View>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
+        {cards.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Icon name="credit-card-off" size={48} color="#ccc" />
+            <Text style={styles.emptyText}>No payment methods added yet.</Text>
+          </View>
+        ) : (
+          cards.map(card => (
+            <View key={card.id} style={{ marginBottom: 18 }}>{renderCard({ item: card })}</View>
+          ))
+        )}
+      </ScrollView>
+      <TouchableOpacity
+        style={{
+          backgroundColor: '#27537B',
+          borderRadius: 12,
+          paddingVertical: 16,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginHorizontal: 18,
+          marginBottom: 18,
+        }}
+        onPress={() => Alert.alert('Add Payment Method', 'This would open the add payment method flow.')}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Icon name="add" size={24} color="#fff" />
+          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16, marginLeft: 10 }}>Add Payment Method</Text>
         </View>
-      ) : (
-        <FlatList
-          data={cards}
-          renderItem={renderCard}
-          keyExtractor={item => item.id}
-          style={{ marginBottom: 20 }}
-        />
-      )}
-      <TouchableOpacity style={styles.fab}>
-        <Icon name="add" size={28} color="#fff" />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

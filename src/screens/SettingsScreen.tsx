@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const languages = ['English', 'Hindi', 'Spanish'];
 
@@ -13,7 +14,7 @@ const SettingsScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Back Button */}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Icon name="arrow-back" size={24} color="#27537B" />
@@ -76,7 +77,7 @@ const SettingsScreen = () => {
           <Text style={styles.value}>1.0.0</Text>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

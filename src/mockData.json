@@ -16,12 +16,17 @@
   "services": [
     { "id": "1", "name": "Laptop Repair", "icon": "https://cdn-icons-png.flaticon.com/512/1055/1055687.png" },
     { "id": "2", "name": "PC Assembly", "icon": "https://cdn-icons-png.flaticon.com/512/1055/1055672.png" },
-    { "id": "3", "name": "Virus Removal", "icon": "https://cdn-icons-png.flaticon.com/512/2920/2920244.png" },
+    { "id": "3", "name": "System Protection", "icon": "https://cdn-icons-png.flaticon.com/512/2920/2920244.png" },
     { "id": "4", "name": "Data Recovery", "icon": "https://cdn-icons-png.flaticon.com/512/270/270798.png" },
     { "id": "5", "name": "Software Installation", "icon": "https://cdn-icons-png.flaticon.com/512/2721/2721297.png" },
     { "id": "6", "name": "Hardware Upgrade", "icon": "https://cdn-icons-png.flaticon.com/512/1055/1055676.png" },
     { "id": "7", "name": "PC Cleaning", "icon": "https://cdn-icons-png.flaticon.com/512/1055/1055679.png" },
-    { "id": "8", "name": "Network Setup", "icon": "https://cdn-icons-png.flaticon.com/512/1055/1055682.png" }
+    { "id": "8", "name": "Network Setup", "icon": "https://cdn-icons-png.flaticon.com/512/1055/1055682.png" },
+    { "id": "9", "name": "CCTV", "icon": "https://cdn-icons-png.flaticon.com/512/6225/6225012.png" },
+    { "id": "10", "name": "Biometric", "icon": "https://cdn-icons-png.flaticon.com/512/6815/6815043.png" },
+    { "id": "11", "name": "Security Alarm", "icon": "https://cdn-icons-png.flaticon.com/512/1827/1827371.png" },
+    { "id": "12", "name": "Intercom", "icon": "https://cdn-icons-png.flaticon.com/512/724/724664.png" },
+    { "id": "13", "name": "Annual Maintenance", "icon": "https://cdn-icons-png.flaticon.com/512/3176/3176363.png" }
   ],
   "popularServices": [
     {
@@ -48,7 +53,7 @@
     },
     {
       "id": "3",
-      "name": "Virus Removal",
+      "name": "System Protection",
       "icon": "https://cdn-icons-png.flaticon.com/512/2920/2920244.png",
       "popularity": 92,
       "description": "Popular for fast virus, malware, and spyware removal. Data safety guaranteed.",
@@ -111,6 +116,61 @@
       "rating": 4.6,
       "reviewCount": 90,
       "price": "₹899"
+    },
+    {
+      "id": "9",
+      "name": "CCTV",
+      "icon": "https://cdn-icons-png.flaticon.com/512/6225/6225012.png",
+      "popularity": 75,
+      "description": "Installation and maintenance of CCTV systems for home and office security.",
+      "image": "https://images.unsplash.com/photo-1519125323398-675f0ddb6308",
+      "rating": 4.7,
+      "reviewCount": 80,
+      "price": "₹2999"
+    },
+    {
+      "id": "10",
+      "name": "Biometric",
+      "icon": "https://cdn-icons-png.flaticon.com/512/6815/6815043.png",
+      "popularity": 70,
+      "description": "Biometric device installation and support for secure access control.",
+      "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      "rating": 4.6,
+      "reviewCount": 60,
+      "price": "₹3499"
+    },
+    {
+      "id": "11",
+      "name": "Security Alarm",
+      "icon": "https://cdn-icons-png.flaticon.com/512/3062/3062638.png",
+      "popularity": 65,
+      "description": "Security alarm system installation and emergency support.",
+      "image": "https://images.unsplash.com/photo-1465101046530-73398c7f28ca",
+      "rating": 4.5,
+      "reviewCount": 50,
+      "price": "₹3999"
+    },
+    {
+      "id": "12",
+      "name": "Intercom",
+      "icon": "https://cdn-icons-png.flaticon.com/512/3062/3062640.png",
+      "popularity": 60,
+      "description": "Intercom system setup and troubleshooting for buildings and offices.",
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
+      "rating": 4.4,
+      "reviewCount": 40,
+      "price": "₹2499"
+    },
+    {
+      "id": "13",
+      "name": "Annual Maintenance",
+      "icon": "https://cdn-icons-png.flaticon.com/512/3176/3176363.png",
+      "popularity": 85,
+      "description": "Annual maintenance contracts for servers, desktops, laptops, printers, and CCTV.",
+      "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      "rating": 4.8,
+      "reviewCount": 100,
+      "price": "₹9999"
     }
   ],
   "serviceDetails": {
@@ -165,11 +225,10 @@
       "categories": [
         { "id": "screen_replacement", "name": "Screen Replacement", "price": "₹3500", "oldPrice": "₹4000", "duration": "2 hrs", "description": "High-quality screen replacement for all laptop models." },
         { "id": "battery_replacement", "name": "Battery Replacement", "price": "₹2000", "oldPrice": "₹2500", "duration": "1 hr", "description": "Genuine battery replacement with warranty." },
-        
+        { "id": "adaptor_replacement", "name": "Adaptor Replacement", "price": "₹1200", "oldPrice": "₹1500", "duration": "30 min", "description": "Replace faulty or damaged laptop power adaptors with genuine parts." },
         { "id": "fan_replacement", "name": "Fan Replacement", "price": "₹900", "oldPrice": "₹1200", "duration": "1 hr", "description": "Replace noisy or non-working laptop fans." },
-       
         { "id": "ram_replacement", "name": "RAM Replacement", "price": "₹1600", "oldPrice": "₹2000", "duration": "1 hr", "description": "Upgrade or replace laptop RAM modules." },
-        { "id": "ssd_replacement", "name": "SSD Replacement", "price": "₹2500", "oldPrice": "₹3200", "duration": "1.5 hrs", "description": "Install or replace SSD for faster performance." },
+        { "id": "ssd_replacement", "name": "Hard Disk Replacement", "price": "₹2500", "oldPrice": "₹3200", "duration": "1.5 hrs", "description": "Install or replace SSD for faster performance." },
         { "id": "speaker_replacement", "name": "Speaker Replacement", "price": "₹1400", "oldPrice": "₹1800", "duration": "1 hr", "description": "Replace faulty or damaged laptop speakers." },
         { "id": "cleaning_service", "name": "Cleaning Service", "price": "₹700", "oldPrice": "₹900", "duration": "45 min", "description": "Internal and external cleaning for laptops." },
         { "id": "os_installation", "name": "OS Installation Service", "price": "₹1200", "oldPrice": "₹1500", "duration": "1.5 hrs", "description": "Install or reinstall Windows, Linux, or Mac OS." }
@@ -191,7 +250,7 @@
     },
     "2": {
       "id": "2",
-      "name": "PC Assembly",
+      "name": "Desktop Repair",
       "description": "Custom PC building and assembly services for gaming, work, or home use.",
       "rating": 4.92,
       "totalBookings": "2.1M",
@@ -232,9 +291,7 @@
         { "id": "basic_assembly", "name": "Basic Assembly", "price": "₹1500", "oldPrice": "₹1800", "duration": "2 hrs", "description": "Assembly of standard PC components." },
         { "id": "advanced_assembly", "name": "Advanced Assembly", "price": "₹2500", "oldPrice": "₹3000", "duration": "3 hrs", "description": "Assembly with custom cooling, RGB, and cable management." },
         { "id": "component_installation", "name": "Component Installation", "price": "₹500", "oldPrice": "₹700", "duration": "30 min", "description": "Installation of a single PC component (GPU, RAM, SSD, etc.)." },
-        { "id": "component_uninstallation", "name": "Component Uninstallation", "price": "₹400", "oldPrice": "₹600", "duration": "20 min", "description": "Safe removal of a single PC component." },
-        { "id": "full_installation", "name": "Full System Installation", "price": "₹1800", "oldPrice": "₹2200", "duration": "2.5 hrs", "description": "Complete installation of all components and system setup." },
-        { "id": "full_uninstallation", "name": "Full System Uninstallation", "price": "₹1200", "oldPrice": "₹1500", "duration": "1.5 hrs", "description": "Complete disassembly and safe removal of all PC components." }
+        { "id": "full_installation", "name": "Full System Installation", "price": "₹1800", "oldPrice": "₹2200", "duration": "2.5 hrs", "description": "Complete installation of all components and system setup." }
       ],
       "packages": [
         { "id": "full_build", "name": "Full Build", "title": "Complete PC Build", "description": "From parts to a working PC, including OS installation.", "price": "₹3499", "features": ["Assembly", "OS install", "Driver setup"] }
@@ -253,7 +310,7 @@
     },
     "3": {
       "id": "3",
-      "name": "Virus Removal",
+      "name": "System Protection",
       "description": "Professional virus, malware, and spyware removal for computers and laptops.",
       "rating": 4.78,
       "totalBookings": "3.7M",
@@ -324,15 +381,6 @@
       "features": ["Free diagnosis", "All device types", "Secure process", "No data, no charge"],
       "highlights": ["Fast turnaround", "Confidential handling", "Free pickup"],
       "superSaverPacks": [
-        {
-          "id": "data_saver",
-          "name": "Data Saver Pack",
-          "title": "Annual Data Recovery",
-          "description": "2 recoveries + free diagnosis + priority support",
-          "price": "₹4999",
-          "savings": "₹2000",
-          "features": ["2 recoveries/year", "Free diagnosis", "Priority support", "1 year validity"]
-        },
         {
           "id": "data_premium",
           "name": "Data Premium Pack",
@@ -414,9 +462,7 @@
         { "id": "os_install", "name": "OS Installation", "price": "₹999", "oldPrice": "₹1299", "duration": "1.5 hrs", "description": "Windows, Linux, or Mac OS installation." },
         { "id": "software_bundle", "name": "Software Bundle", "price": "₹1499", "oldPrice": "₹1799", "duration": "2 hrs", "description": "Installation of essential software (Office, Antivirus, etc.)." },
         { "id": "software_installation", "name": "Software Installation", "price": "₹400", "oldPrice": "₹600", "duration": "20 min", "description": "Installation and setup of a single software application." },
-        { "id": "software_uninstallation", "name": "Software Uninstallation", "price": "₹300", "oldPrice": "₹500", "duration": "15 min", "description": "Safe removal of a single software application." },
-        { "id": "bulk_software_installation", "name": "Bulk Software Installation", "price": "₹1200", "oldPrice": "₹1500", "duration": "1 hr", "description": "Installation and setup of up to 5 software applications." },
-        { "id": "bulk_software_uninstallation", "name": "Bulk Software Uninstallation", "price": "₹900", "oldPrice": "₹1200", "duration": "45 min", "description": "Safe removal of up to 5 software applications." }
+        { "id": "software_uninstallation", "name": "Software Uninstallation", "price": "₹300", "oldPrice": "₹500", "duration": "15 min", "description": "Safe removal of a single software application." }
       ],
       "packages": [
         { "id": "full_setup", "name": "Full Setup", "title": "Complete Software Setup", "description": "OS + all essential software.", "price": "₹1999", "features": ["OS install", "Drivers", "Office suite", "Antivirus"] }
@@ -610,6 +656,119 @@
         { "question": "Do you set up both wired and wireless networks?", "answer": "Yes, we handle both Wi-Fi and LAN setups." },
         { "question": "Can you expand my network coverage?", "answer": "Yes, we offer solutions to improve Wi-Fi range and coverage." }
       ]
+    },
+    "9": {
+      "id": "9",
+      "name": "CCTV",
+      "description": "Installation and maintenance of CCTV systems for home and office security.",
+      "rating": 4.7,
+      "totalBookings": "500K",
+      "warranty": "180 days",
+      "image": "https://images.unsplash.com/photo-1519125323398-675f0ddb6308",
+      "features": ["Certified installation", "Remote monitoring setup", "Warranty included"],
+      "highlights": ["Quick install", "24/7 support", "Free site survey"],
+      "superSaverPacks": [
+        { "id": "cctv_basic", "name": "Basic CCTV Pack", "title": "Basic CCTV Setup", "description": "Standard CCTV installation for up to 4 cameras.", "price": "₹2999", "savings": "₹500", "features": ["4 cameras", "Mobile app setup", "1 year support"] }
+      ],
+      "categories": [
+        { "id": "cctv_install", "name": "CCTV Installation", "price": "₹2999", "oldPrice": "₹3499", "duration": "2 hrs", "description": "Install up to 4 CCTV cameras." },
+        { "id": "cctv_maintenance", "name": "CCTV Maintenance", "price": "₹999", "oldPrice": "₹1299", "duration": "1 hr", "description": "Routine maintenance and checkup." }
+      ],
+      "faqs": [
+        { "question": "Do you provide warranty?", "answer": "Yes, 1 year warranty on installation." },
+        { "question": "Can I monitor remotely?", "answer": "Yes, we set up mobile and web monitoring." }
+      ]
+    },
+    "10": {
+      "id": "10",
+      "name": "Biometric",
+      "description": "Biometric device installation and support for secure access control.",
+      "rating": 4.6,
+      "totalBookings": "120K",
+      "warranty": "1 year",
+      "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      "features": ["Fingerprint/Face devices", "Access control setup", "Training included"],
+      "highlights": ["Quick install", "24/7 support", "Free consultation"],
+      "superSaverPacks": [
+        { "id": "biometric_basic", "name": "Basic Biometric Pack", "title": "Biometric Starter", "description": "Standard biometric device installation.", "price": "₹3499", "savings": "₹700", "features": ["Device setup", "User training", "1 year support"] }
+      ],
+      "categories": [
+        { "id": "biometric_install", "name": "Biometric Installation", "price": "₹3499", "oldPrice": "₹3999", "duration": "2 hrs", "description": "Install and configure biometric device." },
+        { "id": "biometric_support", "name": "Biometric Support", "price": "₹999", "oldPrice": "₹1299", "duration": "1 hr", "description": "Troubleshooting and support." }
+      ],
+      "faqs": [
+        { "question": "What types of biometric devices do you install?", "answer": "We install fingerprint, face, and other access control devices." },
+        { "question": "Is training provided?", "answer": "Yes, user training is included with installation." }
+      ]
+    },
+    "11": {
+      "id": "11",
+      "name": "Security Alarm",
+      "description": "Security alarm system installation and emergency support.",
+      "rating": 4.5,
+      "totalBookings": "150K",
+      "warranty": "180 days",
+      "image": "https://images.unsplash.com/photo-1465101046530-73398c7f28ca",
+      "features": ["Alarm setup", "Emergency support", "Warranty included"],
+      "highlights": ["Quick response", "24/7 monitoring", "Free consultation"],
+      "superSaverPacks": [
+        { "id": "alarm_basic", "name": "Basic Alarm Pack", "title": "Alarm Starter", "description": "Basic alarm system setup.", "price": "₹3999", "savings": "₹800", "features": ["Alarm setup", "Mobile alerts", "1 year support"] }
+      ],
+      "categories": [
+        { "id": "alarm_install", "name": "Alarm Installation", "price": "₹3999", "oldPrice": "₹4499", "duration": "2 hrs", "description": "Install and configure alarm system." },
+        { "id": "alarm_support", "name": "Alarm Support", "price": "₹999", "oldPrice": "₹1299", "duration": "1 hr", "description": "Troubleshooting and support." }
+      ],
+      "faqs": [
+        { "question": "Do you offer emergency support?", "answer": "Yes, 24/7 emergency support is available." },
+        { "question": "Can I get mobile alerts?", "answer": "Yes, mobile alerts are included." }
+      ]
+    },
+    "12": {
+      "id": "12",
+      "name": "Intercom",
+      "description": "Intercom system setup and troubleshooting for buildings and offices.",
+      "rating": 4.4,
+      "totalBookings": "80K",
+      "warranty": "1 year",
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
+      "features": ["Intercom setup", "Multi-unit support", "Training included"],
+      "highlights": ["Quick install", "24/7 support", "Free consultation"],
+      "superSaverPacks": [
+        { "id": "intercom_basic", "name": "Basic Intercom Pack", "title": "Intercom Starter", "description": "Standard intercom system installation.", "price": "₹2499", "savings": "₹500", "features": ["System setup", "User training", "1 year support"] }
+      ],
+      "categories": [
+        { "id": "intercom_install", "name": "Intercom Installation", "price": "₹2499", "oldPrice": "₹2999", "duration": "2 hrs", "description": "Install and configure intercom system." },
+        { "id": "intercom_support", "name": "Intercom Support", "price": "₹799", "oldPrice": "₹999", "duration": "1 hr", "description": "Troubleshooting and support." }
+      ],
+      "faqs": [
+        { "question": "Do you support multi-unit buildings?", "answer": "Yes, we install and support intercoms for multi-unit buildings and offices." },
+        { "question": "Is training provided?", "answer": "Yes, user training is included with installation." }
+      ]
+    },
+    "13": {
+      "id": "13",
+      "name": "Annual Maintenance",
+      "description": "Annual maintenance contracts for servers, desktops, laptops, printers, and CCTV.",
+      "rating": 4.8,
+      "totalBookings": "300K",
+      "warranty": "1 year",
+      "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      "features": ["Covers multiple devices", "Priority support", "Annual health check"],
+      "highlights": ["All-in-one plan", "Free emergency visits", "Discounted repairs"],
+      "superSaverPacks": [
+        { "id": "amc_basic", "name": "Basic AMC Pack", "title": "Annual Maintenance Contract", "description": "Covers server, desktop, laptop, printer, CCTV.", "price": "₹9999", "savings": "₹2000", "features": ["All devices covered", "Priority support", "Unlimited visits"] }
+      ],
+      "categories": [
+        { "id": "amc_server", "name": "Server AMC", "price": "₹3999", "oldPrice": "₹4999", "duration": "1 year", "description": "Annual maintenance for servers." },
+        { "id": "amc_desktop", "name": "Desktop AMC", "price": "₹2999", "oldPrice": "₹3999", "duration": "1 year", "description": "Annual maintenance for desktops." },
+        { "id": "amc_laptop", "name": "Laptop AMC", "price": "₹2999", "oldPrice": "₹3999", "duration": "1 year", "description": "Annual maintenance for laptops." },
+        { "id": "amc_printer", "name": "Printer AMC", "price": "₹1999", "oldPrice": "₹2999", "duration": "1 year", "description": "Annual maintenance for printers." },
+        { "id": "amc_cctv", "name": "CCTV AMC", "price": "₹2499", "oldPrice": "₹3499", "duration": "1 year", "description": "Annual maintenance for CCTV systems." }
+      ],
+      "faqs": [
+        { "question": "What devices are covered?", "answer": "Servers, desktops, laptops, printers, CCTV." },
+        { "question": "How many visits are included?", "answer": "Unlimited visits during contract period." }
+      ]
     }
   },
   "bookings": {
@@ -629,6 +788,36 @@
         "workerProfileImage": "https://randomuser.me/api/portraits/women/44.jpg",
         "progress": 30,
         "status": "Started"
+      }
+    ],
+    "completed": [
+      {
+        "id": "3",
+        "service": "Data Recovery",
+        "provider": "Rahul Mehta",
+        "workerProfileImage": "https://randomuser.me/api/portraits/men/45.jpg",
+        "progress": 100,
+        "status": "Completed"
+      }
+    ],
+    "incomplete": [
+      {
+        "id": "4",
+        "service": "Network Setup",
+        "provider": "Sonia Verma",
+        "workerProfileImage": "https://randomuser.me/api/portraits/women/50.jpg",
+        "progress": 50,
+        "status": "Incomplete"
+      }
+    ],
+    "complaints": [
+      {
+        "id": "5",
+        "service": "System Protection",
+        "provider": "Amit Singh",
+        "workerProfileImage": "https://randomuser.me/api/portraits/men/60.jpg",
+        "progress": 0,
+        "status": "Complaint"
       }
     ]
   },
@@ -655,7 +844,7 @@
     },
     {
       "id": "3",
-      "title": "Virus Removal",
+      "title": "System Protection",
       "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80",
       "rating": 4.7,
       "reviewCount": 160,
@@ -712,6 +901,56 @@
       "price": "₹899",
       "popular": true,
       "specialities": ["Wi-Fi & LAN Setup", "Device Configuration", "Network Security"]
+    },
+    {
+      "id": "9",
+      "title": "CCTV",
+      "image": "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+      "rating": 4.7,
+      "reviewCount": 80,
+      "price": "₹2999",
+      "popular": false,
+      "specialities": ["Certified Installation", "Remote Monitoring", "Warranty Included"]
+    },
+    {
+      "id": "10",
+      "title": "Biometric",
+      "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80",
+      "rating": 4.6,
+      "reviewCount": 60,
+      "price": "₹3499",
+      "popular": false,
+      "specialities": ["Fingerprint/Face Devices", "Access Control", "Training Included"]
+    },
+    {
+      "id": "11",
+      "title": "Security Alarm",
+      "image": "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+      "rating": 4.5,
+      "reviewCount": 50,
+      "price": "₹3999",
+      "popular": false,
+      "specialities": ["Alarm Setup", "Emergency Support", "Mobile Alerts"]
+    },
+    {
+      "id": "12",
+      "title": "Intercom",
+      "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80",
+      "rating": 4.4,
+      "reviewCount": 40,
+      "price": "₹2499",
+      "popular": false,
+      "specialities": ["Intercom Setup", "Multi-unit Support", "Training Included"]
+    },
+    {
+      "id": "13",
+      "title": "Annual Maintenance",
+      "image": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80",
+      "rating": 4.8,
+      "reviewCount": 100,
+      "price": "₹9999",
+      "popular": false,
+      "specialities": ["All Devices Covered", "Priority Support", "Unlimited Visits"]
     }
   ],
   "offers": [

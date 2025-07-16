@@ -6,6 +6,7 @@ import mockData from '../mockData.json';
 import LinearGradient from 'react-native-linear-gradient';
 import AdCarousel from '../components/AdCarousel';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BLUE_PRIMARY = '#0e376e';
 const BLUE_LIGHT = '#E6F2FF';
@@ -76,7 +77,7 @@ const CartScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <LinearGradient colors={[BLUE_LIGHT, BLUE_GRADIENT_END]} style={styles.headerGradient}>
         <Text style={styles.header}>Your cart</Text>
       </LinearGradient>
@@ -128,7 +129,7 @@ const CartScreen = () => {
           <Text style={styles.bottomBtnText}>Proceed to checkout</Text>
         </TouchableOpacity>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

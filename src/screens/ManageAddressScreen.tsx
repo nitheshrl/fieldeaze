@@ -5,12 +5,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import mockData from '../mockData.json';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 

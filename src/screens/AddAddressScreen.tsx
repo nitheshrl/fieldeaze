@@ -4,6 +4,7 @@ import { WebView } from 'react-native-webview';
 import Geolocation from '@react-native-community/geolocation';
 import { useNavigation } from '@react-navigation/native';
 import { request, PERMISSIONS } from 'react-native-permissions';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Address {
   street: string;
@@ -192,7 +193,7 @@ const AddAddressScreen = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -341,7 +342,7 @@ const AddAddressScreen = () => {
           <Text style={styles.saveButtonText}>Save Address</Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

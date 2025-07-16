@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, KeyboardAvoidingView, Platform, Linking, Alert, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, KeyboardAvoidingView, Platform, Linking, Alert, Image, SafeAreaView } from 'react-native';
 import mockDataRaw from '../mockData.json';
 
 const mockData: any = mockDataRaw;
@@ -387,7 +387,7 @@ const ChatScreen = () => {
   );
 
   return (
-    <KeyboardAvoidingView style={styles.bg} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <SafeAreaView style={styles.bg}>
       {/* Header */}
       <View style={styles.header}>
         <Image source={{ uri: BOT_AVATAR }} style={styles.headerAvatar} />
@@ -419,7 +419,7 @@ const ChatScreen = () => {
           <Text style={styles.sendBtnText}>Send</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

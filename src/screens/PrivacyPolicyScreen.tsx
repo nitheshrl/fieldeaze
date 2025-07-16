@@ -2,46 +2,33 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PrivacyPolicyScreen = () => {
   const navigation = useNavigation();
   return (
-    <ScrollView style={styles.container}>
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" size={24} color="#27537B" />
-      </TouchableOpacity>
-      <Text style={styles.title}>Privacy Policy</Text>
-      <Text style={styles.lastUpdated}>Last updated: June 2024</Text>
-      <Text style={styles.sectionTitle}>1. Introduction</Text>
-      <Text style={styles.content}>
-        This Privacy Policy explains how we collect, use, and protect your personal information when you use our services.
-      </Text>
-      <Text style={styles.sectionTitle}>2. Information We Collect</Text>
-      <Text style={styles.content}>
-        We may collect information such as your name, email, address, payment details, and usage data to provide and improve our services.
-      </Text>
-      <Text style={styles.sectionTitle}>3. How We Use Information</Text>
-      <Text style={styles.content}>
-        Your information is used to process bookings, manage your account, communicate with you, and enhance your experience.
-      </Text>
-      <Text style={styles.sectionTitle}>4. Data Security</Text>
-      <Text style={styles.content}>
-        We implement industry-standard security measures to protect your data from unauthorized access or disclosure.
-      </Text>
-      <Text style={styles.sectionTitle}>5. Your Rights</Text>
-      <Text style={styles.content}>
-        You have the right to access, update, or delete your personal information. Contact us for any privacy-related requests.
-      </Text>
-      <Text style={styles.sectionTitle}>6. Changes to This Policy</Text>
-      <Text style={styles.content}>
-        We may update this Privacy Policy from time to time. We will notify you of any significant changes.
-      </Text>
-      <Text style={styles.sectionTitle}>7. Contact Us</Text>
-      <Text style={styles.content}>
-        If you have any questions or concerns about this Privacy Policy, please contact our support team.
-      </Text>
-    </ScrollView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+      {/* Header */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingTop: 18, marginBottom: 8 }}>
+        <TouchableOpacity style={{ padding: 6, marginRight: 8 }} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={28} color="#27537B" />
+        </TouchableOpacity>
+        <Text style={{ flex: 1, fontSize: 22, fontWeight: 'bold', color: '#27537B', textAlign: 'center', marginRight: 36 }}>Privacy Policy</Text>
+      </View>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+        <Text style={{ color: '#888', fontSize: 13, marginBottom: 18, textAlign: 'center' }}>Last updated: June 2024</Text>
+        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#27537B', marginBottom: 6, marginTop: 10 }}>1. Introduction</Text>
+        <Text style={{ fontSize: 15, color: '#222', marginBottom: 18 }}>This Privacy Policy explains how we collect, use, and protect your personal information when you use our services.</Text>
+        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#27537B', marginBottom: 6 }}>2. Information We Collect</Text>
+        <Text style={{ fontSize: 15, color: '#222', marginBottom: 18 }}>We may collect information such as your name, email, address, payment details, and usage data to provide and improve our services.</Text>
+        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#27537B', marginBottom: 6 }}>3. How We Use Information</Text>
+        <Text style={{ fontSize: 15, color: '#222', marginBottom: 18 }}>Your information is used to process bookings, manage your account, communicate with you, and enhance your experience.</Text>
+        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#27537B', marginBottom: 6 }}>4. Data Security</Text>
+        <Text style={{ fontSize: 15, color: '#222', marginBottom: 18 }}>We implement industry-standard security measures to protect your data from unauthorized access or disclosure.</Text>
+        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#27537B', marginBottom: 6 }}>5. Your Rights</Text>
+        <Text style={{ fontSize: 15, color: '#222', marginBottom: 18 }}>You have the right to access, update, or delete your personal information. Contact us for any privacy-related requests.</Text>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,11 @@ import {
   Modal,
   Animated,
   Easing,
+  SafeAreaView,
+  Share,
+  Modal as RNModal,
+  TextInput,
+  FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -79,10 +84,22 @@ const ServiceDetailsScreen = () => {
   const serviceDetails = (mockData.serviceDetails as { [key: string]: ServiceDetail })[serviceId];
   console.log('Found serviceDetails:', serviceDetails?.name);
 
-  const [selectedPackage, setSelectedPackage] = useState(serviceDetails?.packages[0]?.id || '');
+  const [selectedPackage, setSelectedPackage] = useState(
+    (serviceDetails?.packages && serviceDetails.packages.length > 0)
+      ? serviceDetails.packages[0].id
+      : ''
+  );
   const { addBookmark, removeBookmark, bookmarks } = useBookmarks();
   const [showAddedModal, setShowAddedModal] = useState(false);
   const [modalOpacity] = useState(new Animated.Value(0));
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const categoryRefs = useRef<{ [id: string]: View | null }>({});
+  const faqRefs = useRef<{ [idx: number]: View | null }>({});
+  const [categoryPositions, setCategoryPositions] = useState<{ [id: string]: number }>({});
+  const [faqPositions, setFaqPositions] = useState<{ [idx: number]: number }>({});
+  const [showSearchBar, setShowSearchBar] = useState(false);
 
   const showAddedToCartModal = () => {
     setShowAddedModal(true);
@@ -132,6 +149,45 @@ const ServiceDetailsScreen = () => {
     });
   };
 
+  // Search logic
+  const handleSearch = (text: string) => {
+    setSearchQuery(text);
+    if (!text.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    const results: any[] = [];
+    // Search categories (services)
+    if (serviceDetails.categories) {
+      serviceDetails.categories.forEach(cat => {
+        if (cat.name.toLowerCase().includes(text.toLowerCase())) {
+          results.push({ type: 'category', ...cat });
+        }
+      });
+    }
+    // Search FAQs
+    if (serviceDetails.faqs) {
+      serviceDetails.faqs.forEach((faq, idx) => {
+        if (faq.question.toLowerCase().includes(text.toLowerCase()) || faq.answer.toLowerCase().includes(text.toLowerCase())) {
+          results.push({ type: 'faq', ...faq, idx });
+        }
+      });
+    }
+    setSearchResults(results);
+  };
+
+  // Share logic
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `${serviceDetails.name}\n${serviceDetails.description}`,
+        title: serviceDetails.name,
+      });
+    } catch (error) {
+      // Optionally handle error
+    }
+  };
+
   const isFocused = useIsFocused();
 
   React.useEffect(() => {
@@ -139,6 +195,34 @@ const ServiceDetailsScreen = () => {
       scrollViewRef.current.scrollTo({ y: 0, animated: false });
     }
   }, [isFocused, serviceId]);
+
+  // After layout, measure positions
+  useEffect(() => {
+    // Measure categories
+    if (serviceDetails.categories) {
+      serviceDetails.categories.forEach(cat => {
+        if (categoryRefs.current[cat.id]) {
+          categoryRefs.current[cat.id].measureLayout(
+            scrollViewRef.current,
+            (x, y) => setCategoryPositions(pos => ({ ...pos, [cat.id]: y })),
+            () => {}
+          );
+        }
+      });
+    }
+    // Measure FAQs
+    if (serviceDetails.faqs) {
+      serviceDetails.faqs.forEach((faq, idx) => {
+        if (faqRefs.current[idx]) {
+          faqRefs.current[idx].measureLayout(
+            scrollViewRef.current,
+            (x, y) => setFaqPositions(pos => ({ ...pos, [idx]: y })),
+            () => {}
+          );
+        }
+      });
+    }
+  }, [serviceDetails, searchModalVisible]);
 
   if (!serviceDetails) {
     return (
@@ -159,29 +243,91 @@ const ServiceDetailsScreen = () => {
   const totalServices = bookmarks.length;
   const totalCost = bookmarks.reduce((sum, item) => sum + (parseFloat(item.price?.replace(/[^\d.]/g, '') || '0')), 0);
 
+  const handleSuggestionPress = (item) => {
+    setShowSearchBar(false);
+    setSearchQuery('');
+    setSearchResults([]);
+    setTimeout(() => {
+      if (item.type === 'category') {
+        if (categoryPositions[item.id] !== undefined) {
+          scrollViewRef.current?.scrollTo({ y: categoryPositions[item.id], animated: true });
+        } else {
+          scrollToSection(serviceY);
+        }
+      } else if (item.type === 'faq') {
+        if (faqPositions[item.idx] !== undefined) {
+          scrollViewRef.current?.scrollTo({ y: faqPositions[item.idx], animated: true });
+          setExpandedFaq(item.idx);
+        } else {
+          scrollToSection(faqY);
+          setExpandedFaq(item.idx);
+        }
+      }
+    }, 300); // Delay to allow layout to update
+  };
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" backgroundColor="#E6F2FF" />
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-left" size={20} color="#27537B" />
-      </TouchableOpacity>
+      {/* Back Button (only show if search bar is not open) */}
+      {!showSearchBar && (
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-left" size={20} color="#27537B" />
+        </TouchableOpacity>
+      )}
       {/* Top Section with Gradient */}
       <LinearGradient colors={["#E6F2FF", "#B3D8F7"]} style={styles.gradientTopSection}>
-        <View style={styles.topRowExactCentered}>
-         
-          <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }}>
-            <Text style={styles.serviceTitleExactCentered}>{serviceDetails.name}</Text>
-          </View>
-          <View style={styles.iconRowExact}>
-            <TouchableOpacity style={styles.circleIconExact}>
-              <Icon name="search" size={18} color="#27537B" />
+        {showSearchBar ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 12, marginBottom: 10 }}>
+            <TouchableOpacity onPress={() => { setShowSearchBar(false); setSearchQuery(''); setSearchResults([]); }} style={{ marginRight: 8, padding: 6 }}>
+              <Icon name="arrow-left" size={22} color="#27537B" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.circleIconExact}>
-              <Icon name="share-alt" size={18} color="#27537B" />
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 24, paddingHorizontal: 16, elevation: 2, borderWidth: 1, borderColor: '#e0e0e0' }}>
+              <TextInput
+                style={{ flex: 1, fontSize: 16, paddingVertical: 8, backgroundColor: 'transparent' }}
+                placeholder="Search services or FAQs..."
+                value={searchQuery}
+                onChangeText={handleSearch}
+                autoFocus
+              />
+            </View>
+            <TouchableOpacity onPress={() => { setShowSearchBar(false); setSearchQuery(''); setSearchResults([]); }} style={{ marginLeft: 8, padding: 6 }}>
+              <Icon name="close" size={22} color="#27537B" />
             </TouchableOpacity>
           </View>
-        </View>
+        ) : (
+          <View style={styles.topRowExactCentered}>
+            <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }}>
+              <Text style={styles.serviceTitleExactCentered}>{serviceDetails.name}</Text>
+            </View>
+            <View style={styles.iconRowExact}>
+              <TouchableOpacity style={styles.circleIconExact} onPress={() => setShowSearchBar(true)}>
+                <Icon name="search" size={18} color="#27537B" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.circleIconExact} onPress={handleShare}>
+                <Icon name="share-alt" size={18} color="#27537B" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        {/* Show search results below the search bar if visible */}
+        {showSearchBar && (
+          <FlatList
+            data={searchResults}
+            keyExtractor={(_, i) => i.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={{ paddingVertical: 10, borderBottomWidth: 1, borderColor: '#f0f0f0', paddingHorizontal: 16, backgroundColor: '#fff' }}
+                onPress={() => handleSuggestionPress(item)}
+              >
+                <Text style={{ fontWeight: 'bold' }}>{item.type === 'category' ? 'Service' : 'FAQ'}</Text>
+                <Text numberOfLines={2} style={{ color: '#222' }}>{item.name || item.question}</Text>
+              </TouchableOpacity>
+            )}
+            ListEmptyComponent={<Text style={{ color: '#bbb', textAlign: 'center', marginTop: 40, fontSize: 16 }}>No results found.</Text>}
+            style={{ maxHeight: 250, marginBottom: 8 }}
+          />
+        )}
         {/* Offers Pills with Chevron */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.offersPillScrollExact} contentContainerStyle={{paddingRight: 16}}>
           {offers.map((offer) => (
@@ -216,21 +362,23 @@ const ServiceDetailsScreen = () => {
               </View>
               <Text style={styles.categorySquareLabel}>Service</Text>
             </TouchableOpacity>
-            {/* Installation/uninstallation card */}
-            <TouchableOpacity
-              style={{ alignItems: 'center', flex: 1 }}
-              onPress={() => {
-                const hasInstall = serviceDetails.categories && serviceDetails.categories.some(category => /install|uninstall/i.test(category.name));
-                scrollToSection(hasInstall ? installY : serviceY);
-              }}
-            >
-              <View style={styles.categorySquareCard}>
-                <View style={styles.categorySquareIconWrap}>
-                  <Image source={require('../assets/icons/service-details3.png')} style={styles.categorySquareIcon} resizeMode="contain" />
+            {/* Installation/uninstallation card (hide for Laptop Repair) */}
+            {serviceDetails.id !== '1' && serviceDetails.name !== 'Laptop Repair' && (
+              <TouchableOpacity
+                style={{ alignItems: 'center', flex: 1 }}
+                onPress={() => {
+                  const hasInstall = serviceDetails.categories && serviceDetails.categories.some(category => /install|uninstall/i.test(category.name));
+                  scrollToSection(hasInstall ? installY : serviceY);
+                }}
+              >
+                <View style={styles.categorySquareCard}>
+                  <View style={styles.categorySquareIconWrap}>
+                    <Image source={require('../assets/icons/service-details3.png')} style={styles.categorySquareIcon} resizeMode="contain" />
+                  </View>
                 </View>
-              </View>
-              <Text style={styles.categorySquareLabel}>installtion/{'\n'}uninstalllation</Text>
-            </TouchableOpacity>
+                <Text style={styles.categorySquareLabel}>installtion/{'\n'}uninstalllation</Text>
+              </TouchableOpacity>
+            )}
             {/* Repair card (now FAQ) */}
             <TouchableOpacity style={{ alignItems: 'center', flex: 1 }} onPress={() => scrollToSection(faqY)}>
               <View style={styles.categorySquareCard}>
@@ -325,7 +473,11 @@ const ServiceDetailsScreen = () => {
           <View style={styles.categoriesSection}>
             <Text style={styles.sectionTitle}>Service Categories</Text>
             {serviceDetails.categories.filter(category => !/install|uninstall/i.test(category.name)).map((category) => (
-              <View key={category.id} style={styles.newCategoryCard}>
+              <View
+                key={category.id}
+                style={styles.newCategoryCard}
+                ref={ref => (categoryRefs.current[category.id] = ref)}
+              >
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.newCategoryTitle}>{category.name}</Text>
@@ -370,57 +522,59 @@ const ServiceDetailsScreen = () => {
           </View>
         )}
         </View>
-        {/* Installation / Uninstallation Section */}
-        <View onLayout={e => setInstallY(e.nativeEvent.layout.y)}>
-        {serviceDetails.categories && serviceDetails.categories.some(category => /install|uninstall/i.test(category.name)) && (
-          <View style={styles.categoriesSection}>
-            <Text style={styles.sectionTitle}>Installation / Uninstallation</Text>
-            {serviceDetails.categories.filter(category => /install|uninstall/i.test(category.name)).map((category) => (
-              <View key={category.id} style={styles.newCategoryCard}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.newCategoryTitle}>{category.name}</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 4 }}>
-                      <Icon name="star" size={16} color="#FFC107" style={{ marginRight: 4 }} />
-                      <Text style={styles.newCategoryRating}>4.8 (23k)</Text>
+        {/* Installation / Uninstallation Section (hide for Laptop Repair) */}
+        {serviceDetails.id !== '1' && serviceDetails.name !== 'Laptop Repair' && (
+          <View onLayout={e => setInstallY(e.nativeEvent.layout.y)}>
+            {serviceDetails.categories && serviceDetails.categories.some(category => /install|uninstall/i.test(category.name)) && (
+              <View style={styles.categoriesSection}>
+                <Text style={styles.sectionTitle}>Installation / Uninstallation</Text>
+                {serviceDetails.categories.filter(category => /install|uninstall/i.test(category.name)).map((category) => (
+                  <View key={category.id} style={styles.newCategoryCard}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.newCategoryTitle}>{category.name}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 4 }}>
+                          <Icon name="star" size={16} color="#FFC107" style={{ marginRight: 4 }} />
+                          <Text style={styles.newCategoryRating}>4.8 (23k)</Text>
+                        </View>
+                      </View>
+                      <TouchableOpacity
+                        style={styles.heartIconWrap}
+                        onPress={() => {
+                          if (bookmarks.some(b => b.id === category.id)) {
+                            removeBookmark(category.id);
+                          } else {
+                            addBookmark({
+                              id: category.id,
+                              title: category.name,
+                              price: category.price,
+                              oldPrice: category.oldPrice,
+                              duration: category.duration,
+                              serviceId: serviceDetails.id,
+                              serviceName: serviceDetails.name,
+                            });
+                            showAddedToCartModal();
+                          }
+                        }}
+                      >
+                        <MaterialIcon name="shopping-cart" size={20} color={bookmarks.some(b => b.id === category.id) ? '#27537B' : '#888'} />
+                      </TouchableOpacity>
                     </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}>
+                      <Text style={styles.newCategoryPrice}>{category.price}</Text>
+                      {category.oldPrice && <Text style={styles.newCategoryOldPrice}>{category.oldPrice}</Text>}
+                      <Text style={styles.newCategoryDuration}>{category.duration}</Text>
+                    </View>
+                    <TouchableOpacity>
+                      <Text style={styles.viewDetailsText}>view details</Text>
+                    </TouchableOpacity>
+                    <View style={styles.dottedLine} />
                   </View>
-                  <TouchableOpacity
-                    style={styles.heartIconWrap}
-                    onPress={() => {
-                      if (bookmarks.some(b => b.id === category.id)) {
-                        removeBookmark(category.id);
-                      } else {
-                        addBookmark({
-                          id: category.id,
-                          title: category.name,
-                          price: category.price,
-                          oldPrice: category.oldPrice,
-                          duration: category.duration,
-                          serviceId: serviceDetails.id,
-                          serviceName: serviceDetails.name,
-                        });
-                        showAddedToCartModal();
-                      }
-                    }}
-                  >
-                    <MaterialIcon name="shopping-cart" size={20} color={bookmarks.some(b => b.id === category.id) ? '#27537B' : '#888'} />
-                  </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}>
-                  <Text style={styles.newCategoryPrice}>{category.price}</Text>
-                  {category.oldPrice && <Text style={styles.newCategoryOldPrice}>{category.oldPrice}</Text>}
-                  <Text style={styles.newCategoryDuration}>{category.duration}</Text>
-                </View>
-                <TouchableOpacity>
-                  <Text style={styles.viewDetailsText}>view details</Text>
-                </TouchableOpacity>
-                <View style={styles.dottedLine} />
+                ))}
               </View>
-            ))}
+            )}
           </View>
         )}
-        </View>
 
         {/* FAQs Section */}
         {serviceDetails.faqs && (
@@ -448,6 +602,7 @@ const ServiceDetailsScreen = () => {
                     shadowOffset: { width: 0, height: 2 },
                     elevation: 2,
                   }}
+                  ref={ref => (faqRefs.current[i] = ref)}
                 >
                   <TouchableOpacity
                     onPress={() => handleFaqPress(i)}
@@ -520,7 +675,66 @@ const ServiceDetailsScreen = () => {
           </View>
         </Animated.View>
       </Modal>
-    </View>
+      {/* Search Modal */}
+      <RNModal
+        visible={searchModalVisible}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setSearchModalVisible(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: '#fff', borderRadius: 16, padding: 20, width: '90%' }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 12 }}>Search</Text>
+            <TextInput
+              style={{ borderWidth: 1, borderColor: '#e0e0e0', borderRadius: 8, padding: 10, marginBottom: 12 }}
+              placeholder="Search categories, packages, FAQs..."
+              value={searchQuery}
+              onChangeText={handleSearch}
+              autoFocus
+            />
+            <FlatList
+              data={searchResults}
+              keyExtractor={(_, i) => i.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={{ paddingVertical: 10, borderBottomWidth: 1, borderColor: '#f0f0f0' }}
+                  onPress={() => {
+                    setSearchModalVisible(false);
+                    setSearchQuery('');
+                    setSearchResults([]);
+                    if (item.type === 'category') {
+                      if (categoryPositions[item.id] !== undefined) {
+                        scrollViewRef.current?.scrollTo({ y: categoryPositions[item.id], animated: true });
+                      } else {
+                        scrollToSection(serviceY);
+                      }
+                    } else if (item.type === 'package') {
+                      scrollToSection(discountY);
+                    } else if (item.type === 'faq') {
+                      if (faqPositions[item.idx] !== undefined) {
+                        scrollViewRef.current?.scrollTo({ y: faqPositions[item.idx], animated: true });
+                        setExpandedFaq(item.idx);
+                      } else {
+                        scrollToSection(faqY);
+                        setExpandedFaq(item.idx);
+                      }
+                    }
+                  }}
+                >
+                  <Text style={{ fontWeight: 'bold' }}>{item.type === 'category' ? 'Category' : item.type === 'package' ? 'Package' : 'FAQ'}</Text>
+                  <Text numberOfLines={2} style={{ color: '#222' }}>{item.name || item.title || item.question}</Text>
+                </TouchableOpacity>
+              )}
+              ListEmptyComponent={<Text style={{ color: '#888', textAlign: 'center', marginTop: 20 }}>No results found.</Text>}
+              style={{ maxHeight: 250 }}
+            />
+            <TouchableOpacity onPress={() => setSearchModalVisible(false)} style={{ marginTop: 16, alignSelf: 'flex-end' }}>
+              <Text style={{ color: '#27537B', fontWeight: 'bold', fontSize: 16 }}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </RNModal>
+    </SafeAreaView>
   );
 };
 

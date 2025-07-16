@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal, FlatList, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal, FlatList, TextInput, SafeAreaView } from 'react-native';
 import { useBookmarks as useCart } from '../context/BookmarkContext';
 import { useNavigation } from '@react-navigation/native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -166,7 +166,7 @@ const CheckoutScreen = () => {
 
   // --- Main Render ---
   return (
-    <View style={styles.bg}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: BG }}>
       <View style={styles.headerRow}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
           <MaterialIcon name="arrow-back" size={26} color={BLUE_PRIMARY} />
@@ -203,7 +203,7 @@ const CheckoutScreen = () => {
           </TouchableOpacity>
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

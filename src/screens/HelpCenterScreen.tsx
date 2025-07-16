@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, LayoutAnimation, Platform, UIManager } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, LayoutAnimation, Platform, UIManager, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
@@ -43,7 +43,7 @@ const HelpCenterScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
@@ -102,7 +102,7 @@ const HelpCenterScreen = () => {
           <Text style={{ color: '#aaa', fontSize: 16 }}>FAQ content coming soon...</Text>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

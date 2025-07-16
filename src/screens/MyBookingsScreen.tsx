@@ -1,76 +1,109 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
-
-const mockBookings = [
-  { id: '1', service: 'AC Repair', date: '2024-06-10', status: 'Completed' },
-  { id: '2', service: 'Washing Machine Service', date: '2024-06-15', status: 'Upcoming' },
-  { id: '3', service: 'TV Installation', date: '2024-06-18', status: 'Cancelled' },
-];
+import { SafeAreaView } from 'react-native-safe-area-context';
+import mockData from '../mockData.json';
 
 const statusColors = {
   Completed: '#27ae60',
+  'In Progress': '#f39c12',
+  Started: '#f39c12',
   Upcoming: '#f39c12',
   Cancelled: '#e74c3c',
+  Complaint: '#e74c3c',
+  Incomplete: '#e67e22',
 };
 
-const tabs = ['Upcoming', 'Completed', 'Cancelled'];
+const tabs = [
+  { label: 'Upcoming', statuses: ['Upcoming', 'Started', 'In Progress'] },
+  { label: 'Completed', statuses: ['Completed'] },
+  { label: 'Cancelled', statuses: ['Cancelled', 'Complaint', 'Incomplete'] },
+];
 
 const MyBookingsScreen = () => {
-  const [selectedTab, setSelectedTab] = useState('Upcoming');
+  const [selectedTab, setSelectedTab] = useState(tabs[0].label);
   const navigation = useNavigation();
-  const bookings = mockBookings.filter(b => b.status === selectedTab);
+  // Combine all bookings from mockData
+  const allBookings = [
+    ...(mockData.bookings.ongoing || []),
+    ...(mockData.bookings.completed || []),
+    ...(mockData.bookings.incomplete || []),
+    ...(mockData.bookings.complaints || []),
+  ];
+  // Filter bookings for the selected tab
+  const tabObj = tabs.find(t => t.label === selectedTab);
+  const bookings = allBookings.filter(b => tabObj.statuses.includes(b.status));
 
   const renderBooking = ({ item }) => (
     <View style={styles.bookingCard}>
       <View style={styles.bookingInfo}>
-        <Icon name="event" size={32} color="#27537B" />
+        <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#eaf1fa', alignItems: 'center', justifyContent: 'center' }}>
+          <Icon name="event" size={26} color="#27537B" />
+        </View>
         <View style={{ marginLeft: 16 }}>
           <Text style={styles.service}>{item.service}</Text>
-          <Text style={styles.date}>{item.date}</Text>
+          <Text style={styles.date}>{item.provider} • {item.date || '2024-06-15'}</Text>
         </View>
       </View>
       <View style={styles.statusBadgeWrap}>
-        <Text style={[styles.statusBadge, { backgroundColor: statusColors[item.status] || '#ccc' }]}>{item.status}</Text>
+        <Text style={[styles.statusBadge, { backgroundColor: statusColors[item.status] || '#ccc' }]}>{item.status.toUpperCase()}</Text>
       </View>
     </View>
   );
 
   return (
-    <View style={styles.container}>
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" size={24} color="#27537B" />
-      </TouchableOpacity>
-      <Text style={styles.title}>My Bookings</Text>
-      {/* Tabs */}
-      <View style={styles.tabsRow}>
-        {tabs.map(tab => (
-          <TouchableOpacity
-            key={tab}
-            style={[styles.tabBtn, selectedTab === tab && styles.tabBtnActive]}
-            onPress={() => setSelectedTab(tab)}
-          >
-            <Text style={[styles.tabText, selectedTab === tab && styles.tabTextActive]}>{tab}</Text>
-          </TouchableOpacity>
-        ))}
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+      {/* Header */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingTop: 18, marginBottom: 8 }}>
+        <TouchableOpacity style={{ padding: 6, marginRight: 8 }} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={28} color="#27537B" />
+        </TouchableOpacity>
+        <Text style={{ flex: 1, fontSize: 22, fontWeight: 'bold', color: '#27537B', textAlign: 'center', marginRight: 36 }}>My Bookings</Text>
       </View>
-      {/* Bookings List or Empty State */}
-      {bookings.length === 0 ? (
-        <View style={styles.emptyState}>
-          <Icon name="event-busy" size={48} color="#ccc" />
-          <Text style={styles.emptyText}>No {selectedTab.toLowerCase()} bookings found.</Text>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
+        {/* Tabs */}
+        <View style={styles.tabsRow}>
+          {tabs.map(tab => (
+            <TouchableOpacity
+              key={tab.label}
+              style={[styles.tabBtn, selectedTab === tab.label && styles.tabBtnActive]}
+              onPress={() => setSelectedTab(tab.label)}
+            >
+              <Text style={[styles.tabText, selectedTab === tab.label && styles.tabTextActive]}>{tab.label}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
-      ) : (
-        <FlatList
-          data={bookings}
-          renderItem={renderBooking}
-          keyExtractor={item => item.id}
-          contentContainerStyle={{ paddingBottom: 20 }}
-        />
-      )}
-    </View>
+        {/* Bookings List or Empty State */}
+        {bookings.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Icon name="event-busy" size={48} color="#ccc" />
+            <Text style={styles.emptyText}>No {selectedTab.toLowerCase()} bookings found.</Text>
+          </View>
+        ) : (
+          bookings.map(booking => (
+            <View key={booking.id} style={{ marginBottom: 14 }}>{renderBooking({ item: booking })}</View>
+          ))
+        )}
+      </ScrollView>
+      <TouchableOpacity
+        style={{
+          backgroundColor: '#27537B',
+          borderRadius: 12,
+          paddingVertical: 16,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginHorizontal: 18,
+          marginBottom: 18,
+        }}
+        onPress={() => {}}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Icon name="add" size={24} color="#fff" />
+          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16, marginLeft: 10 }}>Book New Service</Text>
+        </View>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 

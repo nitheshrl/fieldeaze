@@ -11,6 +11,7 @@ import {
   ImageBackground,
   Dimensions,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
@@ -74,7 +75,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
       <View style={styles.topHalf}>
         <ImageBackground
           source={require('../assets/login-bg.png')}
@@ -217,7 +218,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
           </View>
         </View>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 };
 

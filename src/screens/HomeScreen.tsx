@@ -10,6 +10,9 @@ import {
   TextInput,
   ScrollView as RNScrollView,
   Dimensions,
+  SafeAreaView,
+  Modal,
+  FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -41,18 +44,47 @@ const getStarColor = (bgColor: string) => {
 };
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const spacing = 8;
+const boxSize = (SCREEN_WIDTH - 3 * spacing) / 4.3;
 const ONGOING_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.92);
 const HORIZONTAL_PADDING = Math.round((SCREEN_WIDTH - ONGOING_CARD_WIDTH) / 2);
+
+function chunkAndPadServices(array: any[], size: number) {
+  const result = [];
+  for (let i = 0; i < array.length; i += size) {
+    let chunk = array.slice(i, i + size);
+    // Pad only at the end to make 8
+    while (chunk.length < size) chunk.push({ _empty: true, id: `empty-pad-${i + chunk.length}` });
+    result.push(chunk);
+  }
+  return result;
+}
 
 const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const [selectedTab, setSelectedTab] = useState('all');
   const { user, services } = mockData;
+  const bookings = mockData.bookings;
+  const [showAllServices, setShowAllServices] = useState(false);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
   const [showRecommendations, setShowRecommendations] = useState(false);
   const [recommendations, setRecommendations] = useState<typeof services>([]);
+
+  // Filtered bookings/services based on tab
+  let filteredBookings: any[] = [];
+  if (selectedTab === 'all') {
+    filteredBookings = bookings.ongoing || [];
+  } else if (selectedTab === 'ongoing') {
+    filteredBookings = bookings.ongoing || [];
+  } else if (selectedTab === 'completed') {
+    filteredBookings = bookings.completed || [];
+  } else if (selectedTab === 'incomplete') {
+    filteredBookings = bookings.incomplete || [];
+  } else if (selectedTab === 'complaints') {
+    filteredBookings = bookings.complaints || [];
+  }
 
   // Search filter handler
   const handleSearch = (text: string) => {
@@ -77,8 +109,29 @@ const HomeScreen = () => {
     navigation.navigate('ServiceDetails', { serviceId: service.id });
   };
 
+  const [showAllModal, setShowAllModal] = useState(false);
+
+  // Combine all bookings for modal (grouped)
+  const modalSections = [
+    { title: 'Ongoing', data: bookings.ongoing || [] },
+    { title: 'Completed', data: bookings.completed || [] },
+    { title: 'Incomplete', data: bookings.incomplete || [] },
+    { title: 'Complaints', data: bookings.complaints || [] },
+  ];
+
+  // Split services
+  const first8 = services.slice(0, 8);
+  const rest = services.slice(8);
+  // Pad the rest to always fill rows of 4
+  let restPadded = rest.slice();
+  if (rest.length > 0 && rest.length % 4 !== 0) {
+    for (let i = rest.length % 4; i < 4; i++) {
+      restPadded.push({ _empty: true, id: `empty-rest-${i}` });
+    }
+  }
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#eaf4ff" />
       {/* Header */}
       <View style={styles.header}>
@@ -90,7 +143,8 @@ const HomeScreen = () => {
           />
           
         </View>
-        <TouchableOpacity style={styles.bellButton}>
+        {/* Notification Icon (Bell) */}
+        <TouchableOpacity>
           <Text style={{ fontSize: 22 }}>🔔</Text>
         </TouchableOpacity>
       </View>
@@ -98,18 +152,32 @@ const HomeScreen = () => {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {/* Search Bar */}
         <View style={styles.searchBarContainer}>
-          <TextInput
-            style={styles.searchBar}
-            placeholder="What service do you need ?"
-            placeholderTextColor="#b0b0b0"
-            value={searchQuery}
-            onChangeText={handleSearch}
-            onFocus={() => {
-              if (searchQuery && recommendations.length > 0) setShowRecommendations(true);
-            }}
-            autoCorrect={false}
-            autoCapitalize="none"
-          />
+          <View style={{ position: 'relative' }}>
+            <TextInput
+              style={[styles.searchBar, { paddingRight: 36 }]}
+              placeholder="What service do you need ?"
+              placeholderTextColor="#b0b0b0"
+              value={searchQuery}
+              onChangeText={handleSearch}
+              onFocus={() => {
+                if (searchQuery && recommendations.length > 0) setShowRecommendations(true);
+              }}
+              autoCorrect={false}
+              autoCapitalize="none"
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity
+                style={{ position: 'absolute', right: 8, top: 0, bottom: 0, justifyContent: 'center', height: '100%' }}
+                onPress={() => {
+                  setSearchQuery('');
+                  setRecommendations([]);
+                  setShowRecommendations(false);
+                }}
+              >
+                <Icon name="close" size={18} color="#888" />
+              </TouchableOpacity>
+            )}
+          </View>
           {/* Recommendations Dropdown */}
           {showRecommendations && (
             <View style={{
@@ -171,69 +239,75 @@ const HomeScreen = () => {
           ))}
         </RNScrollView>
 
-        {/* Ongoing Works Cards (multiple, scrollable) */}
-        <RNScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.ongoingScroll}
-          contentContainerStyle={{
-            ...styles.ongoingScrollContent,
-            paddingLeft: Math.max(HORIZONTAL_PADDING - 16, 0),
-            paddingRight: HORIZONTAL_PADDING,
-          }}
-          pagingEnabled
-          snapToInterval={ONGOING_CARD_WIDTH}
-          decelerationRate="fast"
-        >
-          {mockData.bookings.ongoing.map((ongoingBooking) => {
-            return (
-              <View
-                key={ongoingBooking.id}
-                style={[
-                  styles.ongoingCard,
-                  { width: ONGOING_CARD_WIDTH },
-                  styles.ongoingCardHorizontal,
-                ]}
-              >
-                {/* Bottom Left BG */}
-                <Image
-                  source={require('../assets/ongoing_service-bg.png')}
-                  style={[styles.ongoingBg, styles.ongoingBgBottomLeft]}
-                  resizeMode="contain"
-                />
-                {/* Top Right BG */}
-                <Image
-                  source={require('../assets/ongoing_service-bg.png')}
-                  style={[styles.ongoingBg, styles.ongoingBgTopRight]}
-                  resizeMode="contain"
-                />
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+        {/* Filtered Bookings Cards (multiple, scrollable) */}
+        {filteredBookings.length > 0 ? (
+          <RNScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.ongoingScroll}
+            contentContainerStyle={{
+              ...styles.ongoingScrollContent,
+              paddingLeft: Math.max(HORIZONTAL_PADDING - 16, 0),
+              paddingRight: HORIZONTAL_PADDING,
+            }}
+            pagingEnabled
+            snapToInterval={ONGOING_CARD_WIDTH}
+            decelerationRate="fast"
+          >
+            {filteredBookings.map((booking) => {
+              return (
+                <View
+                  key={booking.id}
+                  style={[
+                    styles.ongoingCard,
+                    { width: ONGOING_CARD_WIDTH },
+                    styles.ongoingCardHorizontal,
+                  ]}
+                >
+                  {/* Bottom Left BG */}
                   <Image
-                    source={{ uri: ongoingBooking.workerProfileImage || user.profileImage }}
-                    style={styles.profilePic}
+                    source={require('../assets/ongoing_service-bg.png')}
+                    style={[styles.ongoingBg, styles.ongoingBgBottomLeft]}
+                    resizeMode="contain"
                   />
-                  <View style={{ marginLeft: 10 }}>
-                    <Text style={styles.ongoingName}>{ongoingBooking.provider} </Text>
-                    <Text style={styles.ongoingServiceName}>{ongoingBooking.service}</Text>
-                  </View>
-                </View>
-                <View style={styles.progressBarBg}>
-                  <View style={[styles.progressBarFill, { width: `${ongoingBooking.progress}%` }]} />
-                </View>
-                <View style={styles.progressBarLabelRow}>
-                  <View style={styles.tick}>
+                  {/* Top Right BG */}
+                  <Image
+                    source={require('../assets/ongoing_service-bg.png')}
+                    style={[styles.ongoingBg, styles.ongoingBgTopRight]}
+                    resizeMode="contain"
+                  />
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
                     <Image
-                      source={require('../assets/progress-tick.png')}
-                      style={{ width: 10, height: 10 }}
-                      resizeMode="contain"
+                      source={{ uri: booking.workerProfileImage || user.profileImage }}
+                      style={styles.profilePic}
                     />
+                    <View style={{ marginLeft: 10 }}>
+                      <Text style={styles.ongoingName}>{booking.provider} </Text>
+                      <Text style={styles.ongoingServiceName}>{booking.service}</Text>
+                    </View>
                   </View>
-                  <Text style={styles.progressBarLabelText}>{ongoingBooking.progress} % {ongoingBooking.status}</Text>
+                  <View style={styles.progressBarBg}>
+                    <View style={[styles.progressBarFill, { width: `${booking.progress}%` }]} />
+                  </View>
+                  <View style={styles.progressBarLabelRow}>
+                    <View style={styles.tick}>
+                      <Image
+                        source={require('../assets/progress-tick.png')}
+                        style={{ width: 10, height: 10 }}
+                        resizeMode="contain"
+                      />
+                    </View>
+                    <Text style={styles.progressBarLabelText}>{booking.progress} % {booking.status}</Text>
+                  </View>
                 </View>
-              </View>
-            );
-          })}
-        </RNScrollView>
+              );
+            })}
+          </RNScrollView>
+        ) : (
+          <Text style={{ textAlign: 'center', color: '#888', marginVertical: 16 }}>
+            No bookings found for this filter.
+          </Text>
+        )}
         {/* Ongoing Services Footer Bar (static) */}
         <View style={styles.ongoingFooterBar}>
           <View style={styles.ongoingFooterLeft}>
@@ -242,37 +316,118 @@ const HomeScreen = () => {
             <View style={styles.ongoingFooterPill}><Text style={styles.ongoingFooterPillText}>{mockData.bookings.ongoing.length}</Text></View>
           </View>
           <View style={styles.ongoingFooterRight}>
-            <Text style={styles.ongoingFooterSeeAll}>See all</Text>
+            <TouchableOpacity onPress={() => setShowAllModal(true)}>
+              <Text style={styles.ongoingFooterSeeAll}>See all</Text>
+            </TouchableOpacity>
             <Text style={styles.ongoingFooterChevron}>›</Text>
           </View>
         </View>
 
         {/* Our Services Section: 2x4 grid for first 8, scroll for extra */}
-        <Text style={styles.servicesTitle}>Our Services</Text>
-        <View style={styles.servicesGrid}>
-          {services.slice(0, 8).map((service) => (
-            <TouchableOpacity
-                        key={service.id}
-              style={styles.serviceBox}
-              onPress={() => navigation.navigate('ServiceDetails', { serviceId: service.id })}
+        <Text style={[styles.servicesTitle, { marginLeft: 16 }]}>Our Services</Text>
+        {/* First 8 services grid */}
+        <View style={{
+          width: SCREEN_WIDTH,
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start',
+          backgroundColor: 'transparent',
+        }}>
+          {first8.map((service: any, idx: number) => {
+            const colIdx = idx % 4;
+            return (
+              <TouchableOpacity
+                key={service.id}
+                style={{
+                  width: boxSize,
+                  height: boxSize,
+                  backgroundColor: '#E7E7E7',
+                  borderRadius: 14,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: spacing,
+                  marginRight: colIdx === 3 ? 0 : spacing,
+                }}
+                onPress={() => navigation.navigate('ServiceDetails', { serviceId: service.id })}
+              >
+                <View style={styles.serviceIconCircle}>
+                  <Image
+                    source={{ uri: service.icon }}
+                    style={styles.serviceIconImg}
+                    resizeMode="contain"
+                  />
+                </View>
+                <Text style={[styles.serviceName, { fontSize: 9 }]} numberOfLines={2} ellipsizeMode="tail">
+                  {service.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        {/* Remaining services grid */}
+        {showAllServices && rest.length > 0 && (
+          <View style={{
+            width: SCREEN_WIDTH,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            backgroundColor: 'transparent',
+          }}>
+            {restPadded.map((service: any, idx: number) => {
+              const colIdx = idx % 4;
+              return service._empty ? (
+                <View
+                  key={service.id}
+                  style={{
+                    width: boxSize,
+                    height: boxSize,
+                    marginBottom: spacing,
+                    marginRight: colIdx === 3 ? 0 : spacing,
+                  }}
+                />
+              ) : (
+                <TouchableOpacity
+                  key={service.id}
+                  style={{
+                    width: boxSize,
+                    height: boxSize,
+                    backgroundColor: '#E7E7E7',
+                    borderRadius: 14,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: spacing,
+                    marginRight: colIdx === 3 ? 0 : spacing,
+                  }}
+                  onPress={() => navigation.navigate('ServiceDetails', { serviceId: service.id })}
                 >
                   <View style={styles.serviceIconCircle}>
                     <Image
-                  source={{ uri: service.icon }}
+                      source={{ uri: service.icon }}
                       style={styles.serviceIconImg}
                       resizeMode="contain"
                     />
-              </View>
-              <Text
-                style={styles.serviceName}
-                numberOfLines={2}
-                ellipsizeMode="tail"
-              >
-                {service.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+                  </View>
+                  <Text style={[styles.serviceName, { fontSize: 9 }]} numberOfLines={2} ellipsizeMode="tail">
+                    {service.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+        {/* Show More/Less text link */}
+        {services.length > 8 && (
+          <TouchableOpacity
+            style={{ alignSelf: 'center', marginVertical: 10 }}
+            onPress={() => setShowAllServices(s => !s)}
+          >
+            <Text style={{ color: '#27537B', fontWeight: 'bold', fontSize: 15, textDecorationLine: 'underline' }}>
+              {showAllServices ? 'Show Less' : 'Show More Services'}
+            </Text>
+          </TouchableOpacity>
+        )}
         {/* Optional: page indicator */}
         {/* Removed page indicator as grid is no longer paged */}
 
@@ -306,7 +461,64 @@ const HomeScreen = () => {
           ))}
         </RNScrollView>
       </ScrollView>
-    </View>
+      {/* All Bookings Modal */}
+      <Modal
+        visible={showAllModal}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setShowAllModal(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.18)', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: '#fff', borderRadius: 18, width: '92%', maxHeight: '85%', padding: 16, elevation: 8 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#27537B' }}>All Bookings</Text>
+              <TouchableOpacity onPress={() => setShowAllModal(false)}>
+                <Icon name="close" size={22} color="#27537B" />
+              </TouchableOpacity>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 8 }}>
+              {modalSections.map(section => (
+                section.data.length > 0 && (
+                  <View key={section.title} style={{ marginBottom: 18 }}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#27537B', marginBottom: 8 }}>{section.title}</Text>
+                    {section.data.map(item => (
+                      <View key={item.id} style={[styles.ongoingCard, { width: '100%', marginBottom: 12 }]}> 
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                          <Image
+                            source={{ uri: item.workerProfileImage || user.profileImage }}
+                            style={styles.profilePic}
+                          />
+                          <View style={{ marginLeft: 10 }}>
+                            <Text style={styles.ongoingName}>{item.provider} </Text>
+                            <Text style={styles.ongoingServiceName}>{item.service}</Text>
+                          </View>
+                        </View>
+                        <View style={styles.progressBarBg}>
+                          <View style={[styles.progressBarFill, { width: `${item.progress}%` }]} />
+                        </View>
+                        <View style={styles.progressBarLabelRow}>
+                          <View style={styles.tick}>
+                            <Image
+                              source={require('../assets/progress-tick.png')}
+                              style={{ width: 10, height: 10 }}
+                              resizeMode="contain"
+                            />
+                          </View>
+                          <Text style={styles.progressBarLabelText}>{item.progress} % {item.status}</Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                )
+              ))}
+              {modalSections.every(section => section.data.length === 0) && (
+                <Text style={{ color: '#888', textAlign: 'center', marginTop: 40 }}>No bookings found.</Text>
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 };
 

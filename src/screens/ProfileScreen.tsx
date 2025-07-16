@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import mockData from '../mockData.json';
 import { useNavigation } from '@react-navigation/native';
@@ -19,6 +19,7 @@ const navCards = [
   { icon: 'settings', title: 'Settings', onPress: 'Settings' },
   { icon: 'help', title: 'Help Center', onPress: 'HelpCenter' },
   { icon: 'privacy-tip', title: 'Privacy Policy', onPress: 'PrivacyPolicy' },
+  { icon: 'home', title: 'Address', onPress: 'ManageAddress' },
 ];
 
 const ProfileScreen = () => {
@@ -27,68 +28,51 @@ const ProfileScreen = () => {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Profile Overview */}
-      <View style={styles.profileCard}>
-        <View style={styles.avatarRow}>
-          <Image
-            source={imgError ? require('../assets/icons/default-profile.png') : { uri: user.profileImage }}
-            style={styles.profileImage}
-            onError={() => setImgError(true)}
-          />
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>{user.name}</Text>
-            {/* Removed user.role as it's not present in user object */}
-          </View>
-          <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditProfile')}>
-            <Icon name="edit" size={20} color="#fff" />
-          </TouchableOpacity>
-        </View>
-        {/* Quick Stats */}
-        <View style={styles.statsRow}>
-          {stats.map((stat) => (
-            <View key={stat.label} style={[styles.statCard, stats.length - 1 !== stats.indexOf(stat) && { marginRight: 16 }] }>
-              <Icon name={stat.icon} size={22} color="#27537B" />
-              <Text style={styles.statValue}>{stat.value}</Text>
-              <Text style={styles.statLabel}>{stat.label}</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
+        {/* Profile Overview */}
+        <View style={styles.profileCard}>
+          <View style={styles.avatarRow}>
+            <Image
+              source={imgError ? require('../assets/icons/default-profile.png') : { uri: user.profileImage }}
+              style={styles.profileImage}
+              onError={() => setImgError(true)}
+            />
+            <View style={styles.profileInfo}>
+              <Text style={styles.profileName}>{user.name}</Text>
+              {/* Removed user.role as it's not present in user object */}
             </View>
+            <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditProfile')}>
+              <Icon name="edit" size={20} color="#fff" />
+            </TouchableOpacity>
+          </View>
+          {/* Quick Stats */}
+          <View style={styles.statsRow}>
+            {stats.map((stat) => (
+              <View key={stat.label} style={[styles.statCard, stats.length - 1 !== stats.indexOf(stat) && { marginRight: 16 }] }>
+                <Icon name={stat.icon} size={22} color="#27537B" />
+                <Text style={styles.statValue}>{stat.value}</Text>
+                <Text style={styles.statLabel}>{stat.label}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+        {/* Navigation Cards */}
+        <View style={styles.navSection}>
+          {navCards.map((item) => (
+            <TouchableOpacity key={item.title} style={styles.navCard} onPress={() => navigation.navigate(item.onPress as any)}>
+              <View style={styles.navIconWrap}>
+                <Icon name={item.icon} size={24} color="#27537B" />
+              </View>
+              <Text style={styles.navTitle}>{item.title}</Text>
+              <Icon name="chevron-right" size={24} color="#bbb" />
+            </TouchableOpacity>
           ))}
         </View>
-      </View>
-      {/* Navigation Cards */}
-      <View style={styles.navSection}>
-        {navCards.map((item) => (
-          <TouchableOpacity key={item.title} style={styles.navCard} onPress={() => navigation.navigate(item.onPress as any)}>
-            <View style={styles.navIconWrap}>
-              <Icon name={item.icon} size={24} color="#27537B" />
-            </View>
-            <Text style={styles.navTitle}>{item.title}</Text>
-            <Icon name="chevron-right" size={24} color="#bbb" />
-          </TouchableOpacity>
-        ))}
-      </View>
-      {/* Addresses Section */}
-      <View style={styles.addressSection}>
-        <Text style={styles.addressSectionTitle}>Addresses</Text>
-        {user.addresses && user.addresses.length > 0 ? (
-          user.addresses.map((addr: any) => (
-            <View key={addr.id} style={styles.addressCard}>
-              <Icon name="location-on" size={22} color="#27537B" style={{ marginRight: 10 }} />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.addressLabel}>{addr.label}</Text>
-                <Text style={styles.addressText}>{addr.address}</Text>
-              </View>
-            </View>
-          ))
-        ) : (
-          <Text style={styles.addressText}>No addresses available.</Text>
-        )}
-        <TouchableOpacity style={styles.addAddressBtn} onPress={() => navigation.navigate('AddAddress') }>
-          <Icon name="add-location" size={20} color="#fff" />
-          <Text style={styles.addAddressBtnText}>Add Address</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+        {/* Addresses Section */}
+        
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

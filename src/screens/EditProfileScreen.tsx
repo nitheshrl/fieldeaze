@@ -6,13 +6,13 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  SafeAreaView,
   Dimensions,
   Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import mockData from '../mockData.json';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 

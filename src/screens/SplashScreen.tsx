@@ -8,6 +8,7 @@ import {
   Animated,
   StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width, height } = Dimensions.get('window');
 
@@ -54,7 +55,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ navigation }) => {
   }, [logoScale, textOpacity, loadingOpacity, navigation]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#4A90E2" />
       
       {/* Logo Container */}
@@ -88,7 +89,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ navigation }) => {
           <View style={[styles.dot, styles.dot3]} />
         </View>
       </Animated.View>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const mockWallet = {
   balance: 1250.75,
@@ -29,38 +30,52 @@ const MyWalletScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
-      {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" size={24} color="#27537B" />
-      </TouchableOpacity>
-      <Text style={styles.title}>My Wallet</Text>
-      <View style={styles.balanceCard}>
-        <Icon name="account-balance-wallet" size={32} color="#27537B" />
-        <View style={{ marginLeft: 16 }}>
-          <Text style={styles.balanceLabel}>Wallet Balance</Text>
-          <Text style={styles.balanceValue}>₹{wallet.balance.toFixed(2)}</Text>
-        </View>
-        <TouchableOpacity style={styles.addFundsBtn}>
-          <Icon name="add" size={20} color="#fff" />
-          <Text style={styles.addFundsText}>Add Funds</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+      {/* Header */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingTop: 18, marginBottom: 8 }}>
+        <TouchableOpacity style={{ padding: 6, marginRight: 8 }} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={28} color="#27537B" />
         </TouchableOpacity>
+        <Text style={{ flex: 1, fontSize: 22, fontWeight: 'bold', color: '#27537B', textAlign: 'center', marginRight: 36 }}>My Wallet</Text>
       </View>
-      <Text style={styles.sectionTitle}>Transaction History</Text>
-      {wallet.transactions.length === 0 ? (
-        <View style={styles.emptyState}>
-          <Icon name="receipt-long" size={48} color="#ccc" />
-          <Text style={styles.emptyText}>No transactions yet.</Text>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
+        <View style={[styles.balanceCard, { marginTop: 8 }]}> 
+          <Icon name="account-balance-wallet" size={32} color="#27537B" />
+          <View style={{ marginLeft: 16 }}>
+            <Text style={styles.balanceLabel}>Wallet Balance</Text>
+            <Text style={styles.balanceValue}>₹{wallet.balance.toFixed(2)}</Text>
+          </View>
         </View>
-      ) : (
-        <FlatList
-          data={wallet.transactions}
-          renderItem={renderTransaction}
-          keyExtractor={item => item.id}
-          contentContainerStyle={{ paddingBottom: 20 }}
-        />
-      )}
-    </View>
+        <Text style={styles.sectionTitle}>Transaction History</Text>
+        {wallet.transactions.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Icon name="receipt-long" size={48} color="#ccc" />
+            <Text style={styles.emptyText}>No transactions yet.</Text>
+          </View>
+        ) : (
+          wallet.transactions.map(txn => (
+            <View key={txn.id} style={{ marginBottom: 10 }}>{renderTransaction({ item: txn })}</View>
+          ))
+        )}
+      </ScrollView>
+      <TouchableOpacity
+        style={{
+          backgroundColor: '#27537B',
+          borderRadius: 12,
+          paddingVertical: 16,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginHorizontal: 18,
+          marginBottom: 18,
+        }}
+        onPress={() => {}}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Icon name="add" size={24} color="#fff" />
+          <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16, marginLeft: 10 }}>Add Funds</Text>
+        </View>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
