@@ -1,67 +1,69 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Switch, TouchableOpacity, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '../context/ThemeContext';
 
 const languages = ['English', 'Hindi', 'Spanish'];
 
 const SettingsScreen = () => {
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
   const [language, setLanguage] = useState('English');
   const [showLangs, setShowLangs] = useState(false);
   const navigation = useNavigation();
+  const { theme } = useTheme();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={theme.background} />
       {/* Back Button */}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back" size={24} color="#27537B" />
+        <Icon name="arrow-back" size={24} color={theme.primary} />
       </TouchableOpacity>
-      <Text style={styles.title}>Settings</Text>
+      <Text style={[styles.title, { color: theme.primary }]}>Settings</Text>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Preferences</Text>
-        <View style={styles.row}>
-          <Icon name="notifications" size={22} color="#27537B" />
-          <Text style={styles.label}>Notifications</Text>
+        <Text style={[styles.sectionTitle, { color: theme.primary }]}>Preferences</Text>
+        <View style={[styles.row, { borderBottomColor: theme.inputBorder }]}>
+          <Icon name="notifications" size={22} color={theme.primary} />
+          <Text style={[styles.label, { color: theme.text }]}>Notifications</Text>
           <Switch
             value={notifications}
             onValueChange={setNotifications}
-            thumbColor={notifications ? '#27537B' : '#ccc'}
-            trackColor={{ true: '#b3cbe6', false: '#eee' }}
+            thumbColor={notifications ? theme.primary : '#ccc'}
+            trackColor={{ true: theme.header, false: '#eee' }}
           />
         </View>
         <TouchableOpacity style={styles.row} onPress={() => setShowLangs(!showLangs)}>
-          <Icon name="language" size={22} color="#27537B" />
-          <Text style={styles.label}>Language</Text>
-          <Text style={styles.value}>{language}</Text>
-          <Icon name={showLangs ? 'expand-less' : 'expand-more'} size={22} color="#888" />
+          <Icon name="language" size={22} color={theme.primary} />
+          <Text style={[styles.label, { color: theme.text }]}>Language</Text>
+          <Text style={[styles.value, { color: theme.text }]}>{language}</Text>
+          <Icon name={showLangs ? 'expand-less' : 'expand-more'} size={22} color={theme.textSecondary} />
         </TouchableOpacity>
         {showLangs && (
           <View style={styles.langList}>
             {languages.map((lang) => (
               <TouchableOpacity key={lang} style={styles.langItem} onPress={() => { setLanguage(lang); setShowLangs(false); }}>
-                <Text style={[styles.langText, lang === language && { color: '#27537B', fontWeight: '700' }]}>{lang}</Text>
+                <Text style={[styles.langText, lang === language && { color: theme.primary, fontWeight: '700' }, { color: theme.text }]}>{lang}</Text>
               </TouchableOpacity>
             ))}
           </View>
         )}
         <View style={styles.row}>
-          <Icon name="dark-mode" size={22} color="#27537B" />
-          <Text style={styles.label}>Dark Mode</Text>
+          <Icon name="dark-mode" size={22} color={theme.primary} />
+          <Text style={[styles.label, { color: theme.text }]}>Dark Mode</Text>
           <Switch
-            value={darkMode}
-            onValueChange={setDarkMode}
-            thumbColor={darkMode ? '#27537B' : '#ccc'}
-            trackColor={{ true: '#b3cbe6', false: '#eee' }}
+            value={theme.mode === 'dark'}
+            onValueChange={() => {}}
+            thumbColor={theme.mode === 'dark' ? theme.primary : '#ccc'}
+            trackColor={{ true: theme.header, false: '#eee' }}
           />
         </View>
       </View>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Account</Text>
         <TouchableOpacity style={styles.row}>
-          <Icon name="lock" size={22} color="#27537B" />
+          <Icon name="lock" size={22} color={theme.primary} />
           <Text style={styles.label}>Change Password</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.row}>
@@ -72,7 +74,7 @@ const SettingsScreen = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>About</Text>
         <View style={styles.rowNoBorder}>
-          <Icon name="info" size={22} color="#27537B" />
+          <Icon name="info" size={22} color={theme.primary} />
           <Text style={styles.label}>App Version</Text>
           <Text style={styles.value}>1.0.0</Text>
         </View>
@@ -84,7 +86,6 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
     padding: 20,
   },
   backButton: {
@@ -104,7 +105,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     marginBottom: 20,
-    color: '#27537B',
     marginTop: 0,
     alignSelf: 'center',
   },
@@ -121,7 +121,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#27537B',
     marginBottom: 12,
   },
   row: {

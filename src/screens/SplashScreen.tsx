@@ -9,6 +9,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '../context/ThemeContext';
 
 const { width, height } = Dimensions.get('window');
 
@@ -17,6 +18,7 @@ interface SplashScreenProps {
 }
 
 const SplashScreen: React.FC<SplashScreenProps> = ({ navigation }) => {
+  const { theme } = useTheme();
   const logoScale = new Animated.Value(0);
   const textOpacity = new Animated.Value(0);
   const loadingOpacity = new Animated.Value(0);
@@ -55,8 +57,8 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ navigation }) => {
   }, [logoScale, textOpacity, loadingOpacity, navigation]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#4A90E2" />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.primary }]}>
+      <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={theme.primary} />
       
       {/* Logo Container */}
       <Animated.View
@@ -77,8 +79,8 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ navigation }) => {
 
       {/* App Name */}
       <Animated.View style={[styles.textContainer, { opacity: textOpacity }]}>
-        <Text style={styles.appName}>FieldEaze</Text>
-        <Text style={styles.tagline}>Your Home Services Partner</Text>
+        <Text style={[styles.appName, { color: theme.text }]}>FieldEaze</Text>
+        <Text style={[styles.tagline, { color: theme.textSecondary }]}>Your Home Services Partner</Text>
       </Animated.View>
 
       {/* Loading Indicator */}

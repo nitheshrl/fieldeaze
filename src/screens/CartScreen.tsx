@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, BackHandler, StatusBar } from 'react-native';
 import { useBookmarks as useCart } from '../context/BookmarkContext';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import mockData from '../mockData.json';
@@ -7,6 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import AdCarousel from '../components/AdCarousel';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '../context/ThemeContext';
 
 const BLUE_PRIMARY = '#0e376e';
 const BLUE_LIGHT = '#E6F2FF';
@@ -76,46 +77,54 @@ const CartScreen = () => {
     return service?.specialities || [];
   };
 
+  const { theme } = useTheme();
+
+  // Choose gradient colors based on theme
+  const gradientColors = theme.mode === 'dark'
+    ? [theme.header, theme.card]
+    : [BLUE_LIGHT, BLUE_GRADIENT_END];
+
   return (
-    <SafeAreaView style={styles.container}>
-      <LinearGradient colors={[BLUE_LIGHT, BLUE_GRADIENT_END]} style={styles.headerGradient}>
-        <Text style={styles.header}>Your cart</Text>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={theme.background} />
+      <LinearGradient colors={gradientColors} style={styles.headerGradient}>
+        <Text style={[styles.header, { color: theme.primary }]} >Your cart</Text>
       </LinearGradient>
-      <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 80 }} contentContainerStyle={{ backgroundColor: BG_SECTION, paddingTop: 8, flexGrow: 1 }}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 80 }} contentContainerStyle={{ backgroundColor: theme.background, paddingTop: 8, flexGrow: 1 }}>
         {cartItems.length === 0 ? (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 80 }}>
-            <Text style={{ fontSize: 18, color: BLUE_PRIMARY, fontWeight: '600', marginBottom: 8 }}>Your cart is empty</Text>
-            <Text style={{ fontSize: 15, color: '#888' }}>Add services to see them here.</Text>
+            <Text style={{ fontSize: 18, color: theme.primary, fontWeight: '600', marginBottom: 8 }}>Your cart is empty</Text>
+            <Text style={{ fontSize: 15, color: theme.textSecondary }}>Add services to see them here.</Text>
           </View>
         ) : (
           <>
             {cartItems.map(pkg => (
-              <View key={pkg.id} style={styles.card}>
+              <View key={pkg.id} style={[styles.card, { backgroundColor: theme.card, borderColor: theme.inputBorder, shadowColor: theme.primary }]}>
                 <View style={styles.rowBetween}>
-                  <Text style={styles.packageTitle}>{pkg.title}</Text>
-                  <View style={styles.qtyBox}>
+                  <Text style={[styles.packageTitle, { color: theme.primary }]}>{pkg.title}</Text>
+                  <View style={[styles.qtyBox, { backgroundColor: theme.header }]}>
                     <TouchableOpacity onPress={() => handleQuantityChange(pkg.id, -1)}>
-                      <Text style={styles.qtyBtn}>-</Text>
+                      <Text style={[styles.qtyBtn, { color: theme.primary }]}>-</Text>
                     </TouchableOpacity>
-                    <Text style={styles.qtyText}>{quantities[pkg.id] || 1}</Text>
+                    <Text style={[styles.qtyText, { color: theme.text }]}>{quantities[pkg.id] || 1}</Text>
                     <TouchableOpacity onPress={() => handleQuantityChange(pkg.id, 1)}>
-                      <Text style={styles.qtyBtn}>+</Text>
+                      <Text style={[styles.qtyBtn, { color: theme.primary }]}>+</Text>
                     </TouchableOpacity>
                   </View>
                   <View style={{ alignItems: 'flex-end', minWidth: 70 }}>
-                    <Text style={styles.price}>{pkg.price}</Text>
-                    {pkg.oldPrice && <Text style={styles.oldPrice}>{pkg.oldPrice}</Text>}
+                    <Text style={[styles.price, { color: theme.primary }]}>{pkg.price}</Text>
+                    {pkg.oldPrice && <Text style={[styles.oldPrice, { color: theme.textSecondary }]}>{pkg.oldPrice}</Text>}
                   </View>
                   <TouchableOpacity onPress={() => removeBookmark(pkg.id)} style={{ marginLeft: 10, padding: 4 }}>
-                    <Icon name="delete" size={20} color="#d32f2f" />
+                    <Icon name="delete" size={20} color={theme.mode === 'dark' ? '#ff6b6b' : '#d32f2f'} />
                   </TouchableOpacity>
                 </View>
                 <View style={{ marginTop: 8, marginBottom: 8 }}>
                   {pkg.features && pkg.features.map((item: string, idx: number) => (
-                    <Text key={idx} style={styles.bullet}>• {item}</Text>
+                    <Text key={idx} style={[styles.bullet, { color: theme.textSecondary }]}>• {item}</Text>
                   ))}
                   {getSpecialities(pkg).map((spec: string, idx: number) => (
-                    <Text key={idx} style={styles.bullet}>• {spec}</Text>
+                    <Text key={idx} style={[styles.bullet, { color: theme.textSecondary }]}>• {spec}</Text>
                   ))}
                 </View>
               </View>
@@ -125,8 +134,8 @@ const CartScreen = () => {
         )}
       </ScrollView>
       {cartItems.length > 0 && (
-        <TouchableOpacity style={styles.bottomBtn} onPress={() => navigation.navigate('Checkout')}>
-          <Text style={styles.bottomBtnText}>Proceed to checkout</Text>
+        <TouchableOpacity style={[styles.bottomBtn, { backgroundColor: theme.primary }]} onPress={() => navigation.navigate('Checkout')}>
+          <Text style={[styles.bottomBtnText, { color: theme.card }]}>Proceed to checkout</Text>
         </TouchableOpacity>
       )}
     </SafeAreaView>

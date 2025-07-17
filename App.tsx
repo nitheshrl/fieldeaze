@@ -11,6 +11,7 @@ import { NavigationContainer, createNavigationContainerRef } from '@react-naviga
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import MainNavigator from './src/navigation/MainNavigator';
 import { BookmarkProvider } from './src/context/BookmarkContext';
+import { ThemeProvider } from './src/context/ThemeContext';
 
 // Error boundary component
 interface ErrorBoundaryProps {
@@ -53,7 +54,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
 export const navigationRef = createNavigationContainerRef();
 
-function App(): React.ReactElement {
+export default function App() {
   const appState = useRef(AppState.currentState);
 
   useEffect(() => {
@@ -108,18 +109,18 @@ function App(): React.ReactElement {
   }, []);
 
   return (
-    <BookmarkProvider>
-      <ErrorBoundary name="root">
-        <SafeAreaProvider>
-          <NavigationContainer ref={navigationRef}>
-            <ErrorBoundary name="navigation">
-              <MainNavigator />
-            </ErrorBoundary>
-          </NavigationContainer>
-        </SafeAreaProvider>
-      </ErrorBoundary>
-    </BookmarkProvider>
+    <ThemeProvider>
+      <BookmarkProvider>
+        <ErrorBoundary name="root">
+          <SafeAreaProvider>
+            <NavigationContainer ref={navigationRef}>
+              <ErrorBoundary name="navigation">
+                <MainNavigator />
+              </ErrorBoundary>
+            </NavigationContainer>
+          </SafeAreaProvider>
+        </ErrorBoundary>
+      </BookmarkProvider>
+    </ThemeProvider>
   );
 }
-
-export default App;

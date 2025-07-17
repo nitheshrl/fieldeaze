@@ -14,6 +14,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import { useTheme } from '../context/ThemeContext';
 
 interface RegisterScreenProps {
   onRegister: (userData: {
@@ -41,6 +42,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const { theme } = useTheme();
 
   const handleRegister = async () => {
     if (!name || !email || !phone || !password || !confirmPassword) {
@@ -75,101 +77,101 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   };
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    <SafeAreaView style={[styles.mainContainer, { backgroundColor: theme.background }]}>
       <View style={styles.topHalf}>
         <ImageBackground
           source={require('../assets/login-bg.png')}
           style={styles.backgroundImage}
           resizeMode="cover"
         >
-          <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+          <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
           <View style={styles.header}>
-            <Text style={styles.title}>Registration Now!</Text>
-            <Text style={styles.subtitle}>create your account</Text>
+            <Text style={[styles.title, { color: theme.text }]} >Registration Now!</Text>
+            <Text style={[styles.subtitle, { color: theme.textSecondary }]} >create your account</Text>
           </View>
         </ImageBackground>
       </View>
 
       <KeyboardAvoidingView
-        style={styles.bottomHalf}
+        style={[styles.bottomHalf, { backgroundColor: theme.background }]}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <View style={styles.formContainer}>
+        <View style={[styles.formContainer, { backgroundColor: theme.card }]}>
           <View style={styles.inputWrapper}>
-            <Icon name="user" size={20} color="#999" style={styles.inputIcon} />
+            <Icon name="user" size={20} color={theme.textSecondary} style={styles.inputIcon} />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: theme.text }]}
               placeholder="Name"
               value={name}
               onChangeText={setName}
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.textSecondary}
             />
           </View>
 
           <View style={styles.inputWrapper}>
-            <Icon name="phone" size={20} color="#999" style={styles.inputIcon} />
+            <Icon name="phone" size={20} color={theme.textSecondary} style={styles.inputIcon} />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: theme.text }]}
               placeholder="Phone no"
               value={phone}
               onChangeText={setPhone}
               keyboardType="phone-pad"
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.textSecondary}
             />
           </View>
 
           <View style={styles.inputWrapper}>
-            <Icon name="mail" size={20} color="#999" style={styles.inputIcon} />
+            <Icon name="mail" size={20} color={theme.textSecondary} style={styles.inputIcon} />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: theme.text }]}
               placeholder="Email"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.textSecondary}
             />
           </View>
 
           <View style={styles.inputWrapper}>
-            <Icon name="lock" size={20} color="#999" style={styles.inputIcon} />
+            <Icon name="lock" size={20} color={theme.textSecondary} style={styles.inputIcon} />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: theme.text }]}
               placeholder="Password"
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
               autoCapitalize="none"
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.textSecondary}
             />
             <TouchableOpacity
               style={styles.eyeIcon}
               onPress={() => setShowPassword(!showPassword)}
             >
-              <Icon name={showPassword ? "eye-off" : "eye"} size={20} color="#999" />
+              <Icon name={showPassword ? "eye-off" : "eye"} size={20} color={theme.textSecondary} />
             </TouchableOpacity>
           </View>
 
           <View style={styles.inputWrapper}>
-            <Icon name="lock" size={20} color="#999" style={styles.inputIcon} />
+            <Icon name="lock" size={20} color={theme.textSecondary} style={styles.inputIcon} />
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: theme.text }]}
               placeholder="Confirm Password"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               secureTextEntry={!showConfirmPassword}
               autoCapitalize="none"
-              placeholderTextColor="#999"
+              placeholderTextColor={theme.textSecondary}
             />
             <TouchableOpacity
               style={styles.eyeIcon}
               onPress={() => setShowConfirmPassword(!showConfirmPassword)}
             >
-              <Icon name={showConfirmPassword ? "eye-off" : "eye"} size={20} color="#999" />
+              <Icon name={showConfirmPassword ? "eye-off" : "eye"} size={20} color={theme.textSecondary} />
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.orText}>or register with</Text>
+          <Text style={[styles.orText, { color: theme.textSecondary }]}>or register with</Text>
 
           <View style={styles.socialContainer}>
             <TouchableOpacity style={[styles.socialButton, { borderColor: '#1877F2' }]}>
@@ -194,7 +196,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
                 color={agreeToTerms ? "#6C63FF" : "#999"}
               />
             </TouchableOpacity>
-            <Text style={styles.termsText}>
+            <Text style={[styles.termsText, { color: theme.textSecondary }]}>
               I agree to{' '}
               <Text style={styles.termsLink}>terms of Service</Text>
               {' '}and{' '}
@@ -211,7 +213,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
           </TouchableOpacity>
 
           <View style={styles.loginContainer}>
-            <Text style={styles.loginText}>Already have an account? </Text>
+            <Text style={[styles.loginText, { color: theme.textSecondary }]}>Already have an account? </Text>
             <TouchableOpacity onPress={onNavigateToLogin}>
               <Text style={styles.loginLink}>Sign in!</Text>
             </TouchableOpacity>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, SafeAreaView, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '../context/ThemeContext';
 
 const mockCards = [
   { id: '1', type: 'Visa', last4: '1234', isDefault: true },
@@ -11,6 +12,7 @@ const mockCards = [
 const PaymentMethodsScreen = () => {
   const [cards, setCards] = useState(mockCards);
   const navigation = useNavigation();
+  const { theme } = useTheme();
 
   const handleRemove = (id) => {
     Alert.alert('Remove Card', 'Are you sure you want to remove this card?', [
@@ -24,18 +26,18 @@ const PaymentMethodsScreen = () => {
   };
 
   const renderCard = ({ item }) => (
-    <View style={styles.cardContainer}>
+    <View style={[styles.cardContainer, { backgroundColor: theme.card, borderColor: theme.inputBorder }]}>
       <View style={styles.cardInfo}>
-        <Icon name={item.type === 'Visa' ? 'credit-card' : 'payment'} size={32} color="#27537B" />
+        <Icon name={item.type === 'Visa' ? 'credit-card' : 'payment'} size={32} color={theme.primary} />
         <View style={{ marginLeft: 16 }}>
-          <Text style={styles.cardType}>{item.type} **** {item.last4}</Text>
-          {item.isDefault && <Text style={styles.defaultLabel}>Default</Text>}
+          <Text style={[styles.cardType, { color: theme.text }]}>{item.type} **** {item.last4}</Text>
+          {item.isDefault && <Text style={[styles.defaultLabel, { color: theme.primary }]}>Default</Text>}
         </View>
       </View>
       <View style={styles.cardActions}>
         {!item.isDefault && (
-          <TouchableOpacity style={styles.setDefaultBtn} onPress={() => handleSetDefault(item.id)}>
-            <Text style={styles.setDefaultText}>Set Default</Text>
+          <TouchableOpacity style={[styles.setDefaultBtn, { backgroundColor: theme.primary }]} onPress={() => handleSetDefault(item.id)}>
+            <Text style={[styles.setDefaultText, { color: '#fff' }]}>Set Default</Text>
           </TouchableOpacity>
         )}
         <TouchableOpacity style={styles.removeBtn} onPress={() => handleRemove(item.id)}>
@@ -46,7 +48,7 @@ const PaymentMethodsScreen = () => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingTop: 18, marginBottom: 8 }}>
         <TouchableOpacity style={{ padding: 6, marginRight: 8 }} onPress={() => navigation.goBack()}>
@@ -54,7 +56,7 @@ const PaymentMethodsScreen = () => {
         </TouchableOpacity>
         <Text style={{ flex: 1, fontSize: 22, fontWeight: 'bold', color: '#27537B', textAlign: 'center', marginRight: 36 }}>Payment Methods</Text>
       </View>
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{ padding: 16 }} showsVerticalScrollIndicator={false}>
         {cards.length === 0 ? (
           <View style={styles.emptyState}>
             <Icon name="credit-card-off" size={48} color="#ccc" />

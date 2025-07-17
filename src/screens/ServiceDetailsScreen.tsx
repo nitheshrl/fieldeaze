@@ -27,6 +27,7 @@ import PopularServicesSection from '../components/PopularServicesSection';
 import { useBookmarks } from '../context/BookmarkContext';
 import LinearGradient from 'react-native-linear-gradient';
 import AdCarousel from '../components/AdCarousel';
+import { useTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
@@ -100,6 +101,7 @@ const ServiceDetailsScreen = () => {
   const [categoryPositions, setCategoryPositions] = useState<{ [id: string]: number }>({});
   const [faqPositions, setFaqPositions] = useState<{ [idx: number]: number }>({});
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const { theme } = useTheme();
 
   const showAddedToCartModal = () => {
     setShowAddedModal(true);
@@ -267,20 +269,20 @@ const ServiceDetailsScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar barStyle="dark-content" backgroundColor="#E6F2FF" />
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.background }}>
+      <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={theme.background} />
       {/* Back Button (only show if search bar is not open) */}
       {!showSearchBar && (
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={20} color="#27537B" />
+          <Icon name="arrow-left" size={20} color={theme.primary} />
         </TouchableOpacity>
       )}
       {/* Top Section with Gradient */}
-      <LinearGradient colors={["#E6F2FF", "#B3D8F7"]} style={styles.gradientTopSection}>
+      <LinearGradient colors={theme.mode === 'dark' ? [theme.header, theme.card] : ["#E6F2FF", "#B3D8F7"]} style={styles.gradientTopSection}>
         {showSearchBar ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: 12, marginBottom: 10 }}>
             <TouchableOpacity onPress={() => { setShowSearchBar(false); setSearchQuery(''); setSearchResults([]); }} style={{ marginRight: 8, padding: 6 }}>
-              <Icon name="arrow-left" size={22} color="#27537B" />
+              <Icon name="arrow-left" size={22} color={theme.primary} />
             </TouchableOpacity>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 24, paddingHorizontal: 16, elevation: 2, borderWidth: 1, borderColor: '#e0e0e0' }}>
               <TextInput
@@ -292,20 +294,20 @@ const ServiceDetailsScreen = () => {
               />
             </View>
             <TouchableOpacity onPress={() => { setShowSearchBar(false); setSearchQuery(''); setSearchResults([]); }} style={{ marginLeft: 8, padding: 6 }}>
-              <Icon name="close" size={22} color="#27537B" />
+              <Icon name="close" size={22} color={theme.primary} />
             </TouchableOpacity>
           </View>
         ) : (
           <View style={styles.topRowExactCentered}>
             <View style={{ flex: 1, alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }}>
-              <Text style={styles.serviceTitleExactCentered}>{serviceDetails.name}</Text>
+              <Text style={[styles.serviceTitleExactCentered, { color: theme.text }]}>{serviceDetails.name}</Text>
             </View>
             <View style={styles.iconRowExact}>
               <TouchableOpacity style={styles.circleIconExact} onPress={() => setShowSearchBar(true)}>
-                <Icon name="search" size={18} color="#27537B" />
+                <Icon name="search" size={18} color={theme.primary} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.circleIconExact} onPress={handleShare}>
-                <Icon name="share-alt" size={18} color="#27537B" />
+                <Icon name="share-alt" size={18} color={theme.primary} />
               </TouchableOpacity>
             </View>
           </View>
@@ -392,7 +394,7 @@ const ServiceDetailsScreen = () => {
         )}
       </LinearGradient>
 
-      <ScrollView ref={scrollViewRef} style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView ref={scrollViewRef} style={[styles.content, { backgroundColor: theme.background }]} showsVerticalScrollIndicator={false}>
         {/* Service Packages */}
         <View onLayout={e => setDiscountY(e.nativeEvent.layout.y)}>
           <AdCarousel />
@@ -410,7 +412,11 @@ const ServiceDetailsScreen = () => {
                     key={pkg.id}
                     style={[
                       styles.packageCard,
-                      selectedPackage === pkg.id && styles.packageCardSelected
+                      { 
+                        backgroundColor: theme.mode === 'dark' ? '#000' : theme.card, 
+                        borderColor: theme.inputBorder 
+                      },
+                      selectedPackage === pkg.id && { borderColor: theme.primary, borderWidth: 2 }
                     ]}
                   >
                     {/* Heart icon for bookmarking */}
@@ -445,8 +451,8 @@ const ServiceDetailsScreen = () => {
                       <View style={styles.packageHeader}>
                         <Text style={styles.packageType}>{pkg.name}</Text>
                       </View>
-                      <Text style={styles.packageTitle}>{pkg.title}</Text>
-                      <Text style={styles.packageDesc}>{pkg.description}</Text>
+                      <Text style={[styles.packageTitle, theme.mode === 'dark' && { color: '#fff' }]}>{pkg.title}</Text>
+                      <Text style={[styles.packageDesc, theme.mode === 'dark' && { color: '#fff' }]}>{pkg.description}</Text>
                       <View style={styles.priceRow}>
                         <Text style={styles.packagePrice}>{pkg.price}</Text>
                         <Text style={styles.savingsText}>Save {pkg.savings}</Text>
@@ -455,7 +461,7 @@ const ServiceDetailsScreen = () => {
                         {pkg.features.map((feature, i) => (
                           <View key={i} style={styles.featureRow}>
                             <Icon name="check" size={14} color="#27537B" />
-                            <Text style={styles.featureText}>{feature}</Text>
+                            <Text style={[styles.featureText, theme.mode === 'dark' && { color: '#fff' }]}>{feature}</Text>
                           </View>
                         ))}
                       </View>
@@ -475,15 +481,18 @@ const ServiceDetailsScreen = () => {
             {serviceDetails.categories.filter(category => !/install|uninstall/i.test(category.name)).map((category) => (
               <View
                 key={category.id}
-                style={styles.newCategoryCard}
+                style={[
+                  styles.newCategoryCard,
+                  theme.mode === 'dark' && { backgroundColor: '#000', borderColor: '#222' }
+                ]}
                 ref={ref => (categoryRefs.current[category.id] = ref)}
               >
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <View style={{ flex: 1 }}>
-                    <Text style={styles.newCategoryTitle}>{category.name}</Text>
+                    <Text style={[styles.newCategoryTitle, theme.mode === 'dark' && { color: '#fff' }]}>{category.name}</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 4 }}>
                       <Icon name="star" size={16} color="#FFC107" style={{ marginRight: 4 }} />
-                      <Text style={styles.newCategoryRating}>4.8 (23k)</Text>
+                      <Text style={[styles.newCategoryRating, theme.mode === 'dark' && { color: '#fff' }]}>4.8 (23k)</Text>
                     </View>
                   </View>
                   <TouchableOpacity
@@ -510,13 +519,13 @@ const ServiceDetailsScreen = () => {
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 6 }}>
                   <Text style={styles.newCategoryPrice}>{category.price}</Text>
-                  {category.oldPrice && <Text style={styles.newCategoryOldPrice}>{category.oldPrice}</Text>}
-                  <Text style={styles.newCategoryDuration}>{category.duration}</Text>
+                  {category.oldPrice && <Text style={[styles.newCategoryOldPrice, theme.mode === 'dark' && { color: '#fff' }]}>{category.oldPrice}</Text>}
+                  <Text style={[styles.newCategoryDuration, theme.mode === 'dark' && { color: '#fff' }]}>{category.duration}</Text>
                 </View>
                 <TouchableOpacity>
-                  <Text style={styles.viewDetailsText}>view details</Text>
+                  <Text style={[styles.viewDetailsText, theme.mode === 'dark' && { color: '#fff' }]}>view details</Text>
                 </TouchableOpacity>
-                <View style={styles.dottedLine} />
+                <View style={[styles.dottedLine, theme.mode === 'dark' && { borderColor: '#444' }]} />
               </View>
             ))}
           </View>
@@ -591,17 +600,19 @@ const ServiceDetailsScreen = () => {
               return (
                 <View
                   key={i}
-                  style={{
-                    backgroundColor: isOpen ? '#f0f6ff' : '#fff',
-                    borderRadius: 12,
-                    marginBottom: 12,
-                    padding: 0,
-                    shadowColor: '#000',
-                    shadowOpacity: 0.06,
-                    shadowRadius: 4,
-                    shadowOffset: { width: 0, height: 2 },
-                    elevation: 2,
-                  }}
+                  style={[
+                    {
+                      backgroundColor: isOpen ? (theme.mode === 'dark' ? '#111' : '#f0f6ff') : (theme.mode === 'dark' ? '#000' : '#fff'),
+                      borderRadius: 12,
+                      marginBottom: 12,
+                      padding: 0,
+                      shadowColor: '#000',
+                      shadowOpacity: 0.06,
+                      shadowRadius: 4,
+                      shadowOffset: { width: 0, height: 2 },
+                      elevation: 2,
+                    }
+                  ]}
                   ref={ref => (faqRefs.current[i] = ref)}
                 >
                   <TouchableOpacity
@@ -620,14 +631,14 @@ const ServiceDetailsScreen = () => {
                       style={{
                         fontWeight: isOpen ? 'bold' : '600',
                         fontSize: 16,
-                        color: '#222',
+                        color: theme.mode === 'dark' ? '#fff' : '#222',
                         flex: 1,
                       }}
                     >
                       {faq.question}
                     </Text>
                     <Animated.View style={{ transform: [{ rotate }] }}>
-                      <Icon name="chevron-right" size={20} color="#27537B" />
+                      <Icon name="chevron-right" size={20} color={theme.mode === 'dark' ? '#fff' : '#27537B'} />
                     </Animated.View>
                   </TouchableOpacity>
                   {isOpen && (
@@ -638,7 +649,7 @@ const ServiceDetailsScreen = () => {
                         opacity: animations[i] ? animations[i] : 1,
                       }}
                     >
-                      <Text style={{ color: '#444', fontSize: 15, lineHeight: 22 }}>
+                      <Text style={{ color: theme.mode === 'dark' ? '#fff' : '#444', fontSize: 15, lineHeight: 22 }}>
                         {faq.answer}
                       </Text>
                     </Animated.View>

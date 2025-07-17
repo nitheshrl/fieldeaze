@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { View, Text } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 
 // Import screens
 import HomeScreen from '../screens/HomeScreen';
@@ -59,17 +60,21 @@ const withErrorBoundary = (ScreenComponent: React.ComponentType<any>, screenName
 };
 
 const BottomTabNavigator = () => {
+  const { theme } = useTheme();
   console.log('BottomTabNavigator rendering...'); // Debug log
 
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#27537B',
-        tabBarInactiveTintColor: '#999',
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {
           height: 60,
           paddingBottom: 8,
           paddingTop: 8,
+          backgroundColor: theme.card,
+          borderTopColor: theme.inputBorder,
+          borderTopWidth: 1,
         },
         headerShown: false,
       }}

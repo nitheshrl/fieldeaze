@@ -5,6 +5,7 @@ import mockData from '../mockData.json';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { MainStackParamList } from '../navigation/MainNavigator';
+import { useTheme } from '../context/ThemeContext';
 
 const stats = [
   { label: 'Bookings', value: 12, icon: 'event' },
@@ -26,12 +27,13 @@ const ProfileScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const { user } = mockData;
   const [imgError, setImgError] = useState(false);
+  const { theme } = useTheme();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <ScrollView contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
         {/* Profile Overview */}
-        <View style={styles.profileCard}>
+        <View style={[styles.profileCard, { backgroundColor: theme.card, shadowColor: theme.inputBorder }]}>
           <View style={styles.avatarRow}>
             <Image
               source={imgError ? require('../assets/icons/default-profile.png') : { uri: user.profileImage }}
@@ -39,20 +41,20 @@ const ProfileScreen = () => {
               onError={() => setImgError(true)}
             />
             <View style={styles.profileInfo}>
-              <Text style={styles.profileName}>{user.name}</Text>
+              <Text style={[styles.profileName, { color: theme.text }]}>{user.name}</Text>
               {/* Removed user.role as it's not present in user object */}
             </View>
-            <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('EditProfile')}>
+            <TouchableOpacity style={[styles.editBtn, { backgroundColor: theme.primary }]} onPress={() => navigation.navigate('EditProfile')}>
               <Icon name="edit" size={20} color="#fff" />
             </TouchableOpacity>
           </View>
           {/* Quick Stats */}
           <View style={styles.statsRow}>
             {stats.map((stat) => (
-              <View key={stat.label} style={[styles.statCard, stats.length - 1 !== stats.indexOf(stat) && { marginRight: 16 }] }>
-                <Icon name={stat.icon} size={22} color="#27537B" />
-                <Text style={styles.statValue}>{stat.value}</Text>
-                <Text style={styles.statLabel}>{stat.label}</Text>
+              <View key={stat.label} style={[styles.statCard, { backgroundColor: theme.mode === 'dark' ? theme.inputBorder : '#f7fafd' }, stats.length - 1 !== stats.indexOf(stat) && { marginRight: 16 }] }>
+                <Icon name={stat.icon} size={22} color={theme.primary} />
+                <Text style={[styles.statValue, { color: theme.primary }]}>{stat.value}</Text>
+                <Text style={[styles.statLabel, { color: theme.textSecondary }]}>{stat.label}</Text>
               </View>
             ))}
           </View>
@@ -60,12 +62,12 @@ const ProfileScreen = () => {
         {/* Navigation Cards */}
         <View style={styles.navSection}>
           {navCards.map((item) => (
-            <TouchableOpacity key={item.title} style={styles.navCard} onPress={() => navigation.navigate(item.onPress as any)}>
-              <View style={styles.navIconWrap}>
-                <Icon name={item.icon} size={24} color="#27537B" />
+            <TouchableOpacity key={item.title} style={[styles.navCard, { backgroundColor: theme.card, shadowColor: theme.inputBorder }]} onPress={() => navigation.navigate(item.onPress as any)}>
+              <View style={[styles.navIconWrap, { backgroundColor: theme.mode === 'dark' ? theme.inputBorder : '#eaf1fa' }]}>
+                <Icon name={item.icon} size={24} color={theme.primary} />
               </View>
-              <Text style={styles.navTitle}>{item.title}</Text>
-              <Icon name="chevron-right" size={24} color="#bbb" />
+              <Text style={[styles.navTitle, { color: theme.text }]}>{item.title}</Text>
+              <Icon name="chevron-right" size={24} color={theme.textSecondary} />
             </TouchableOpacity>
           ))}
         </View>

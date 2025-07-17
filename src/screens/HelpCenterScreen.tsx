@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import mockData from '../mockData.json';
+import { useTheme } from '../context/ThemeContext';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -36,6 +37,7 @@ const HelpCenterScreen = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const navigation = useNavigation();
+  const { theme } = useTheme();
 
   const handleExpand = (key: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -43,21 +45,21 @@ const HelpCenterScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.card }]}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back" size={24} color="#27537B" />
+          <Icon name="arrow-back" size={24} color={theme.primary} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: '#27537B' }]}>Help Center</Text>
+        <Text style={[styles.headerTitle, { color: theme.primary }]}>Help Center</Text>
       </View>
       {/* Search Bar */}
-      <View style={styles.searchBarContainer}>
-        <Icon name="search" size={20} color="#aaa" style={{ marginLeft: 12 }} />
+      <View style={[styles.searchBarContainer, { backgroundColor: theme.inputBg }]}>
+        <Icon name="search" size={20} color={theme.textSecondary} style={{ marginLeft: 12 }} />
         <TextInput
-          style={styles.searchBar}
+          style={[styles.searchBar, { color: theme.text }]}
           placeholder="Search"
-          placeholderTextColor="#aaa"
+          placeholderTextColor={theme.textSecondary}
           value={search}
           onChangeText={setSearch}
         />
@@ -65,16 +67,16 @@ const HelpCenterScreen = () => {
       {/* Tabs */}
       <View style={styles.tabsRow}>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'faq' && { borderBottomWidth: 3, borderBottomColor: '#000' }]}
+          style={[styles.tab, activeTab === 'faq' && { borderBottomWidth: 3, borderBottomColor: theme.primary }]}
           onPress={() => setActiveTab('faq')}
         >
-          <Text style={[styles.tabText, { color: activeTab === 'faq' ? '#000' : '#27537B' }]}>FAQ</Text>
+          <Text style={[styles.tabText, { color: activeTab === 'faq' ? theme.primary : theme.text }]}>FAQ</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'contact' && { borderBottomWidth: 3, borderBottomColor: '#000' }]}
+          style={[styles.tab, activeTab === 'contact' && { borderBottomWidth: 3, borderBottomColor: theme.primary }]}
           onPress={() => setActiveTab('contact')}
         >
-          <Text style={[styles.tabText, { color: activeTab === 'contact' ? '#000' : '#27537B' }]}>Contact Us</Text>
+          <Text style={[styles.tabText, { color: activeTab === 'contact' ? theme.primary : theme.text }]}>Contact Us</Text>
         </TouchableOpacity>
       </View>
       {/* Contact List */}
@@ -84,12 +86,12 @@ const HelpCenterScreen = () => {
             <View key={item.key} style={styles.card}>
               <TouchableOpacity style={styles.cardHeader} onPress={() => handleExpand(item.key)}>
                 <View style={styles.cardIcon}>{item.icon}</View>
-                <Text style={[styles.cardLabel, { color: '#27537B' }]}>{item.label}</Text>
-                <Icon name={expanded === item.key ? 'expand-less' : 'expand-more'} size={24} color="#27537B" style={{ marginLeft: 'auto' }} />
+                <Text style={[styles.cardLabel, { color: theme.primary }]}>{item.label}</Text>
+                <Icon name={expanded === item.key ? 'expand-less' : 'expand-more'} size={24} color={theme.primary} style={{ marginLeft: 'auto' }} />
               </TouchableOpacity>
               {expanded === item.key && (
                 <View style={styles.cardDetails}>
-                  <Text style={[styles.cardDetailsText, { color: '#888' }]}>{item.details}</Text>
+                  <Text style={[styles.cardDetailsText, { color: theme.textSecondary }]}>{item.details}</Text>
                 </View>
               )}
             </View>
@@ -99,7 +101,7 @@ const HelpCenterScreen = () => {
       {/* FAQ Tab Placeholder */}
       {activeTab === 'faq' && (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ color: '#aaa', fontSize: 16 }}>FAQ content coming soon...</Text>
+          <Text style={{ color: theme.textSecondary, fontSize: 16 }}>FAQ content coming soon...</Text>
         </View>
       )}
     </SafeAreaView>

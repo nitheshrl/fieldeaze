@@ -12,7 +12,6 @@ import {
   Dimensions,
   SafeAreaView,
   Modal,
-  FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -20,6 +19,8 @@ import type { MainStackParamList } from '../navigation/MainNavigator';
 import mockData from '../mockData.json';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import PopularServicesSection from '../components/PopularServicesSection';
+import { useTheme } from '../context/ThemeContext';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
 const TABS = [
   { key: 'all', label: 'All' },
@@ -49,19 +50,9 @@ const boxSize = (SCREEN_WIDTH - 3 * spacing) / 4.3;
 const ONGOING_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.92);
 const HORIZONTAL_PADDING = Math.round((SCREEN_WIDTH - ONGOING_CARD_WIDTH) / 2);
 
-function chunkAndPadServices(array: any[], size: number) {
-  const result = [];
-  for (let i = 0; i < array.length; i += size) {
-    let chunk = array.slice(i, i + size);
-    // Pad only at the end to make 8
-    while (chunk.length < size) chunk.push({ _empty: true, id: `empty-pad-${i + chunk.length}` });
-    result.push(chunk);
-  }
-  return result;
-}
-
 const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
+  const { theme, toggleTheme } = useTheme();
   const [selectedTab, setSelectedTab] = useState('all');
   const { user, services } = mockData;
   const bookings = mockData.bookings;
@@ -126,37 +117,40 @@ const HomeScreen = () => {
   let restPadded = rest.slice();
   if (rest.length > 0 && rest.length % 4 !== 0) {
     for (let i = rest.length % 4; i < 4; i++) {
-      restPadded.push({ _empty: true, id: `empty-rest-${i}` });
+      restPadded.push({ _empty: true, id: `empty-rest-${i}` } as any);
     }
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#eaf4ff" />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={theme.header} />
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.header }]}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image
             source={require('../assets/logo.png')}
             style={styles.logo}
             resizeMode="contain"
           />
-          
         </View>
         {/* Notification Icon (Bell) */}
-        <TouchableOpacity>
-          <Text style={{ fontSize: 22 }}>🔔</Text>
+        <TouchableOpacity style={{ marginRight: -42 }}>
+          <Text style={{ fontSize: 18, top:10,color: theme.accent }}>🔔</Text>
+        </TouchableOpacity>
+        {/* Theme Toggle Button (toggle both ways) */}
+        <TouchableOpacity onPress={toggleTheme} style={{ marginLeft: -90 , top:10,}}>
+          <MaterialIcon name={theme.mode === 'dark' ? 'light-mode' : 'dark-mode'} size={24} color={theme.accent} />
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+      <ScrollView style={[styles.content, { backgroundColor: theme.background }]} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {/* Search Bar */}
         <View style={styles.searchBarContainer}>
           <View style={{ position: 'relative' }}>
             <TextInput
-              style={[styles.searchBar, { paddingRight: 36 }]}
+              style={[styles.searchBar, { backgroundColor: theme.inputBg, borderColor: theme.inputBorder, color: theme.text, paddingRight: 36 }]}
               placeholder="What service do you need ?"
-              placeholderTextColor="#b0b0b0"
+              placeholderTextColor={theme.mode === 'dark' ? '#888' : '#b0b0b0'}
               value={searchQuery}
               onChangeText={handleSearch}
               onFocus={() => {
@@ -174,7 +168,7 @@ const HomeScreen = () => {
                   setShowRecommendations(false);
                 }}
               >
-                <Icon name="close" size={18} color="#888" />
+                <Icon name="close" size={18} color={theme.text} />
               </TouchableOpacity>
             )}
           </View>
@@ -185,10 +179,10 @@ const HomeScreen = () => {
               top: 48,
               left: 0,
               right: 0,
-              backgroundColor: '#fff',
+              backgroundColor: theme.card,
               borderRadius: 8,
               borderWidth: 1,
-              borderColor: '#e0e0e0',
+              borderColor: theme.inputBorder,
               zIndex: 10,
               shadowColor: '#000',
               shadowOffset: { width: 0, height: 2 },
@@ -200,7 +194,7 @@ const HomeScreen = () => {
               {recommendations.map(service => (
                 <TouchableOpacity
                   key={service.id}
-                  style={{ flexDirection: 'row', alignItems: 'center', padding: 12, borderBottomWidth: 1, borderBottomColor: '#f0f0f0' }}
+                  style={{ flexDirection: 'row', alignItems: 'center', padding: 12, borderBottomWidth: 1, borderBottomColor: theme.inputBorder }}
                   onPress={() => handleRecommendationSelect(service)}
                 >
                   <Image
@@ -208,7 +202,7 @@ const HomeScreen = () => {
                     style={{ width: 28, height: 28, marginRight: 12 }}
                     resizeMode="contain"
                   />
-                  <Text style={{ fontSize: 15, color: '#222' }}>{service.name}</Text>
+                  <Text style={{ fontSize: 15, color: theme.text }}>{service.name}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -227,12 +221,12 @@ const HomeScreen = () => {
               key={tab.key}
               style={[
                 styles.tabButton,
-                selectedTab === tab.key && styles.tabButtonActive,
+                selectedTab === tab.key && { backgroundColor: theme.tabActive },
                 idx !== TABS.length - 1 && { marginRight: 12 },
               ]}
               onPress={() => setSelectedTab(tab.key)}
             >
-              <Text style={[styles.tabText, selectedTab === tab.key && styles.tabTextActive]}>
+              <Text style={[styles.tabText, selectedTab === tab.key && { color: '#fff' }]}>
                 {tab.label} <Text style={styles.tabCount}></Text>
               </Text>
             </TouchableOpacity>
@@ -304,7 +298,7 @@ const HomeScreen = () => {
             })}
           </RNScrollView>
         ) : (
-          <Text style={{ textAlign: 'center', color: '#888', marginVertical: 16 }}>
+          <Text style={{ textAlign: 'center', color: theme.textSecondary || '#888', marginVertical: 16 }}>
             No bookings found for this filter.
           </Text>
         )}
@@ -324,7 +318,7 @@ const HomeScreen = () => {
         </View>
 
         {/* Our Services Section: 2x4 grid for first 8, scroll for extra */}
-        <Text style={[styles.servicesTitle, { marginLeft: 16 }]}>Our Services</Text>
+        <Text style={[styles.servicesTitle, { color: theme.text }]}>Our Services</Text>
         {/* First 8 services grid */}
         <View style={{
           width: SCREEN_WIDTH,
@@ -342,7 +336,7 @@ const HomeScreen = () => {
                 style={{
                   width: boxSize,
                   height: boxSize,
-                  backgroundColor: '#E7E7E7',
+                  backgroundColor: theme.serviceBox || '#E7E7E7',
                   borderRadius: 14,
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -358,7 +352,7 @@ const HomeScreen = () => {
                     resizeMode="contain"
                   />
                 </View>
-                <Text style={[styles.serviceName, { fontSize: 9 }]} numberOfLines={2} ellipsizeMode="tail">
+                <Text style={[styles.serviceName, { color: theme.text, fontSize: 9 }]} numberOfLines={2} ellipsizeMode="tail">
                   {service.name}
                 </Text>
               </TouchableOpacity>
@@ -393,7 +387,7 @@ const HomeScreen = () => {
                   style={{
                     width: boxSize,
                     height: boxSize,
-                    backgroundColor: '#E7E7E7',
+                    backgroundColor: theme.serviceBox || '#E7E7E7',
                     borderRadius: 14,
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -409,7 +403,7 @@ const HomeScreen = () => {
                       resizeMode="contain"
                     />
                   </View>
-                  <Text style={[styles.serviceName, { fontSize: 9 }]} numberOfLines={2} ellipsizeMode="tail">
+                  <Text style={[styles.serviceName, { color: theme.text, fontSize: 9 }]} numberOfLines={2} ellipsizeMode="tail">
                     {service.name}
                   </Text>
                 </TouchableOpacity>
@@ -423,7 +417,7 @@ const HomeScreen = () => {
             style={{ alignSelf: 'center', marginVertical: 10 }}
             onPress={() => setShowAllServices(s => !s)}
           >
-            <Text style={{ color: '#27537B', fontWeight: 'bold', fontSize: 15, textDecorationLine: 'underline' }}>
+            <Text style={{ color: theme.primary, fontWeight: 'bold', fontSize: 15, textDecorationLine: 'underline' }}>
               {showAllServices ? 'Show Less' : 'Show More Services'}
             </Text>
           </TouchableOpacity>
@@ -469,18 +463,18 @@ const HomeScreen = () => {
         onRequestClose={() => setShowAllModal(false)}
       >
         <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.18)', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ backgroundColor: '#fff', borderRadius: 18, width: '92%', maxHeight: '85%', padding: 16, elevation: 8 }}>
+          <View style={{ backgroundColor: theme.card, borderRadius: 18, width: '92%', maxHeight: '85%', padding: 16, elevation: 8 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#27537B' }}>All Bookings</Text>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme.primary }}>All Bookings</Text>
               <TouchableOpacity onPress={() => setShowAllModal(false)}>
-                <Icon name="close" size={22} color="#27537B" />
+                <Icon name="close" size={22} color={theme.primary} />
               </TouchableOpacity>
             </View>
             <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 8 }}>
               {modalSections.map(section => (
                 section.data.length > 0 && (
                   <View key={section.title} style={{ marginBottom: 18 }}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#27537B', marginBottom: 8 }}>{section.title}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.primary, marginBottom: 8 }}>{section.title}</Text>
                     {section.data.map(item => (
                       <View key={item.id} style={[styles.ongoingCard, { width: '100%', marginBottom: 12 }]}> 
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
@@ -512,7 +506,7 @@ const HomeScreen = () => {
                 )
               ))}
               {modalSections.every(section => section.data.length === 0) && (
-                <Text style={{ color: '#888', textAlign: 'center', marginTop: 40 }}>No bookings found.</Text>
+                <Text style={{ color: theme.textSecondary || '#888', textAlign: 'center', marginTop: 40 }}>No bookings found.</Text>
               )}
             </ScrollView>
           </View>

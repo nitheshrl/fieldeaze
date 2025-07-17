@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, KeyboardAvoidingView, Platform, Linking, Alert, Image, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, KeyboardAvoidingView, Platform, Linking, Alert, Image, SafeAreaView, StatusBar, ScrollView } from 'react-native';
 import mockDataRaw from '../mockData.json';
+import { useTheme } from '../context/ThemeContext';
 
 const mockData: any = mockDataRaw;
 
@@ -50,6 +51,7 @@ const ChatScreen = () => {
   const [selectedCategories, setSelectedCategories] = useState<any[]>([]);
   const [bookingStep, setBookingStep] = useState<'none' | 'name' | 'mobile' | 'address' | 'done'>('none');
   const [bookingInfo, setBookingInfo] = useState<{ name: string; mobile: string; address: string }>({ name: '', mobile: '', address: '' });
+  const { theme } = useTheme();
 
   // Scroll to bottom when new message arrives
   useEffect(() => {
@@ -387,12 +389,13 @@ const ChatScreen = () => {
   );
 
   return (
-    <SafeAreaView style={styles.bg}>
+    <SafeAreaView style={[styles.bg, { backgroundColor: theme.background }]}>
+      <StatusBar barStyle={theme.mode === 'dark' ? 'light-content' : 'dark-content'} backgroundColor={theme.background} />
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { backgroundColor: theme.card }]}>
         <Image source={{ uri: BOT_AVATAR }} style={styles.headerAvatar} />
         <View style={{ flex: 1 }}>
-          <Text style={styles.headerTitle}>{BOT_NAME}</Text>
+          <Text style={[styles.headerTitle, { color: '#fff' }]}>Fieldot</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
             <View style={styles.onlineDot} />
             <Text style={styles.onlineText}>Online</Text>
@@ -406,14 +409,14 @@ const ChatScreen = () => {
         keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.chatContainer}
       />
-      <View style={styles.inputBar}>
+      <View style={[styles.inputBar, { backgroundColor: theme.card, borderColor: theme.inputBorder }]}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: theme.inputBg, color: theme.text }]}
           value={input}
           onChangeText={setInput}
           placeholder="Send a message..."
           onSubmitEditing={() => sendMessage(input)}
-          placeholderTextColor="#b0b0b0"
+          placeholderTextColor={theme.textSecondary}
         />
         <TouchableOpacity style={styles.sendBtn} onPress={() => sendMessage(input)}>
           <Text style={styles.sendBtnText}>Send</Text>
